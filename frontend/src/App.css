@@ -1,0 +1,122 @@
+.background {
+    background-color: rgba(10, 9, 9, 0.918);
+    min-height: 100vh;
+    width: 75%;
+    margin: 0 auto;
+}
+
+.dropbtn {
+    background-color: transparent;
+    opacity: 1;
+    color: white;
+    padding: 10px;
+    font-size: 2em;
+    border: none;
+}
+
+.dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+.info {
+    display: flexbox;
+    width: 100%;
+    text-align: center;
+    color: grey;
+}
+
+.dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: black;
+    min-width: 130px;
+    box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2);
+    z-index: 1;
+}
+
+.dropdown-content a {
+    color: white;
+    padding: 10px 14px;
+    text-decoration: none;
+    display: block;
+    font-size: 0.8em;
+}
+
+.dropdown-content a:hover {
+    background-color: grey;
+}
+
+.dropdown:hover .dropdown-content {
+    display: block;
+}
+
+.dropdown:hover .dropbtn {
+    background-color: transparent;
+    color: grey;
+}
+
+.weightless {
+    margin: 0;
+    padding: 0;
+}
+
+.Logo {
+    color: #ffffff;
+    margin-left: 1em;
+    font-size: 2em;
+}
+
+#root {
+    background-color: black;
+}
+
+.image {
+    height: 5em;
+    width: 5em;
+    margin-right: 1em;
+}
+
+.Heatmap {
+    background-color: #2e2e2e;
+    color: #ffffff;
+    align-items: center;
+    justify-content: center;
+    margin: 5em auto;
+}
+
+.Hourslot {
+    background-color: black;
+    height: 5px;
+    width: 12px;
+    text-align: center;
+}
+
+.LowHeat {
+    background-color: rgba(255, 0, 0, 0.603);
+    height: 5px;
+    width: 12px;
+    text-align: center;
+    padding-top: 2px;
+}
+
+.Hot {
+    background-color: rgba(255, 0, 0, 0.863);
+    height: 5px;
+    width: 12px;
+    text-align: center;
+    padding-top: 2px;
+}
+
+.SuperHot {
+    background-color: red;
+    height: 5px;
+    width: 12px;
+    text-align: center;
+    padding-top: 2px;
+}
+
+.Top {
+    color: grey;
+    text-align: center;
+}
