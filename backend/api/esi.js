@@ -5,100 +5,6 @@ const sqlite3 = require('sqlite3');
 const db = new sqlite3.Database('zkill.db');
 const esiDbInit = require('../utils/esiDbInit');
 
-//add time between for the brackets that'll get added in the frontend here.
-//maybe making this a get('/', (req, res, next) => {
-//}) route that gets called by the front end is what needs to happen...
-
-esiRouter.get(`/:weekday/:shipName/:time`, (req, res, next) => {
-  const shipName = req.params.shipName;
-  const shipTypeId = shipSelector(shipName)
-  const time = req.params.time
-    db.all(`SELECT * FROM esi WHERE weekday = '${req.params.weekday}' AND ship_type_id = '${shipTypeId}' AND killmail_time LIKE '%T${time}:%';`, 
-    (err, rows) => {
-      if(err){
-        console.log(err)
-      } else {
-        const data = rows.length;
-        const parsedData = JSON.parse(data);
-        res.send({parsedData});
-      }
-    })
-})
-
-esiRouter.get(`/totalDestroyed/:shipName`, (req, res, next) => {
-  const shipName = req.params.shipName;
-  const shipTypeId = shipSelector(shipName);
-  db.all(`SELECT * FROM esi WHERE ship_type_id = '${shipTypeId}';`, (err, rows) => {
-    if(err){
-      console.log(err)
-    } else {
-      const data = rows.length;
-      const totalDestroyed = JSON.parse(data);
-      res.send({totalDestroyed})
-    }
-  })
-})
-
-// esiRouter.get(`/totalDays`, (req, res, next) => {
-//   db.get(`SELECT DISTINCT WHERE killmail_time LIKE '_/_/_T_' FROM esi;`, (err, rows) => {
-//     if(err){
-//       console.log(err)
-//     } else {
-//       const data = rows.length;
-//       const totalDays = JSON.parse(data);
-//       console.log(totalDays)
-//       res.send({totalDays})
-//     }
-//   })
-// })
-
-const shipSelector = (shipType) => {
-  let shipTypeId = ''
-  if(shipType === 'Golem'){
-      return shipTypeId = 28710;
-  }
-  if(shipType === 'Paladin'){
-      return shipTypeId = 28659
-  }
-  if(shipType === 'Vargur'){
-      return shipTypeId = 28665
-  }
-  if(shipType === 'Kronos'){
-      return shipTypeId = 28661
-  }
-  if(shipType === 'Revelation'){
-      return shipTypeId = 19720
-  }
-  if(shipType === 'Phoenix'){
-      return shipTypeId = 19726
-  }
-  if(shipType === 'Moros'){
-      return shipTypeId = 19724
-  }
-  if(shipType === 'Naglfar'){
-      return shipTypeId = 19722
-  }
-  if(shipType === 'Gila'){
-      return shipTypeId = 17715
-  }
-  if(shipType === 'Praxis'){
-      return shipTypeId = 47466
-  }
-  if(shipType === 'Nestor'){
-      return shipTypeId = 33472
-  }
-  if(shipType === 'Leshak'){
-      return shipTypeId = 47271
-  }
-  if(shipType === 'Rattlesnake'){
-      return shipTypeId = 17918
-  }
-  if(shipType === 'Heron'){
-    return shipTypeId = 605
-  }
-  return shipTypeId;
-}
-
 const dateToDay = (date) => {
   const killDate = new Date(date);
   const dayIndex = killDate.getDay();
@@ -142,10 +48,10 @@ const updateDayOfTheWeek = () => {
           const weekday = dateToDay(row.killmail_time);
           const zkill_id = row.killmail_id;
           const sql = 'UPDATE esi ' +
-                      `SET weekday = '${weekday}'`
-                      + ` WHERE killmail_id = ${zkill_id};`
+            `SET weekday = '${weekday}'`
+            + ` WHERE killmail_id = ${zkill_id};`
           db.run(sql, (err) => {
-            if(err){
+            if (err) {
               return;
             }
           })
@@ -195,7 +101,7 @@ const esiDatabaseFiller = () => {
               })
           })
           .catch(function (error) {
-            if(error){
+            if (error) {
               return;
             }
             if (error.response) {

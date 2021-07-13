@@ -37,7 +37,7 @@ class Hotmap extends React.Component {
                     </thead>
                     <tbody>
                         <tr>
-                            <td className="Top"><b>M</b></td>
+                            <td className="Top">M</td>
                             <Timeslot day = 'Monday' time='00' />
                             <Timeslot day = 'Monday' time='01' />
                             <Timeslot day = 'Monday' time='02' />
@@ -64,7 +64,7 @@ class Hotmap extends React.Component {
                             <Timeslot day = 'Monday' time='23' />
                         </tr>
                         <tr>
-                            <td className="Top"><b>T</b></td>
+                            <td className="Top">T</td>
                             <Timeslot day = 'Tuesday' time='00' />
                             <Timeslot day = 'Tuesday' time='01' />
                             <Timeslot day = 'Tuesday' time='02' />
@@ -91,7 +91,7 @@ class Hotmap extends React.Component {
                             <Timeslot day = 'Tuesday' time='23' />
                         </tr>
                         <tr>
-                            <td className="Top"><b>W</b></td>
+                            <td className="Top">W</td>
                             <Timeslot day = 'Wednesday' time='00' />
                             <Timeslot day = 'Wednesday' time='01' />
                             <Timeslot day = 'Wednesday' time='02' />
@@ -118,7 +118,7 @@ class Hotmap extends React.Component {
                             <Timeslot day = 'Wednesday' time='23' />
                         </tr>
                         <tr>
-                            <td className="Top"><b>T</b></td>
+                            <td className="Top">T</td>
                             <Timeslot day = 'Thursday' time='00' />
                             <Timeslot day = 'Thursday' time='01' />
                             <Timeslot day = 'Thursday' time='02' />
@@ -145,7 +145,7 @@ class Hotmap extends React.Component {
                             <Timeslot day = 'Thursday' time='23' />
                         </tr>
                         <tr>
-                            <td className="Top"><b>F</b></td>
+                            <td className="Top">F</td>
                             <Timeslot day = 'Friday' time='00' />
                             <Timeslot day = 'Friday' time='01' />
                             <Timeslot day = 'Friday' time='02' />
@@ -172,7 +172,7 @@ class Hotmap extends React.Component {
                             <Timeslot day = 'Friday' time='23' />
                         </tr>
                         <tr>
-                            <td className="Top"><b>S</b></td>
+                            <td className="Top">S</td>
                             <Timeslot day = 'Saturday' time='00' />
                             <Timeslot day = 'Saturday' time='01' />
                             <Timeslot day = 'Saturday' time='02' />
@@ -199,7 +199,7 @@ class Hotmap extends React.Component {
                             <Timeslot day = 'Saturday' time='23' />
                         </tr>
                         <tr>
-                            <td className="Top"><b>S</b></td>
+                            <td className="Top">S</td>
                             <Timeslot day = 'Sunday' time='00' />
                             <Timeslot day = 'Sunday' time='01' />
                             <Timeslot day = 'Sunday' time='02' />

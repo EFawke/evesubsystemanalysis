@@ -12,35 +12,57 @@ class Info extends React.Component {
         this.fetchTotalDestroyed = this.fetchTotalDestroyed.bind(this);
     }
     HomeCheck = () => {
-        if(window.location.pathname === "/"){
-            return "Heron"
+        //Homepage automatically displays Herons.
+        if (window.location.pathname === "/") {
+            this.setState({ shipSelected: "Heron" })
+        }
+        if (window.location.pathname === "/AllC5RattingShips") {
+            this.setState({ shipSelected: "C5 Ratting Ship" })
+        }
+        if(window.location.pathname === "/Marauders"){
+            this.setState({shipSelected : "Marauder"})
+        }
+        if(window.location.pathname === "/Dreadnoughts"){
+            this.setState({shipSelected : "Dreadnought"})
         }
         else {
             return window.location.pathname
         }
     }
     fetchTotalDestroyed = () => {
-        axios.get(`/api/esi/totalDestroyed/${this.state.shipSelected}`)
-        .then(response => {
-            return this.setState({totalDestroyed: response.data.totalDestroyed})
-        })
+        //Homepage automatically displays Herons.
+        if (window.location.pathname === "/") {
+            axios.get(`/api/info/totalDestroyed/Heron`).then(response => {
+                this.setState({ totalDestroyed: response.data.totalDestroyed });
+            })
+        }
+        else if (this.props.shipSelected === 'Marauders' || this.props.shipSelected === 'Dreadnoughts' || this.props.shipSelected === 'AllC5RattingShips') {
+            axios.get(`api/info/totalClassDestroyed/${this.props.shipSelected}`).then(response => {
+                this.setState({ totalDestroyed: response.data.totalClassDestroyed });
+            })
+        } else {
+        axios.get(`/api/info/totalDestroyed/${this.props.shipSelected}`)
+            .then(response => {
+                this.setState({ totalDestroyed: response.data.totalDestroyed })
+            })
+        }
     }
-    calcTotalDays = () =>{
-        const oneDay = 24 * 60 * 60 * 1000; // hours*minutes*seconds*milliseconds
+    calcTotalDays = () => {
+        const oneDay = 24 * 60 * 60 * 1000;
         const firstDate = new Date('2021-07-03T11:30:02Z')
         const secondDate = Date.now();
         const diffDays = Math.round(Math.abs((firstDate - secondDate) / oneDay));
-        this.setState({totalDays: diffDays});
+        this.setState({ totalDays: diffDays });
     }
-    componentDidMount(){
-        this.calcTotalDays();
+    componentDidMount() {
+        this.HomeCheck();
         this.fetchTotalDestroyed();
         this.calcTotalDays();
     };
-    render(){
-            return (
-                <p className = "info">Fetching {this.state.totalDestroyed} {this.props.shipSelected} kills from the last {this.state.totalDays} days in wormhole space.</p>
-            )
+    render() {
+        return (
+            <p className="info">Fetching {this.state.totalDestroyed} <span className = "infoSpan">{this.state.shipSelected}</span> kills from the last {this.state.totalDays} days in wormhole space.</p>
+        )
     }
 };
 
