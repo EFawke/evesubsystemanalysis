@@ -1,8 +1,33 @@
+.Name {
+    color: black;
+    z-index: 1;
+    font-size: 80px;
+}
+
+.dropbtn {
+    background-color: transparent;
+    opacity: 1;
+    color: white;
+    padding: 10px;
+    font-size: 2em;
+    border: none;
+    margin-left: 0.8em;
+}
+
 .background {
     background-color: rgba(10, 9, 9, 0.918);
     min-height: 120vh;
     width: 75%;
     margin: 0 auto;
+}
+
+@media only screen and (max-width: 830px) {
+    .Name {
+        font-size: 25px;
+        padding: 0px;
+        margin: 0px;
+
+    }
 }
 
 @media only screen and (max-width: 750px) {
@@ -25,15 +50,6 @@
     font-weight: bold;
 }
 
-.dropbtn {
-    background-color: transparent;
-    opacity: 1;
-    color: white;
-    padding: 10px;
-    font-size: 2em;
-    border: none;
-}
-
 .dropdown {
     position: relative;
     display: inline-block;
@@ -47,7 +63,6 @@
 }
 
 .dropdown-content {
-    overflow-y: scroll;
     display: none;
     position: absolute;
     background-color: black;
@@ -80,12 +95,6 @@
 .weightless {
     margin: 0;
     padding: 0;
-}
-
-.Logo {
-    color: #ffffff;
-    margin-left: 1em;
-    font-size: 2em;
 }
 
 #root {

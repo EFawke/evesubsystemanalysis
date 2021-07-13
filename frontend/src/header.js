@@ -7,7 +7,7 @@ class Header extends React.Component {
             <div>
                 <nav className="navbar navbar-dark bg-dark">
                 <div className="dropdown">
-                <button className="dropbtn">Rage Roller</button>
+                <button className="dropbtn">Ships</button>
                 <div className="dropdown-content">
                     <a href="/Marauders">Marauders</a>
                     <a href="/Dreadnoughts">Dreadnoughts</a>
@@ -28,6 +28,7 @@ class Header extends React.Component {
                     <a href="/Heron/">Heron</a>
                 </div>
             </div>
+                <h1 className = "Name">Rage Roller</h1>
                 <a className = 'weightless' href = 'https://github.com/EFawke/rage-roller'><img className = "image" src = {github} alt = "github"/></a>
                 </nav>
             </div>

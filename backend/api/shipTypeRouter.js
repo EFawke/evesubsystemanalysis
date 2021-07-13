@@ -15,7 +15,6 @@ shipTypeRouter.get(`/:weekday/:shipName/:time`, (req, res, next) => {
         const data = rows.length;
         const parsedData = JSON.parse(data);
         res.send({ parsedData });
-        console.log(parsedData);
       }
     })
 })

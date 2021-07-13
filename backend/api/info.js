@@ -21,7 +21,6 @@ infoRouter.get(`/totalClassDestroyed/:class`, (req, res, next) => {
             const data = rows.length;
             const totalClassDestroyed = JSON.parse(data);
             res.send({ totalClassDestroyed })
-            console.log(totalClassDestroyed)
         }
     })
 })
