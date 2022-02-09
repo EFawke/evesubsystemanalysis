@@ -5,8 +5,9 @@ const app = express();
 const errorHandler = require('errorhandler');
 
 //makes a router for all express api routes.
-const apiRouter = require('./api/apiRouter')
-app.use('/api', apiRouter);
+//UNCOMMENT THIS AFTER TEST
+// const apiRouter = require('./api/apiRouter')
+// app.use('/api', apiRouter);
 
 // const port = 5000;
 
