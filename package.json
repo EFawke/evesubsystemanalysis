@@ -1,0 +1,26 @@
+{
+  "name": "rage-roll",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "frontend": "cd frontend && npm start",
+    "api": "cd backend && node app",
+    "dev": "concurrently --kill-others-on-fail \"npm run api\" \"npm run frontend\"",
+    "heroku-postbuild": "cd frontend && npm install && npm run build"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/EFawke/rage-roll.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/EFawke/rage-roller/issues"
+  },
+  "homepage": "https://github.com/EFawke/rage-roll#readme",
+  "dependencies": {
+    "concurrently": "^7.0.0"
+  }
+}
