@@ -61,7 +61,7 @@ class Info extends React.Component {
     };
     render() {
         return (
-            <p className="info">Fetching {this.state.totalDestroyed} <span className = "infoSpan">{this.state.shipSelected}</span> kills from the last {this.state.totalDays} days in wormhole space.</p>
+            <p className="info">Fetching {this.state.totalDestroyed} <span className = "infoSpan">{this.state.shipSelected}</span> kills from the last <span>3 months</span> in wormhole space.</p>
         )
     }
 };

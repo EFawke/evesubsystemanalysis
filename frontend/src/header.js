@@ -9,9 +9,6 @@ class Header extends React.Component {
                 <div className="dropdown">
                 <button className="dropbtn">Ships</button>
                 <div className="dropdown-content">
-                    <a href="/Marauders">Marauders</a>
-                    <a href="/Dreadnoughts">Dreadnoughts</a>
-                    <a href="/AllC5RattingShips">All C5 Ratting Ships</a>
                     <a href="/Golem/">Golem</a>
                     <a href="/Paladin/">Paladin</a>
                     <a href="/Vargur/">Vargur</a>

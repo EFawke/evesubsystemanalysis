@@ -14,7 +14,7 @@ infoRouter.get(`/totalClassDestroyed/:class`, (req, res, next) => {
     if (req.params.class === 'AllC5RattingShips') {
         query = "('33472', '47271', '19720', '19726', '19724', '19722', '28661', '28665', '28659', '28710');"
     }
-    db.all(`SELECT * FROM esi WHERE ship_type_id IN ${query}`, (err, rows) => {
+    db.all(`SELECT * FROM esi WHERE weekday IS NOT NULL AND ship_type_id IN ${query}`, (err, rows) => {
         if (err) {
             console.log(err)
         } else {
@@ -32,7 +32,15 @@ infoRouter.get(`/totalDestroyed/:shipName`, (req, res, next) => {
         if (err) {
             console.log(err)
         } else {
-            const data = rows.length;
+            var d = new Date();
+            d.setMonth(d.getMonth() - 3);
+            let data = 0;
+            for(let i = 0; i < rows.length; i ++){
+                const killmailDate = new Date(rows[i].killmail_time);
+                if(killmailDate > d){
+                    data +=1;
+                }
+            }
             const totalDestroyed = JSON.parse(data);
             res.send({ totalDestroyed })
         }

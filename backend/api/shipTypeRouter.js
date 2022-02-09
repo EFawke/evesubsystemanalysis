@@ -3,21 +3,63 @@ const shipTypeRouter = express.Router();
 const sqlite3 = require('sqlite3');
 const db = new sqlite3.Database('zkill.db');
 
-shipTypeRouter.get(`/:weekday/:shipName/:time`, (req, res, next) => {
+shipTypeRouter.get(`/:shipName`, (req, res, next) => {
   const shipName = req.params.shipName;
-  const shipTypeId = shipSelector(shipName)
-  const time = req.params.time
-  db.all(`SELECT * FROM esi WHERE weekday = '${req.params.weekday}' AND ship_type_id = '${shipTypeId}' AND killmail_time LIKE '%T${time}:%';`,
-    (err, rows) => {
-      if (err) {
-        console.log(err)
-      } else {
-        const data = rows.length;
-        const parsedData = JSON.parse(data);
-        res.send({ parsedData });
+  const shipTypeId = shipSelector(shipName);
+  db.all(`SELECT * FROM esi WHERE ship_type_id = '${shipTypeId}';`, (err, rows) => {
+    if(err){
+      console.log(err)
+    } else {
+      const data = rows;
+      let heatmap = {
+        Monday: [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+        Tuesday: [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+        Wednesday: [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+        Thursday: [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+        Friday: [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+        Saturday: [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+        Sunday: [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
+      };
+      
+      var d = new Date();
+      d.setMonth(d.getMonth() - 3);
+
+      for(let i = 0; i < data.length; i++){
+        let time = Number(data[i].killmail_time.substring(11,13));
+        const day = data[i].weekday;
+        const killmailDate = new Date(data[i].killmail_time);
+        if(day === "Monday" && killmailDate > d){
+          heatmap.Monday[time]+=1;
+        }
+        if(day === "Tuesday" && killmailDate > d){
+          heatmap.Tuesday[time]+=1;
+        }
+        if(day === "Wednesday" && killmailDate > d){
+          heatmap.Wednesday[time]+=1;
+        }
+        if(day === "Thursday" && killmailDate > d){
+          heatmap.Thursday[time]+=1;
+        }
+        if(day === "Friday" && killmailDate > d){
+          heatmap.Friday[time]+=1;
+        }
+        if(day === "Saturday" && killmailDate > d){
+          heatmap.Saturday[time]+=1;
+        }
+        if(day === "Sunday" && killmailDate > d){
+          heatmap.Sunday[time]+=1;
+        }
       }
-    })
+      res.status(200).send(heatmap);
+    }
+  })
 })
+
+const isKillTooOld = (a, b) => {
+  const threeMonthsAgo = a;
+  const killmailTime = b;
+  return dates.compare(threeMonthsAgo, killmailTime)
+}
 
 const shipSelector = (shipType) => {
   let shipTypeId = ''

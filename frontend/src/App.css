@@ -1,7 +1,7 @@
 .Name {
     color: black;
     z-index: 1;
-    font-size: 80px;
+    font-size: 50px;
 }
 
 .dropbtn {
@@ -31,17 +31,36 @@
 }
 
 @media only screen and (max-width: 750px) {
-    .Top {
+    .Top, th {
         display: none;
+        margin: 0px;
+        padding: 0px;
+        background-color: black;
     }
     .span {
         color: transparent;
     }
     .Heatmap {
         width: 100%;
+        background-color: black;
     }
     td {
         height: 50%;
+        color: transparent;
+        width: 100%;
+    }
+}
+
+@media only screen and (max-width: 625px) {
+    .Top {
+        display: none;
+    }
+    .Heatmap {
+        width: 100%;
+    }
+    td {
+        font-size: x-small;
+        height: 10em;
     }
 }
 
@@ -50,16 +69,16 @@
     font-weight: bold;
 }
 
-.dropdown {
-    position: relative;
-    display: inline-block;
-}
-
 .info {
     display: flexbox;
     width: 100%;
     text-align: center;
     color: grey;
+}
+
+.dropdown {
+    position: relative;
+    display: inline-block;
 }
 
 .dropdown-content {
@@ -120,6 +139,7 @@
     height: 5px;
     width: 12px;
     text-align: center;
+    color: transparent;
 }
 
 .LowHeat {
@@ -144,6 +164,15 @@
     width: 12px;
     text-align: center;
     padding-top: 2px;
+}
+
+.WhiteHot {
+    background-color: white;
+    height: 5px;
+    width: 12px;
+    text-align: center;
+    padding-top: 2px;
+    color: black;
 }
 
 .Top {
