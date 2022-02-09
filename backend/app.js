@@ -8,14 +8,19 @@ const errorHandler = require('errorhandler');
 const apiRouter = require('./api/apiRouter')
 app.use('/api', apiRouter);
 
-const port = 5000;
+// const port = 5000;
 
 //using dependencies
 app.use(morgan('dev'));
 app.use(cors());
 app.use(errorHandler());
 
+let port = process.env.PORT;
+if (port == null || port == "") {
+  port = 8000;
+}
 app.listen(port, () => console.log(`listening on port ${port}`));
+// app.listen(port, () => console.log(`listening on port ${port}`));
 
 const path = require('path')
 
