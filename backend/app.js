@@ -4,6 +4,8 @@ const cors = require('cors');
 const app = express();
 const errorHandler = require('errorhandler');
 
+console.log('backend is online')
+
 //makes a router for all express api routes.
 //UNCOMMENT THIS AFTER TEST
 const apiRouter = require('./api/apiRouter')
