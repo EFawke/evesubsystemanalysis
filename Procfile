@@ -1,1 +1,2 @@
-web: cd backend && npm i && node app
+web: cd frontend && npm i && npm start
+server: cd backend && npm i && node app
