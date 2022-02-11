@@ -8,8 +8,8 @@ console.log('backend is online')
 
 //makes a router for all express api routes.
 //UNCOMMENT THIS AFTER TEST
-// const apiRouter = require('./api/apiRouter')
-// app.use('/api', apiRouter);
+const apiRouter = require('./api/apiRouter')
+app.use('/api', apiRouter);
 
 // const port = 5000;
 
@@ -28,7 +28,7 @@ const path = require('path')
 // Serve static files from the React frontend app
 app.use(express.static(path.join(__dirname, '/../frontend/src/App.js')))
 
-// AFTER defining routes: Anything that doesn't match what's above, send back index.html; (the beginning slash ('/') in the string is important!)
+AFTER defining routes: Anything that doesn't match what's above, send back index.html; (the beginning slash ('/') in the string is important!)
 app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname + '/../frontend/public/index.html'))
 })

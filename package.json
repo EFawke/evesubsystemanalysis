@@ -6,8 +6,8 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "frontend": "cd frontend && npm start",
-    "backend": "cd backend && node app.js",
-    "dev": "concurrently --kill-others-on-fail \"npm run api\" \"npm run frontend\"",
+    "backend": "cd backend && node app",
+    "dev": "concurrently --kill-others-on-fail \"npm run backend\" \"npm run frontend\"",
     "heroku-postbuild": "cd frontend && npm install && npm run build"
   },
   "repository": {
@@ -17,7 +17,7 @@
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/EFawke/rage-roller/issues"
+    "url": "https://github.com/EFawke/rage-roll/issues"
   },
   "homepage": "https://github.com/EFawke/rage-roll#readme",
   "dependencies": {
