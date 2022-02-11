@@ -8,8 +8,8 @@ console.log('backend is online')
 
 //makes a router for all express api routes.
 //UNCOMMENT THIS AFTER TEST
-// const apiRouter = require('./api/apiRouter')
-// app.use('/api', apiRouter);
+const apiRouter = require('./api/apiRouter')
+app.use('/api', apiRouter);
 
 // const port = 5000;
 
