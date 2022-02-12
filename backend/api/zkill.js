@@ -178,7 +178,7 @@ const findTopZkillId = () => {
         return Object.values(rows)[0];
        
     })
-    query.get('SELECT MAX (killmail_id) FROM esi', (err, rows) => {
+    client.query('SELECT MAX (killmail_id) FROM esi', (err, rows) => {
         if (err) {
             console.log(err);
         }
