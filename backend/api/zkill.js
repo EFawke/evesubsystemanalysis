@@ -5,12 +5,12 @@ const zkillDbInit = require('../utils/zkillTableInit');
 const { Client } = require('pg');
 
 
-const client = new Client({
-    connectionString: process.env.DATABASE_URL,
-    ssl: {
-        rejectUnauthorized: false
-    }
-});
+// const client = new Client({
+//     connectionString: process.env.DATABASE_URL,
+//     ssl: {
+//         rejectUnauthorized: false
+//     }
+// });
 
 zkillDbInit();
 
@@ -78,7 +78,12 @@ const insertIntoZkill = async (num) => {
             $zkill_id: currentZKillId,
             $hash: currentHash
         };
-        client.end();
+        const client = new Client({
+            connectionString: process.env.DATABASE_URL,
+            ssl: {
+                rejectUnauthorized: false
+            }
+        });
         client.connect();
         client.query(`INSERT INTO zkill (zkill_id, hash) VALUES ($zkill_id, $hash)`, values,(err, res) => {
             if (err){
