@@ -21,10 +21,13 @@ const zkillDbInit = () => {
     zkill_id integer PRIMARY KEY NOT NULL,
     hash TEXT NOT NULL
 );`, (err, res) => {
-    if (err) console.log(err);
+    if (err){
+      console.log(err);
+    } else {
+      console.log('this part fine')
+    }
     client.end();
   });
-  client.end();
 }
 
 
