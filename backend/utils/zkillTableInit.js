@@ -13,10 +13,8 @@ const client = new Client({
   }
 });
 
-client.connect();
-
-
 const zkillDbInit = () => {
+  client.connect();
   client.query(`CREATE TABLE IF NOT EXISTS zkill(
     zkill_id integer PRIMARY KEY NOT NULL,
     hash TEXT NOT NULL
