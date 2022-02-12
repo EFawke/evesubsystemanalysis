@@ -84,9 +84,11 @@ const insertIntoZkill = async (num) => {
             if (err){
                 console.log(err)
             }
-            for (let row of res.rows) {
-                console.log(JSON.stringify(row));
-            }
+            console.log(res)
+            // console.log(res)
+            // for (let row of res.rows) {
+            //     console.log(JSON.stringify(row));
+            // }
             client.end();
         });
         // db.run(`INSERT INTO zkill (zkill_id, hash) VALUES ($zkill_id, $hash)`,
