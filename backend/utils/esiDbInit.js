@@ -26,10 +26,10 @@ const client = new Client({
 const esiDbInit = () => {
     client.connect();
     client.query(`CREATE TABLE IF NOT EXISTS esi(
-    killmail_id PRIMARY KEY,
+    killmail_id INTEGER PRIMARY KEY,
     killmail_time TEXT NOT NULL,
     ship_type_id INTEGER NOT NULL,
-    weekday TEXT
+    weekday DATE
 );`, (err) => {
     if(err){
         throw err;
