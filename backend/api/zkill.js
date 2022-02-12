@@ -3,6 +3,7 @@ const zkillRouter = express.Router();
 const axios = require('axios');
 const zkillDbInit = require('../utils/zkillTableInit');
 const { Client } = require('pg');
+const { query } = require('express');
 
 
 // const client = new Client({
@@ -177,13 +178,13 @@ const findTopZkillId = () => {
         return Object.values(rows)[0];
        
     })
-    client.end()
-    db.get('SELECT MAX (killmail_id) FROM esi', (err, rows) => {
+    query.get('SELECT MAX (killmail_id) FROM esi', (err, rows) => {
         if (err) {
             console.log(err);
         }
         return Object.values(rows)[0];
     })
+    client.end()
 }
 
 const highestZkillId = findTopZkillId()
