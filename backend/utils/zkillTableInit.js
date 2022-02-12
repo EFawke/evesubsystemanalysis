@@ -22,7 +22,8 @@ const client = new Client({
 //     client.end();
 // });
 
-const zkillDbInit = () => {
+const zkillDbInit = () => {]
+    client.end()
     client.connect();
     console.log('database connected')
     client.query(`CREATE TABLE IF NOT EXISTS zkill(
