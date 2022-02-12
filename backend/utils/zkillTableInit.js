@@ -30,7 +30,7 @@ const zkillDbInit = () => {
     hash TEXT NOT NULL
 );`, (err) => {
     if(err){
-        throw err;
+        console.log(err);
     }
 })
 client.end();
