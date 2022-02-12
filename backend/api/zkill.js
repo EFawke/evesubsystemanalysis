@@ -12,15 +12,15 @@ const client = new Client({
     }
 });
 
-client.connect();
+// client.connect();
 
-client.query('SELECT table_schema,table_name FROM information_schema.tables;', (err, res) => {
-    if (err) throw err;
-    for (let row of res.rows) {
-        console.log(JSON.stringify(row));
-    }
-    client.end();
-});
+// client.query('SELECT table_schema,table_name FROM information_schema.tables;', (err, res) => {
+//     if (err) throw err;
+//     for (let row of res.rows) {
+//         console.log(JSON.stringify(row));
+//     }
+//     client.end();
+// });
 
 
 // const sqlite3 = require('sqlite3').verbose();
@@ -93,13 +93,21 @@ const insertIntoZkill = async (num) => {
             $zkill_id: currentZKillId,
             $hash: currentHash
         };
-        db.run(`INSERT INTO zkill (zkill_id, hash) VALUES ($zkill_id, $hash)`,
-            values
-            , (err) => {
-                if (err) {
-                    return;
-                }
-            })
+        client.connect();
+        client.query(`INSERT INTO zkill (zkill_id, hash) VALUES ($zkill_id, $hash)`, values,(err, res) => {
+            if (err) throw err;
+            for (let row of res.rows) {
+                console.log(JSON.stringify(row));
+            }
+            client.end();
+        });
+        // db.run(`INSERT INTO zkill (zkill_id, hash) VALUES ($zkill_id, $hash)`,
+        //     values
+        //     , (err) => {
+        //         if (err) {
+        //             return;
+        //         }
+        //     })
     }
 }
 
@@ -135,25 +143,43 @@ const insertIntoEsi = async (num) => {
         const date = killmails[i].date;
         const ship = killmails[i].ship;
         const day = killmails[i].day;
-        db.run(`INSERT INTO esi (killmail_id, killmail_time, ship_type_id, weekday)
-                VALUES('${id}', '${date}', '${ship}', '${day}');`, (err) => {
-            if (err) {
-                return;
+        client.connect();
+        client.query(`INSERT INTO esi (killmail_id, killmail_time, ship_type_id, weekday) VALUES('${id}', '${date}', '${ship}', '${day}');`, (err, res) => {
+            if (err) throw err;
+            for (let row of res.rows) {
+                console.log(JSON.stringify(row));
             }
-        })
+            client.end();
+        });
+
+        // db.run(`INSERT INTO esi (killmail_id, killmail_time, ship_type_id, weekday)
+        //         VALUES('${id}', '${date}', '${ship}', '${day}');`, (err) => {
+        //     if (err) {
+        //         return;
+        //     }
+        // })
     }
 }
 
-const findTopZkillId = () => {
-    db.get('SELECT MAX (killmail_id) FROM esi', (err, rows) => {
-        if (err) {
-            console.log(err);
-        }
-        return Object.values(rows)[0];
-    })
-}
+// const findTopZkillId = () => {
+//     client.connect();
+//     client.query(`SELECT MAX (killmail_id) FROM esi`, (err, rows) => {
+//         if(err){
+//             console.log(err);
+//         }
+//         return Object.values(rows)[0];
+       
+//     })
+//     client.end()
+    // db.get('SELECT MAX (killmail_id) FROM esi', (err, rows) => {
+    //     if (err) {
+    //         console.log(err);
+    //     }
+    //     return Object.values(rows)[0];
+    // })
+// }
 
-const highestZkillId = findTopZkillId();
+// const highestZkillId = findTopZkillId()
 
 const fillDbs = async () => {
     let counter;

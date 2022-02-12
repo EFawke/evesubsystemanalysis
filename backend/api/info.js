@@ -1,7 +1,16 @@
 const express = require('express');
 const infoRouter = express.Router();
-const sqlite3 = require('sqlite3');
-const db = new sqlite3.Database('zkill.db');
+// const sqlite3 = require('sqlite3');
+// const db = new sqlite3.Database('zkill.db');
+const { Client } = require('pg');
+
+
+const client = new Client({
+    connectionString: process.env.DATABASE_URL,
+    ssl: {
+        rejectUnauthorized: false
+    }
+});
 
 infoRouter.get(`/totalClassDestroyed/:class`, (req, res, next) => {
     let query;
@@ -14,7 +23,8 @@ infoRouter.get(`/totalClassDestroyed/:class`, (req, res, next) => {
     if (req.params.class === 'AllC5RattingShips') {
         query = "('33472', '47271', '19720', '19726', '19724', '19722', '28661', '28665', '28659', '28710');"
     }
-    db.all(`SELECT * FROM esi WHERE weekday IS NOT NULL AND ship_type_id IN ${query}`, (err, rows) => {
+    client.connect()
+    client.query(`SELECT * FROM esi WHERE weekday IS NOT NULL AND ship_type_id IN ${query}`, (err, rows) => {
         if (err) {
             console.log(err)
         } else {
@@ -23,12 +33,14 @@ infoRouter.get(`/totalClassDestroyed/:class`, (req, res, next) => {
             res.send({ totalClassDestroyed })
         }
     })
+    client.end();
 })
 
 infoRouter.get(`/totalDestroyed/:shipName`, (req, res, next) => {
     const shipName = req.params.shipName;
     const shipTypeId = shipSelector(shipName);
-    db.all(`SELECT * FROM esi WHERE ship_type_id = '${shipTypeId}';`, (err, rows) => {
+    client.connect()
+    client.query(`SELECT * FROM esi WHERE ship_type_id = '${shipTypeId}';`, (err, rows) => {
         if (err) {
             console.log(err)
         } else {
@@ -45,6 +57,7 @@ infoRouter.get(`/totalDestroyed/:shipName`, (req, res, next) => {
             res.send({ totalDestroyed })
         }
     })
+    client.end()
 })
 
 const shipSelector = (shipType) => {

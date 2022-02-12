@@ -1,12 +1,22 @@
 const express = require('express');
 const shipTypeRouter = express.Router();
-const sqlite3 = require('sqlite3');
-const db = new sqlite3.Database('zkill.db');
+// const sqlite3 = require('sqlite3');
+// const db = new sqlite3.Database('zkill.db');
+const { Client } = require('pg');
+
+
+const client = new Client({
+    connectionString: process.env.DATABASE_URL,
+    ssl: {
+        rejectUnauthorized: false
+    }
+});
 
 shipTypeRouter.get(`/:shipName`, (req, res, next) => {
   const shipName = req.params.shipName;
   const shipTypeId = shipSelector(shipName);
-  db.all(`SELECT * FROM esi WHERE ship_type_id = '${shipTypeId}';`, (err, rows) => {
+  client.connect()
+  client.query(`SELECT * FROM esi WHERE ship_type_id = '${shipTypeId}';`, (err, rows) => {
     if(err){
       console.log(err)
     } else {
@@ -51,6 +61,7 @@ shipTypeRouter.get(`/:shipName`, (req, res, next) => {
         }
       }
       res.status(200).send(heatmap);
+      client.end()
     }
   })
 })
