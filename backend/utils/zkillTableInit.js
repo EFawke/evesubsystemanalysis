@@ -24,6 +24,7 @@ const zkillDbInit = () => {
     if (err) console.log(err);
     client.end();
   });
+  client.end();
 }
 
 
