@@ -76,10 +76,8 @@ const insertIntoZkill = async (num) => {
     for (let i = 0; i < Object.keys(wormholeData).length; i++) {
         const currentZKillId = Object.keys(wormholeData)[i]
         const currentHash = Object.values(wormholeData)[i]
-        let values = {
-            $zkill_id: currentZKillId,
-            $hash: currentHash
-        };
+        const zkill_id = currentZKillId,
+        const hash = currentHash
         const client = new Client({
             connectionString: process.env.DATABASE_URL,
             ssl: {
