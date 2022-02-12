@@ -85,7 +85,7 @@ const insertIntoZkill = async (num) => {
             }
         });
         client.connect();
-        client.query(`INSERT INTO zkill (zkill_id, hash) VALUES ($zkill_id, $hash)`, values,(err, res) => {
+        client.query(`INSERT INTO zkill (zkill_id, hash) VALUES (['${zkill_id}'], ['${hash}'])`, (err, res) => {
             if (err){
                 console.log(err)
             }
@@ -138,6 +138,12 @@ const insertIntoEsi = async (num) => {
         const date = killmails[i].date;
         const ship = killmails[i].ship;
         const day = killmails[i].day;
+        const client = new Client({
+            connectionString: process.env.DATABASE_URL,
+            ssl: {
+                rejectUnauthorized: false
+            }
+        });
         client.connect();
         client.query(`INSERT INTO esi (killmail_id, killmail_time, ship_type_id, weekday) VALUES('${id}', '${date}', '${ship}', '${day}');`, (err, res) => {
             if (err) throw err;
@@ -156,25 +162,31 @@ const insertIntoEsi = async (num) => {
     }
 }
 
-// const findTopZkillId = () => {
-//     client.connect();
-//     client.query(`SELECT MAX (killmail_id) FROM esi`, (err, rows) => {
-//         if(err){
-//             console.log(err);
-//         }
-//         return Object.values(rows)[0];
+const findTopZkillId = () => {
+    const client = new Client({
+        connectionString: process.env.DATABASE_URL,
+        ssl: {
+            rejectUnauthorized: false
+        }
+    });
+    client.connect();
+    client.query(`SELECT MAX (killmail_id) FROM esi`, (err, rows) => {
+        if(err){
+            console.log(err);
+        }
+        return Object.values(rows)[0];
        
-//     })
-//     client.end()
-    // db.get('SELECT MAX (killmail_id) FROM esi', (err, rows) => {
-    //     if (err) {
-    //         console.log(err);
-    //     }
-    //     return Object.values(rows)[0];
-    // })
-// }
+    })
+    client.end()
+    db.get('SELECT MAX (killmail_id) FROM esi', (err, rows) => {
+        if (err) {
+            console.log(err);
+        }
+        return Object.values(rows)[0];
+    })
+}
 
-// const highestZkillId = findTopZkillId()
+const highestZkillId = findTopZkillId()
 
 const fillDbs = async () => {
     let counter;
