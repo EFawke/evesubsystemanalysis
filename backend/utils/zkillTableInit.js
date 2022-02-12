@@ -1,15 +1,15 @@
 // const sqlite3 = require('sqlite3');
 
 // const db = new sqlite3.Database('zkill.db');
-const { Client } = require('pg');
+// const { Client } = require('pg');
 
 
-const client = new Client({
-    connectionString: process.env.DATABASE_URL,
-    ssl: {
-        rejectUnauthorized: false
-    }
-});
+// const client = new Client({
+//     connectionString: process.env.DATABASE_URL,
+//     ssl: {
+//         rejectUnauthorized: false
+//     }
+// });
 
 
 // client.connect();
@@ -22,8 +22,7 @@ const client = new Client({
 //     client.end();
 // });
 
-const zkillDbInit = () => {]
-    client.end()
+const zkillDbInit = () => {
     client.connect();
     console.log('database connected')
     client.query(`CREATE TABLE IF NOT EXISTS zkill(
