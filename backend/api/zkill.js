@@ -81,7 +81,9 @@ const insertIntoZkill = async (num) => {
         client.end();
         client.connect();
         client.query(`INSERT INTO zkill (zkill_id, hash) VALUES ($zkill_id, $hash)`, values,(err, res) => {
-            if (err) throw err;
+            if (err){
+                console.log(err)
+            }
             for (let row of res.rows) {
                 console.log(JSON.stringify(row));
             }
