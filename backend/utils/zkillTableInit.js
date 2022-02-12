@@ -15,13 +15,17 @@ const client = new Client({
 
 client.connect();
 
-client.query(`CREATE TABLE IF NOT EXISTS zkill(
+
+const zkillDbInit = () => {
+  client.query(`CREATE TABLE IF NOT EXISTS zkill(
     zkill_id PRIMARY KEY NOT NULL,
     hash TEXT NOT NULL
 );`, (err, res) => {
-  if (err) console.log(err);
-  client.end();
-});
+    if (err) console.log(err);
+    client.end();
+  });
+}
+
 
 // const zkillDbInit = () => {
 //     pool.connect(function (err, client, done) {
