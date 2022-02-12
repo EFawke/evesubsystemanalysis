@@ -12,22 +12,7 @@ const client = new Client({
     }
 });
 
-// client.connect();
-
-// client.query('SELECT table_schema,table_name FROM information_schema.tables;', (err, res) => {
-//     if (err) throw err;
-//     for (let row of res.rows) {
-//         console.log(JSON.stringify(row));
-//     }
-//     client.end();
-// });
-
-
-// const sqlite3 = require('sqlite3').verbose();
-
 zkillDbInit();
-
-// let db = new sqlite3.Database('zkill.db');
 
 const dateToDay = (date) => {
     const killDate = new Date(date);
@@ -93,6 +78,7 @@ const insertIntoZkill = async (num) => {
             $zkill_id: currentZKillId,
             $hash: currentHash
         };
+        client.end();
         client.connect();
         client.query(`INSERT INTO zkill (zkill_id, hash) VALUES ($zkill_id, $hash)`, values,(err, res) => {
             if (err) throw err;
