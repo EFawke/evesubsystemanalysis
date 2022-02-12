@@ -146,7 +146,9 @@ const insertIntoEsi = async (num) => {
         });
         client.connect();
         client.query(`INSERT INTO esi (killmail_id, killmail_time, ship_type_id, weekday) VALUES('${id}', '${date}', '${ship}', '${day}');`, (err, res) => {
-            if (err) throw err;
+            if (err){
+                console.log(err)
+            }
             for (let row of res.rows) {
                 console.log(JSON.stringify(row));
             }
