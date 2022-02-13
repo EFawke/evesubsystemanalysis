@@ -67,6 +67,7 @@ const insertIntoZkill = async (num) => {
     pageNum = num
     const wormholeData = await axiosZkillData(pageNum);
     console.log('WORMHOLE DATA: ' + wormholeData)
+    console.log(Object.keys(wormholeData).length + 'wormhole data length is')
     for (let i = 0; i < Object.keys(wormholeData).length; i++) {
         const currentZKillId = Object.keys(wormholeData)[i]
         const currentHash = Object.values(wormholeData)[i]
@@ -143,12 +144,6 @@ const insertIntoEsi = async (num) => {
         console.log(killmails[i].ship)
         console.log(killmails[i].date)
         console.log(killmails[i].day)
-        const client = new Client({
-            connectionString: process.env.DATABASE_URL,
-            ssl: {
-                rejectUnauthorized: false
-            }
-        });
         client.query(`INSERT INTO esi (killmail_id, killmail_time, ship_type_id, weekday) VALUES('${id}', '${date}', '${ship}', '${day}');`, (err, res) => {
             if (err){
                 console.log(err)
