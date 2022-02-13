@@ -67,16 +67,35 @@ const axiosZkillData = async (page) => {
     }
 }
 
+const retrieveEntries = (client) => {
+    client.query(`SELECT * FROM zkill`, (err, res) => {
+        if(err){
+            console.log(err)
+        }
+        for (let row of res.rows) {
+            console.log(JSON.stringify(row));
+          }
+    })
+}
+
+const logAllDatabaseEntries = async () => {
+    const client = new Client({
+        connectionString: process.env.DATABASE_URL,
+        ssl: {
+            rejectUnauthorized: false
+        }
+    });
+    client.connect();
+    await retrieveEntries(client).then(() => {
+        client.end()
+    })
+}
+
+logAllDatabaseEntries()
+
 const insertIntoZkill = async (num, client) => {
     pageNum = num
     const wormholeData = await axiosZkillData(pageNum);
-    // const client = new Client({
-    //     connectionString: process.env.DATABASE_URL,
-    //     ssl: {
-    //         rejectUnauthorized: false
-    //     }
-    // });
-    // client.connect();
     for (let i = 0; i < Object.keys(wormholeData).length; i++) {
         const currentZKillId = Object.keys(wormholeData)[i]
         const currentHash = Object.values(wormholeData)[i]
