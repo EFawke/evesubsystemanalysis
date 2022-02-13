@@ -60,8 +60,11 @@ const axiosZkillData = async (page) => {
                 return;
             }
         })
-    console.log(response.data)
-    return response.data;
+    if(response === undefined){
+        return
+    } else {
+        return response.data;
+    }
 }
 
 const insertIntoZkill = async (num, client) => {
