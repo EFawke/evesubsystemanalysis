@@ -60,6 +60,7 @@ const axiosZkillData = async (page) => {
                 return;
             }
         })
+    console.log(response.data)
     return response.data;
 }
 
@@ -80,7 +81,7 @@ const insertIntoZkill = async (num, client) => {
         const hash = currentHash
         client.query(`INSERT INTO zkill (zkill_id, hash) VALUES ('${zkill_id}', '${hash}')`, (err, res) => {
             if (err){
-                console.log(err)
+                // console.log(err)
             }
             // console.log('floop')
         });
@@ -129,7 +130,7 @@ const insertIntoEsi = async (num) => {
         const day = killmails[i].day;
         client.query(`INSERT INTO esi (killmail_id, killmail_time, ship_type_id, weekday) VALUES('${id}', '${date}', '${ship}', '${day}');`, (err, res) => {
             if (err){
-                console.log(err)
+                // console.log(err)
             }
         });
     }
@@ -146,7 +147,7 @@ const findTopZkillId = () => {
     client.connect();
     client.query(`SELECT MAX (killmail_id) FROM esi`, (err, rows) => {
         if(err){
-            console.log(err);
+            // console.log(err);
         }
         // return Object.values(rows)[0];
        
