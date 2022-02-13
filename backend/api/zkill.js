@@ -74,7 +74,8 @@ const retrieveEntries = (client) => {
         }
         for (let row of res.rows) {
             console.log(JSON.stringify(row));
-          }
+        }
+        return true
     })
 }
 
@@ -86,8 +87,11 @@ const logAllDatabaseEntries = async () => {
         }
     });
     client.connect();
-    await retrieveEntries(client).then(() => {
-        client.end()
+    await retrieveEntries(client).then((res) => {
+        if(res){
+            client.end()
+        }
+        
     })
 }
 
