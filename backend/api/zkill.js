@@ -67,7 +67,7 @@ const axiosZkillData = async (page) => {
     }
 }
 
-const retrieveEntries = (client) => {
+const retrieveEntries = async (client) => {
     client.query(`SELECT * FROM zkill`, (err, res) => {
         if(err){
             console.log(err)
@@ -75,7 +75,6 @@ const retrieveEntries = (client) => {
         for (let row of res.rows) {
             console.log(JSON.stringify(row));
         }
-        return true
     })
 }
 
@@ -87,11 +86,8 @@ const logAllDatabaseEntries = async () => {
         }
     });
     client.connect();
-    await retrieveEntries(client).then((res) => {
-        if(res){
-            client.end()
-        }
-        
+    await retrieveEntries(client).then(() => {
+        client.end()
     })
 }
 
