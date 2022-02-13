@@ -73,6 +73,7 @@ const axiosZkillData = async (page) => {
 const insertIntoZkill = async (num) => {
     pageNum = num
     const wormholeData = await axiosZkillData(pageNum);
+    console.log('WORMHOLE DATA: ' + wormholeData)
     for (let i = 0; i < Object.keys(wormholeData).length; i++) {
         const currentZKillId = Object.keys(wormholeData)[i]
         const currentHash = Object.values(wormholeData)[i]
@@ -85,7 +86,7 @@ const insertIntoZkill = async (num) => {
             }
         });
         client.connect();
-        client.query(`INSERT INTO zkill (zkill_id, hash) VALUES (['${zkill_id}'], ['${hash}'])`, (err, res) => {
+        client.query(`INSERT INTO zkill (zkill_id, hash) VALUES ('${zkill_id}', '${hash}')`, (err, res) => {
             if (err){
                 console.log(err)
             }
@@ -133,7 +134,7 @@ const lookUpEsi = async (num) => {
 const insertIntoEsi = async (num) => {
     let pageNum = num
     const killmails = await lookUpEsi(pageNum);
-    console.log(killmails)
+    console.log('HERE' + killmails)
     client.connect();
     for (let i = 0; i < killmails.length; i++) {
         const id = killmails[i].id;
