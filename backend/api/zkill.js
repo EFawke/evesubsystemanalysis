@@ -66,28 +66,26 @@ const axiosZkillData = async (page) => {
 const insertIntoZkill = async (num) => {
     pageNum = num
     const wormholeData = await axiosZkillData(pageNum);
-    console.log('WORMHOLE DATA: ' + wormholeData)
-    console.log(Object.keys(wormholeData).length + 'wormhole data length is')
+    const client = new Client({
+        connectionString: process.env.DATABASE_URL,
+        ssl: {
+            rejectUnauthorized: false
+        }
+    });
+    client.connect();
     for (let i = 0; i < Object.keys(wormholeData).length; i++) {
         const currentZKillId = Object.keys(wormholeData)[i]
         const currentHash = Object.values(wormholeData)[i]
         const zkill_id = currentZKillId
         const hash = currentHash
-        const client = new Client({
-            connectionString: process.env.DATABASE_URL,
-            ssl: {
-                rejectUnauthorized: false
-            }
-        });
-        client.connect();
         client.query(`INSERT INTO zkill (zkill_id, hash) VALUES ('${zkill_id}', '${hash}')`, (err, res) => {
             if (err){
                 console.log(err)
             }
             console.log('floop')
-            client.end();
         });
     }
+    client.end();
 }
 
 const lookUpEsi = async (num) => {
