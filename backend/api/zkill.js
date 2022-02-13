@@ -53,7 +53,7 @@ const axiosZkillData = async (page) => {
             headers: {
                 'accept-encoding': 'gzip',
                 'user-agent': 'Johnson Kanjus - rage-roll.com - teduardof@gmail.com',
-                'connection': 'close'
+                // 'connection': 'close'
             }
         }).catch(err => {
             if (err) {
