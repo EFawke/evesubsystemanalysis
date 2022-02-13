@@ -127,13 +127,9 @@ const insertIntoEsi = async (num) => {
         const date = killmails[i].date;
         const ship = killmails[i].ship;
         const day = killmails[i].day;
-        console.log(killmails[i].id)
-        console.log(killmails[i].ship)
-        console.log(killmails[i].date)
-        console.log(killmails[i].day)
         client.query(`INSERT INTO esi (killmail_id, killmail_time, ship_type_id, weekday) VALUES('${id}', '${date}', '${ship}', '${day}');`, (err, res) => {
             if (err){
-                // console.log(err)
+                console.log(err)
             }
         });
     }
