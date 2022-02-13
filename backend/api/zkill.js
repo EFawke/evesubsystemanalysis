@@ -68,7 +68,7 @@ const axiosZkillData = async (page) => {
 }
 
 const retrieveEntries = async (client) => {
-    client.query(`SELECT * FROM zkill`, (err, res) => {
+    client.query(`SELECT * FROM esi`, (err, res) => {
         if(err){
             console.log(err)
         }
