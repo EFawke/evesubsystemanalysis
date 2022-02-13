@@ -6,14 +6,7 @@ const esiDbInit = require('../utils/esiDbInit');
 const { Client } = require('pg');
 const { query } = require('express');
 
-
-// const client = new Client({
-//     connectionString: process.env.DATABASE_URL,
-//     ssl: {
-//         rejectUnauthorized: false
-//     }
-// });
-
+esiDbInit();
 zkillDbInit();
 
 const dateToDay = (date) => {
@@ -134,13 +127,22 @@ const lookUpEsi = async (num) => {
 const insertIntoEsi = async (num) => {
     let pageNum = num
     const killmails = await lookUpEsi(pageNum);
-    console.log('HERE' + killmails)
+    const client = new Client({
+        connectionString: process.env.DATABASE_URL,
+        ssl: {
+            rejectUnauthorized: false
+        }
+    });
     client.connect();
     for (let i = 0; i < killmails.length; i++) {
         const id = killmails[i].id;
         const date = killmails[i].date;
         const ship = killmails[i].ship;
         const day = killmails[i].day;
+        console.log(killmails[i].id)
+        console.log(killmails[i].ship)
+        console.log(killmails[i].date)
+        console.log(killmails[i].day)
         const client = new Client({
             connectionString: process.env.DATABASE_URL,
             ssl: {
