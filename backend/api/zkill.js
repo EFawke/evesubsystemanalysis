@@ -82,7 +82,7 @@ const insertIntoZkill = async (num) => {
             if (err){
                 // console.log(err)
             }
-            console.log('floop')
+            // console.log('floop')
         });
     }
     client.end();
