@@ -63,7 +63,7 @@ const axiosZkillData = async (page) => {
     return response.data;
 }
 
-const insertIntoZkill = async (num) => {
+const insertIntoZkill = async (num, client) => {
     pageNum = num
     const wormholeData = await axiosZkillData(pageNum);
     // const client = new Client({
@@ -162,10 +162,10 @@ const findTopZkillId = () => {
 
 const highestZkillId = findTopZkillId()
 
-const insertThings = async (counter) => {
+const insertThings = async (counter, client) => {
     for (let i = 1; i <= 20; i++) {
         counter = i;
-        await insertIntoZkill(counter)
+        await insertIntoZkill(counter, client)
         // await insertIntoEsi(counter)
     }
 }
@@ -179,7 +179,7 @@ const fillDbs = async () => {
         }
     });
     client.connect();
-    await insertThings(counter).then(() => {
+    await insertThings(counter, client).then(() => {
         client.end()
     })
 }
