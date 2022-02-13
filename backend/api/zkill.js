@@ -86,9 +86,10 @@ const logAllDatabaseEntries = async () => {
         }
     });
     client.connect();
-    await retrieveEntries(client).then(() => {
-        client.end()
-    })
+    await retrieveEntries(client)
+    // .then(() => {
+    //     client.end()
+    // })
 }
 
 logAllDatabaseEntries()
