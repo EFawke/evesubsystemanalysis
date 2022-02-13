@@ -79,10 +79,10 @@ const insertIntoZkill = async (num) => {
         const zkill_id = currentZKillId
         const hash = currentHash
         client.query(`INSERT INTO zkill (zkill_id, hash) VALUES ('${zkill_id}', '${hash}')`, (err, res) => {
-            // if (err){
-            //     console.log(err)
-            // }
-            // console.log('floop')
+            if (err){
+                // console.log(err)
+            }
+            console.log('floop')
         });
     }
     client.end();
@@ -133,7 +133,7 @@ const insertIntoEsi = async (num) => {
         console.log(killmails[i].day)
         client.query(`INSERT INTO esi (killmail_id, killmail_time, ship_type_id, weekday) VALUES('${id}', '${date}', '${ship}', '${day}');`, (err, res) => {
             if (err){
-                console.log(err)
+                // console.log(err)
             }
         });
     }
