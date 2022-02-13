@@ -133,6 +133,8 @@ const lookUpEsi = async (num) => {
 const insertIntoEsi = async (num) => {
     let pageNum = num
     const killmails = await lookUpEsi(pageNum);
+    console.log(killmails)
+    client.connect();
     for (let i = 0; i < killmails.length; i++) {
         const id = killmails[i].id;
         const date = killmails[i].date;
@@ -144,24 +146,13 @@ const insertIntoEsi = async (num) => {
                 rejectUnauthorized: false
             }
         });
-        client.connect();
         client.query(`INSERT INTO esi (killmail_id, killmail_time, ship_type_id, weekday) VALUES('${id}', '${date}', '${ship}', '${day}');`, (err, res) => {
             if (err){
                 console.log(err)
             }
-            for (let row of res.rows) {
-                console.log(JSON.stringify(row));
-            }
-            client.end();
         });
-
-        // db.run(`INSERT INTO esi (killmail_id, killmail_time, ship_type_id, weekday)
-        //         VALUES('${id}', '${date}', '${ship}', '${day}');`, (err) => {
-        //     if (err) {
-        //         return;
-        //     }
-        // })
     }
+    client.end();
 }
 
 const findTopZkillId = () => {
