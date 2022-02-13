@@ -159,7 +159,11 @@ const findTopZkillId = () => {
         if (err) {
             console.log(err);
         }
-        // return Object.values(rows)[0];
+        if(Object.values(rows)[0]){
+            console.log(Object.values(rows)[0])
+        } else {
+            console.log(rows)
+        }
     })
     client.end()
 }
