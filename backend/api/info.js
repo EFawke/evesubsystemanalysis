@@ -32,8 +32,8 @@ infoRouter.get(`/totalDestroyed/:shipName`, (req, response, next) => {
             // response.send({ totalDestroyed })
             const data = res.rows.length;
             console.log(data + 'is data in info.js')
-            const totalClassDestroyed = JSON.parse(data);
-            response.status(200).send({ totalClassDestroyed })
+            // const totalClassDestroyed = JSON.parse(data);
+            response.status(200).send({ data })
             client.end()
         }
     })
