@@ -133,7 +133,6 @@ const insertIntoEsi = async (num) => {
             }
         });
     }
-    client.end();
 }
 
 const findTopZkillId = () => {
