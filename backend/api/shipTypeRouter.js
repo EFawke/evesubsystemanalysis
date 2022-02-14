@@ -6,7 +6,7 @@ const { Pool } = require('pg');
 shipTypeRouter.get(`/:shipName`, (req, res, next) => {
   const shipName = req.params.shipName;
   const shipTypeId = shipSelector(shipName);
-  if(pool !== undefined){
+  if(pool === undefined){
     pool.end()
 }
   const pool = new Pool({
