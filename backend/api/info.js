@@ -16,7 +16,7 @@ infoRouter.get(`/totalDestroyed/:shipName`, (req, response, next) => {
     client.connect()
     client.query(`SELECT * FROM esi WHERE ship_type_id = '${shipTypeId}';`, (err, res) => {
         if (err) {
-            console.log(err)
+            console.log(err + 'poop')
         } else {
             // var d = new Date();
             // d.setMonth(d.getMonth() - 3);
