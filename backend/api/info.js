@@ -6,11 +6,7 @@ const { Pool } = require('pg')
 infoRouter.get(`/totalDestroyed/:shipName`, (req, response, next) => {
     const shipName = req.params.shipName;
     const shipTypeId = shipSelector(shipName);
-    let pool;
-    if(pool === undefined){
-        pool.end()
-    }
-    pool = new Pool({
+    const pool = new Pool({
         connectionString: process.env.DATABASE_URL,
         ssl: {
             rejectUnauthorized: false
@@ -20,18 +16,6 @@ infoRouter.get(`/totalDestroyed/:shipName`, (req, response, next) => {
     pool.query(`SELECT COUNT(*) FROM esi WHERE ship_type_id = '${shipTypeId}';`, (err, res) => {
         if (err) {
         } else {
-            // var d = new Date();
-            // d.setMonth(d.getMonth() - 3);
-            // let data = 0;
-            // let rows = res.rows
-            // for(let i = 0; i < rows.length; i ++){
-            //     const killmailDate = new Date(rows[i].killmail_time);
-            //     if(killmailDate > d){
-            //         data +=1;
-            //     }
-            // }
-            // const totalDestroyed = JSON.parse(data);
-            // response.send({ totalDestroyed })
             const data = res.rows;
             const floop = data[0].count
             response.status(200).send(floop)
