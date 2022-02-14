@@ -7,7 +7,7 @@ const shipTypeRouter = require('./shipTypeRouter.js')
 
 apiRouter.use('/ShipType', shipTypeRouter);
 apiRouter.use('./zkill.js', zkillRouter);
-apiRouter.use('./info', infoRouter);
+apiRouter.use('/info', infoRouter);
 // apiRouter.use('/hoverRouter', hoverRouter);
 
 module.exports = apiRouter;
