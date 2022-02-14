@@ -108,7 +108,6 @@ const lookUpEsi = async (num) => {
         const currentHash = Object.values(wormholeData)[i]
         const response = await axios.get(`https://esi.evetech.net/latest/killmails/${currentZKillId}/${currentHash}/?datasource=tranquility`)
         killmails[i] = new Killmail(response.data.killmail_id, response.data.killmail_time, response.data.victim.ship_type_id, dateToDay(response.data.killmail_time))
-        console.log(killmails[i])
     }
     return killmails;
 }
