@@ -45,6 +45,7 @@ class Info extends React.Component {
         } else {
         axios.get(`/api/info/totalDestroyed/${this.props.shipSelected}`)
             .then(response => {
+                console.log(response)
                 this.setState({ totalDestroyed: response.data.totalDestroyed })
                 this.setState({isLoaded: true})
             })
