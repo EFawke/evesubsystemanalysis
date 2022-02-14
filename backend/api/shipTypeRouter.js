@@ -4,60 +4,58 @@ const shipTypeRouter = express.Router();
 // const db = new sqlite3.Database('zkill.db');
 const { Client } = require('pg');
 
-
-const client = new Client({
-    connectionString: process.env.DATABASE_URL,
-    ssl: {
-        rejectUnauthorized: false
-    }
-});
-
 shipTypeRouter.get(`/:shipName`, (req, res, next) => {
   const shipName = req.params.shipName;
   const shipTypeId = shipSelector(shipName);
+  const client = new Client({
+    connectionString: process.env.DATABASE_URL,
+    ssl: {
+      rejectUnauthorized: false
+    }
+  });
   client.connect()
-  client.query(`SELECT * FROM esi WHERE ship_type_id = '${shipTypeId}';`, (err, rows) => {
-    if(err){
+  client.query(`SELECT * FROM esi WHERE ship_type_id = '${shipTypeId}';`, (err, res) => {
+    if (err) {
       console.log(err)
     } else {
-      const data = rows;
+      const data = JSON.stringify(res.rows)
       let heatmap = {
-        Monday: [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-        Tuesday: [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-        Wednesday: [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-        Thursday: [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-        Friday: [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-        Saturday: [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-        Sunday: [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
+        Monday: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        Tuesday: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        Wednesday: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        Thursday: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        Friday: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        Saturday: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        Sunday: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
       };
-      
+
       var d = new Date();
       d.setMonth(d.getMonth() - 3);
 
-      for(let i = 0; i < data.length; i++){
-        let time = Number(data[i].killmail_time.substring(11,13));
+      for (let i = 0; i < data.length; i++) {
+        let time = Number(data[i].killmail_time.substring(11, 13));
         const day = data[i].weekday;
         const killmailDate = new Date(data[i].killmail_time);
-        if(day === "Monday" && killmailDate > d){
-          heatmap.Monday[time]+=1;
+        if (day === "Monday" && killmailDate > d) {
+          heatmap.Monday[time] += 1;
         }
-        if(day === "Tuesday" && killmailDate > d){
-          heatmap.Tuesday[time]+=1;
+        if (day === "Tuesday" && killmailDate > d) {
+          heatmap.Tuesday[time] += 1;
         }
-        if(day === "Wednesday" && killmailDate > d){
-          heatmap.Wednesday[time]+=1;
+        if (day === "Wednesday" && killmailDate > d) {
+          heatmap.Wednesday[time] += 1;
         }
-        if(day === "Thursday" && killmailDate > d){
-          heatmap.Thursday[time]+=1;
+        if (day === "Thursday" && killmailDate > d) {
+          heatmap.Thursday[time] += 1;
         }
-        if(day === "Friday" && killmailDate > d){
-          heatmap.Friday[time]+=1;
+        if (day === "Friday" && killmailDate > d) {
+          heatmap.Friday[time] += 1;
         }
-        if(day === "Saturday" && killmailDate > d){
-          heatmap.Saturday[time]+=1;
+        if (day === "Saturday" && killmailDate > d) {
+          heatmap.Saturday[time] += 1;
         }
-        if(day === "Sunday" && killmailDate > d){
-          heatmap.Sunday[time]+=1;
+        if (day === "Sunday" && killmailDate > d) {
+          heatmap.Sunday[time] += 1;
         }
       }
       res.status(200).send(heatmap);
