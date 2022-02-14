@@ -15,9 +15,8 @@ shipTypeRouter.get(`/:shipName`, (req, res, next) => {
   pool.connect()
   pool.query(`SELECT * FROM esi WHERE ship_type_id = '${shipTypeId}';`, (err, response) => {
     if (err) {
-      pool.end()
       res.sendStatus(404)
-      console.log(err)
+      throw err
     } else {
       const data = response.rows
       let heatmap = {
