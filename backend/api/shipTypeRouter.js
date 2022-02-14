@@ -15,6 +15,7 @@ shipTypeRouter.get(`/:shipName`, (req, res, next) => {
   pool.connect()
   pool.query(`SELECT * FROM esi WHERE ship_type_id = '${shipTypeId}';`, (err, response) => {
     if (err) {
+      //warning, can throw h13 errors if you hammer the connections
       res.sendStatus(404)
       throw err
     } else {
