@@ -135,6 +135,9 @@ const insertIntoEsi = async (num) => {
         return;
     })
     .then((killmails) => {
+        if(!killmails || killmails === undefined){
+            return
+        }
         const client = new Client({
             connectionString: process.env.DATABASE_URL,
             ssl: {
