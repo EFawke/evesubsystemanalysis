@@ -1,13 +1,12 @@
 const express = require('express');
 const infoRouter = express.Router();
-// const sqlite3 = require('sqlite3');
-// const db = new sqlite3.Database('zkill.db');
 const { Client } = require('pg');
 const { Pool } = require('pg')
 
 infoRouter.get(`/totalDestroyed/:shipName`, (req, response, next) => {
     const shipName = req.params.shipName;
     const shipTypeId = shipSelector(shipName);
+    pool.end()
     const pool = new Pool({
         connectionString: process.env.DATABASE_URL,
         ssl: {
