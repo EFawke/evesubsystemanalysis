@@ -124,26 +124,32 @@ const insertIntoZkill = async (num, client) => {
 
 const insertIntoEsi = async (num) => {
     let pageNum = num
-    const killmails = await lookUpEsi(pageNum);
-    const client = new Client({
-        connectionString: process.env.DATABASE_URL,
-        ssl: {
-            rejectUnauthorized: false
-        }
-    });
-    client.connect();
-    for (let i = 0; i < killmails.length; i++) {
-        const id = killmails[i].id;
-        const date = killmails[i].date;
-        const ship = killmails[i].ship;
-        const day = killmails[i].day;
-        client.query(`INSERT INTO esi (killmail_id, killmail_time, ship_type_id, weekday) VALUES('${id}', '${date}', '${ship}', '${day}');`, (err, res) => {
-            if (err){
-                return;
-                // console.log(err)
+    await lookUpEsi(pageNum)
+    .catch((err) => {
+        console.log(err)
+        return;
+    })
+    .then((killmails) => {
+        const client = new Client({
+            connectionString: process.env.DATABASE_URL,
+            ssl: {
+                rejectUnauthorized: false
             }
         });
-    }
+        client.connect();
+        for (let i = 0; i < killmails.length; i++) {
+            const id = killmails[i].id;
+            const date = killmails[i].date;
+            const ship = killmails[i].ship;
+            const day = killmails[i].day;
+            client.query(`INSERT INTO esi (killmail_id, killmail_time, ship_type_id, weekday) VALUES('${id}', '${date}', '${ship}', '${day}');`, (err, res) => {
+                if (err){
+                    return;
+                    // console.log(err)
+                }
+            });
+        }
+    })
 }
 
 const findTopZkillId = () => {
