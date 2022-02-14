@@ -30,7 +30,7 @@ infoRouter.get(`/totalDestroyed/:shipName`, (req, response, next) => {
             // }
             // const totalDestroyed = JSON.parse(data);
             // response.send({ totalDestroyed })
-            const data = res.rows.length;
+            const data = res.rows;
             console.log(data + 'is data in info.js')
             // const totalClassDestroyed = JSON.parse(data);
 
