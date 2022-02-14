@@ -67,33 +67,6 @@ const axiosZkillData = async (page) => {
     }
 }
 
-const retrieveEntries = async (client) => {
-    client.query(`SELECT * FROM esi`, (err, res) => {
-        if(err){
-            console.log(err)
-        }
-        for (let row of res.rows) {
-            console.log(JSON.stringify(row));
-        }
-    })
-}
-
-const logAllDatabaseEntries = async () => {
-    const client = new Client({
-        connectionString: process.env.DATABASE_URL,
-        ssl: {
-            rejectUnauthorized: false
-        }
-    });
-    client.connect();
-    await retrieveEntries(client)
-    // .then(() => {
-    //     client.end()
-    // })
-}
-
-logAllDatabaseEntries()
-
 const insertIntoZkill = async (num, client) => {
     pageNum = num
     const wormholeData = await axiosZkillData(pageNum);
@@ -132,6 +105,7 @@ const lookUpEsi = async (num) => {
         const currentHash = Object.values(wormholeData)[i]
         const response = await axios.get(`https://esi.evetech.net/latest/killmails/${currentZKillId}/${currentHash}/?datasource=tranquility`)
         killmails[i] = new Killmail(response.data.killmail_id, response.data.killmail_time, response.data.victim.ship_type_id, dateToDay(response.data.killmail_time))
+        console.log(killmails[i])
     }
     return killmails;
 }
