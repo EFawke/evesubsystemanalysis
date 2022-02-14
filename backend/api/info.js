@@ -14,7 +14,7 @@ infoRouter.get(`/totalDestroyed/:shipName`, (req, response, next) => {
         }
     });
     client.connect()
-    client.query(`SELECT * FROM esi WHERE ship_type_id = '${shipTypeId}';`, (err, res) => {
+    client.query(`SELECT COUNT killmail_id FROM esi WHERE ship_type_id = '${shipTypeId}';`, (err, res) => {
         if (err) {
             console.log(err + 'poop')
         } else {
@@ -30,7 +30,7 @@ infoRouter.get(`/totalDestroyed/:shipName`, (req, response, next) => {
             // }
             // const totalDestroyed = JSON.parse(data);
             // response.send({ totalDestroyed })
-            const data = res.rows;
+            const data = res.rows.length;
             console.log(data + 'is data in info.js')
             const totalClassDestroyed = JSON.parse(data);
             response.status(200).send({ totalClassDestroyed })
