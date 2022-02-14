@@ -19,6 +19,7 @@ shipTypeRouter.get(`/:shipName`, (req, res, next) => {
       console.log(err)
     } else {
       const data = JSON.stringify(res.rows)
+      console.log(data)
       let heatmap = {
         Monday: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
         Tuesday: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
