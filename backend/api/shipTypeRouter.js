@@ -3,7 +3,7 @@ const shipTypeRouter = express.Router();
 const { Client } = require('pg');
 const { Pool } = require('pg');
 
-shipTypeRouter.get(`/:shipName`, (req, response, next) => {
+shipTypeRouter.get(`/:shipName`, (req, res, next) => {
   const shipName = req.params.shipName;
   const shipTypeId = shipSelector(shipName);
   const pool = new Pool({
@@ -13,11 +13,11 @@ shipTypeRouter.get(`/:shipName`, (req, response, next) => {
     }
   });
   pool.connect()
-  pool.query(`SELECT * FROM esi WHERE ship_type_id = '${shipTypeId}';`, (err, res) => {
+  pool.query(`SELECT * FROM esi WHERE ship_type_id = '${shipTypeId}';`, (err, response) => {
     if (err) {
       console.log(err)
     } else {
-      const data = res.rows
+      const data = response.rows
       let heatmap = {
         Monday: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
         Tuesday: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
@@ -55,7 +55,7 @@ shipTypeRouter.get(`/:shipName`, (req, response, next) => {
           heatmap.Sunday[time] += 1;
         }
       }
-      response.status(200).send(heatmap);
+      res.status(200).send(heatmap);
       pool.end()
     }
   })

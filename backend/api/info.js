@@ -3,18 +3,19 @@ const infoRouter = express.Router();
 // const sqlite3 = require('sqlite3');
 // const db = new sqlite3.Database('zkill.db');
 const { Client } = require('pg');
+const { Pool } = require('pg')
 
 infoRouter.get(`/totalDestroyed/:shipName`, (req, response, next) => {
     const shipName = req.params.shipName;
     const shipTypeId = shipSelector(shipName);
-    const client = new Client({
+    const pool = new Pool({
         connectionString: process.env.DATABASE_URL,
         ssl: {
             rejectUnauthorized: false
         }
     });
-    client.connect()
-    client.query(`SELECT COUNT(*) FROM esi WHERE ship_type_id = '${shipTypeId}';`, (err, res) => {
+    pool.connect()
+    pool.query(`SELECT COUNT(*) FROM esi WHERE ship_type_id = '${shipTypeId}';`, (err, res) => {
         if (err) {
             console.log(err + 'poop')
         } else {
@@ -35,7 +36,7 @@ infoRouter.get(`/totalDestroyed/:shipName`, (req, response, next) => {
             // const totalClassDestroyed = JSON.parse(data);
             const floop = data[0].count
             response.status(200).send(floop)
-            client.end()
+            pool.end()
         }
     })
     // next()
