@@ -5,6 +5,7 @@ class Info extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
+            isLoaded: false,
             totalDestroyed: null,
             shipSelected: this.props.shipSelected,
             totalDays: null
@@ -34,6 +35,7 @@ class Info extends React.Component {
         if (window.location.pathname === "/") {
             axios.get(`/api/info/totalDestroyed/Heron`).then(response => {
                 this.setState({ totalDestroyed: response.data.totalDestroyed });
+                this.setState({isLoaded: true})
             })
         }
         else if (this.props.shipSelected === 'Marauders' || this.props.shipSelected === 'Dreadnoughts' || this.props.shipSelected === 'AllC5RattingShips') {
@@ -44,6 +46,7 @@ class Info extends React.Component {
         axios.get(`/api/info/totalDestroyed/${this.props.shipSelected}`)
             .then(response => {
                 this.setState({ totalDestroyed: response.data.totalDestroyed })
+                this.setState({isLoaded: true})
             })
         }
     }
@@ -60,6 +63,12 @@ class Info extends React.Component {
         this.calcTotalDays();
     };
     render() {
+        const isLoaded = this.state.isLoaded
+        if(!isLoaded){
+            return (
+                <div>Loading...</div>
+            )
+        }
         return (
             <p className="info">Fetching {this.state.totalDestroyed} <span className = "infoSpan">{this.state.shipSelected}</span> kills from the last <span>3 months</span> in wormhole space.</p>
         )

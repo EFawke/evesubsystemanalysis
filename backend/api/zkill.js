@@ -102,7 +102,12 @@ const lookUpEsi = async (num) => {
 
 const insertIntoZkill = async (num, client) => {
     pageNum = num
-    await axiosZkillData(pageNum).then((wormholeData) => {
+    await axiosZkillData(pageNum)
+    .catch((err) => {
+        console.log(err);
+        return;
+    })
+    .then((wormholeData) => {
         if(wormholeData){
             for (let i = 0; i < Object.keys(wormholeData).length; i++) {
                 const currentZKillId = Object.keys(wormholeData)[i]

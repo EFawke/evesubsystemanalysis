@@ -16,7 +16,6 @@ shipTypeRouter.get(`/:shipName`, (req, response, next) => {
   client.connect()
   client.query(`SELECT * FROM esi WHERE ship_type_id = '${shipTypeId}';`, (err, res) => {
     if (err) {
-      console.log('poop')
       console.log(err)
     } else {
       const data = res.rows

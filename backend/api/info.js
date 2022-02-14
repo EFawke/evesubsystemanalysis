@@ -4,36 +4,6 @@ const infoRouter = express.Router();
 // const db = new sqlite3.Database('zkill.db');
 const { Client } = require('pg');
 
-infoRouter.get(`/totalClassDestroyed/:class`, (req, response, next) => {
-    const client = new Client({
-        connectionString: process.env.DATABASE_URL,
-        ssl: {
-            rejectUnauthorized: false
-        }
-    });
-    let query;
-    if (req.params.class === 'Marauders') {
-        query = "('28661', '28665', '28659', '28710');"
-    }
-    if (req.params.class === 'Dreadnoughts') {
-        query = "('19720', '19726', '19724', '19722');"
-    }
-    if (req.params.class === 'AllC5RattingShips') {
-        query = "('33472', '47271', '19720', '19726', '19724', '19722', '28661', '28665', '28659', '28710');"
-    }
-    client.connect()
-    client.query(`SELECT * FROM esi WHERE weekday IS NOT NULL AND ship_type_id IN ${query}`, (err, res) => {
-        if (err) {
-            console.log(err)
-        } else {
-            const data = res.rows.length;
-            const totalClassDestroyed = JSON.parse(data);
-            response.send({ totalClassDestroyed })
-        }
-    })
-    client.end();
-})
-
 infoRouter.get(`/totalDestroyed/:shipName`, (req, response, next) => {
     const shipName = req.params.shipName;
     const shipTypeId = shipSelector(shipName);
@@ -115,5 +85,37 @@ const shipSelector = (shipType) => {
     }
     return shipTypeId;
 }
+
+
+
+// infoRouter.get(`/totalClassDestroyed/:class`, (req, response, next) => {
+//     const client = new Client({
+//         connectionString: process.env.DATABASE_URL,
+//         ssl: {
+//             rejectUnauthorized: false
+//         }
+//     });
+//     let query;
+//     if (req.params.class === 'Marauders') {
+//         query = "('28661', '28665', '28659', '28710');"
+//     }
+//     if (req.params.class === 'Dreadnoughts') {
+//         query = "('19720', '19726', '19724', '19722');"
+//     }
+//     if (req.params.class === 'AllC5RattingShips') {
+//         query = "('33472', '47271', '19720', '19726', '19724', '19722', '28661', '28665', '28659', '28710');"
+//     }
+//     client.connect()
+//     client.query(`SELECT * FROM esi WHERE weekday IS NOT NULL AND ship_type_id IN ${query}`, (err, res) => {
+//         if (err) {
+//             console.log(err)
+//         } else {
+//             const data = res.rows.length;
+//             const totalClassDestroyed = JSON.parse(data);
+//             response.send({ totalClassDestroyed })
+//         }
+//     })
+//     client.end();
+// })
 
 module.exports = infoRouter;
