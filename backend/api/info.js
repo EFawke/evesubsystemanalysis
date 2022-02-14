@@ -4,15 +4,13 @@ const infoRouter = express.Router();
 // const db = new sqlite3.Database('zkill.db');
 const { Client } = require('pg');
 
-
-const client = new Client({
-    connectionString: process.env.DATABASE_URL,
-    ssl: {
-        rejectUnauthorized: false
-    }
-});
-
-infoRouter.get(`/totalClassDestroyed/:class`, (req, res, next) => {
+infoRouter.get(`/totalClassDestroyed/:class`, (req, response, next) => {
+    const client = new Client({
+        connectionString: process.env.DATABASE_URL,
+        ssl: {
+            rejectUnauthorized: false
+        }
+    });
     let query;
     if (req.params.class === 'Marauders') {
         query = "('28661', '28665', '28659', '28710');"
@@ -24,29 +22,36 @@ infoRouter.get(`/totalClassDestroyed/:class`, (req, res, next) => {
         query = "('33472', '47271', '19720', '19726', '19724', '19722', '28661', '28665', '28659', '28710');"
     }
     client.connect()
-    client.query(`SELECT * FROM esi WHERE weekday IS NOT NULL AND ship_type_id IN ${query}`, (err, rows) => {
+    client.query(`SELECT * FROM esi WHERE weekday IS NOT NULL AND ship_type_id IN ${query}`, (err, res) => {
         if (err) {
             console.log(err)
         } else {
-            const data = rows.length;
+            const data = res.rows.length;
             const totalClassDestroyed = JSON.parse(data);
-            res.send({ totalClassDestroyed })
+            response.send({ totalClassDestroyed })
         }
     })
     client.end();
 })
 
-infoRouter.get(`/totalDestroyed/:shipName`, (req, res, next) => {
+infoRouter.get(`/totalDestroyed/:shipName`, (req, response, next) => {
     const shipName = req.params.shipName;
     const shipTypeId = shipSelector(shipName);
+    const client = new Client({
+        connectionString: process.env.DATABASE_URL,
+        ssl: {
+            rejectUnauthorized: false
+        }
+    });
     client.connect()
-    client.query(`SELECT * FROM esi WHERE ship_type_id = '${shipTypeId}';`, (err, rows) => {
+    client.query(`SELECT * FROM esi WHERE ship_type_id = '${shipTypeId}';`, (err, res) => {
         if (err) {
             console.log(err)
         } else {
             var d = new Date();
             d.setMonth(d.getMonth() - 3);
             let data = 0;
+            let rows = res.rows
             for(let i = 0; i < rows.length; i ++){
                 const killmailDate = new Date(rows[i].killmail_time);
                 if(killmailDate > d){
@@ -54,7 +59,7 @@ infoRouter.get(`/totalDestroyed/:shipName`, (req, res, next) => {
                 }
             }
             const totalDestroyed = JSON.parse(data);
-            res.send({ totalDestroyed })
+            response.send({ totalDestroyed })
         }
     })
     client.end()

@@ -59,7 +59,7 @@ shipTypeRouter.get(`/:shipName`, (req, response, next) => {
         }
       }
       response.status(200).send(heatmap);
-      // client.end()
+      client.end()
     }
   })
 })
