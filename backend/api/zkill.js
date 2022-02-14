@@ -5,9 +5,6 @@ const zkillDbInit = require('../utils/zkillTableInit');
 const esiDbInit = require('../utils/esiDbInit');
 const { Client } = require('pg');
 const { query } = require('express');
-const { Pool } = require('pg');
-
-const pool = new Pool;
 
 esiDbInit();
 zkillDbInit();
