@@ -6,10 +6,11 @@ const { Pool } = require('pg')
 infoRouter.get(`/totalDestroyed/:shipName`, (req, response, next) => {
     const shipName = req.params.shipName;
     const shipTypeId = shipSelector(shipName);
+    let pool;
     if(pool === undefined){
         pool.end()
     }
-    const pool = new Pool({
+    pool = new Pool({
         connectionString: process.env.DATABASE_URL,
         ssl: {
             rejectUnauthorized: false

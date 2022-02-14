@@ -6,10 +6,11 @@ const { Pool } = require('pg');
 shipTypeRouter.get(`/:shipName`, (req, res, next) => {
   const shipName = req.params.shipName;
   const shipTypeId = shipSelector(shipName);
+  let pool;
   if(pool === undefined){
-    pool.end()
-}
-  const pool = new Pool({
+      pool.end()
+  }
+  pool = new Pool({
     connectionString: process.env.DATABASE_URL,
     ssl: {
       rejectUnauthorized: false
