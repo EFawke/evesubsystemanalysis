@@ -26,7 +26,7 @@ class Header extends React.Component {
                 </div>
             </div>
                 <h1 className = "Name">Rage Roller</h1>
-                <a className = 'weightless' href = 'https://github.com/EFawke/rage-roller'><img className = "image" src = {github} alt = "github"/></a>
+                <a className = 'weightless' href = 'https://github.com/EFawke'><img className = "image" src = {github} alt = "github"/></a>
                 </nav>
             </div>
         )
