@@ -85,7 +85,7 @@ const insertIntoZkill = async (num, client) => {
             }
         }
     })
-    client.end()
+    // client.end()
 }
 
 const lookUpEsi = async (num) => {
@@ -181,6 +181,7 @@ const fillDbs = async () => {
     });
     client.connect();
     await insertThings(counter, client).then(() => {
+        console.log('done')
         client.end()
     })
 }
