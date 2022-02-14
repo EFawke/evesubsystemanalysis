@@ -48,18 +48,22 @@ infoRouter.get(`/totalDestroyed/:shipName`, (req, response, next) => {
         if (err) {
             console.log(err)
         } else {
-            var d = new Date();
-            d.setMonth(d.getMonth() - 3);
-            let data = 0;
-            let rows = res.rows
-            for(let i = 0; i < rows.length; i ++){
-                const killmailDate = new Date(rows[i].killmail_time);
-                if(killmailDate > d){
-                    data +=1;
-                }
-            }
-            const totalDestroyed = JSON.parse(data);
-            response.send({ totalDestroyed })
+            // var d = new Date();
+            // d.setMonth(d.getMonth() - 3);
+            // let data = 0;
+            // let rows = res.rows
+            // for(let i = 0; i < rows.length; i ++){
+            //     const killmailDate = new Date(rows[i].killmail_time);
+            //     if(killmailDate > d){
+            //         data +=1;
+            //     }
+            // }
+            // const totalDestroyed = JSON.parse(data);
+            // response.send({ totalDestroyed })
+            const data = res.rows.length;
+            console.log(data)
+            const totalClassDestroyed = JSON.parse(data);
+            response.send({ totalClassDestroyed })
         }
     })
     client.end()

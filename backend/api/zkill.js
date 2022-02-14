@@ -53,7 +53,7 @@ const axiosZkillData = async (page) => {
             headers: {
                 'accept-encoding': 'gzip',
                 'user-agent': 'Johnson Kanjus - rage-roll.com - teduardof@gmail.com',
-                // 'connection': 'close'
+                'connection': 'close'
             }
         }).catch(err => {
             if (err) {
@@ -65,6 +65,39 @@ const axiosZkillData = async (page) => {
     } else {
         return response.data;
     }
+}
+
+const lookUpEsi = async (num) => {
+    let pageNum = num
+    let killmails = [];
+    class Killmail {
+        constructor(id, date, ship, day) {
+            this.id = id;
+            this.date = date;
+            this.ship = ship;
+            this.day = day;
+        }
+    }
+    const wormholeData = await axiosZkillData(pageNum);
+    for (let i = 0; i < Object.keys(wormholeData).length; i++) {
+        const currentZKillId = Object.keys(wormholeData)[i]
+        if (currentZKillId < highestZkillId) {
+            return;
+        }
+        const currentHash = Object.values(wormholeData)[i]
+        await axios.get(`https://esi.evetech.net/latest/killmails/${currentZKillId}/${currentHash}/?datasource=tranquility`)
+        .catch(err => {
+            if (err) {
+                return;
+            }
+        })
+        .then((response) => {
+            if(response){
+                killmails[i] = new Killmail(response.data.killmail_id, response.data.killmail_time, response.data.victim.ship_type_id, dateToDay(response.data.killmail_time))
+            }
+        })
+    }
+    return killmails;
 }
 
 const insertIntoZkill = async (num, client) => {
@@ -87,30 +120,6 @@ const insertIntoZkill = async (num, client) => {
         }
     })
     // client.end()
-}
-
-const lookUpEsi = async (num) => {
-    let pageNum = num
-    let killmails = [];
-    class Killmail {
-        constructor(id, date, ship, day) {
-            this.id = id;
-            this.date = date;
-            this.ship = ship;
-            this.day = day;
-        }
-    }
-    const wormholeData = await axiosZkillData(pageNum);
-    for (let i = 0; i < Object.keys(wormholeData).length; i++) {
-        const currentZKillId = Object.keys(wormholeData)[i]
-        if (currentZKillId < highestZkillId) {
-            return;
-        }
-        const currentHash = Object.values(wormholeData)[i]
-        const response = await axios.get(`https://esi.evetech.net/latest/killmails/${currentZKillId}/${currentHash}/?datasource=tranquility`)
-        killmails[i] = new Killmail(response.data.killmail_id, response.data.killmail_time, response.data.victim.ship_type_id, dateToDay(response.data.killmail_time))
-    }
-    return killmails;
 }
 
 const insertIntoEsi = async (num) => {
