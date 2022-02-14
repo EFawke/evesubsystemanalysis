@@ -16,10 +16,10 @@ shipTypeRouter.get(`/:shipName`, (req, response, next) => {
   client.connect()
   client.query(`SELECT * FROM esi WHERE ship_type_id = '${shipTypeId}';`, (err, res) => {
     if (err) {
+      console.log('poop')
       console.log(err)
     } else {
       const data = res.rows
-      console.log('data is ' + data)
       let heatmap = {
         Monday: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
         Tuesday: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
