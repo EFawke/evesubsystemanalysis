@@ -14,7 +14,7 @@ infoRouter.get(`/totalDestroyed/:shipName`, (req, response, next) => {
         }
     });
     client.connect()
-    client.query(`COUNT(DISTINCT killmail_id) FROM esi WHERE ship_type_id = '${shipTypeId}';`, (err, res) => {
+    client.query(`SELECT COUNT(*) FROM esi WHERE ship_type_id = '${shipTypeId}';`, (err, res) => {
         if (err) {
             console.log(err + 'poop')
         } else {
