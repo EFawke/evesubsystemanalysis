@@ -5,6 +5,9 @@ const zkillDbInit = require('../utils/zkillTableInit');
 const esiDbInit = require('../utils/esiDbInit');
 const { Client } = require('pg');
 const { query } = require('express');
+const { Pool } = require('pg');
+
+const pool = new Pool;
 
 esiDbInit();
 zkillDbInit();
@@ -213,6 +216,6 @@ const fillDbs = async () => {
 }
 
 fillDbs();
-setInterval(fillDbs, 1000 * 60 * 10);
+setInterval(fillDbs, 1000 * 60 * 60 * 24);
 
 module.exports = zkillRouter;
