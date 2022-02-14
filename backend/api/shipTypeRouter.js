@@ -31,7 +31,7 @@ shipTypeRouter.get(`/:shipName`, (req, res, next) => {
 
       var d = new Date();
       d.setMonth(d.getMonth() - 3);
-      console.log(data.length)
+      console.log(data.length + 'data.length is')
       for (let i = 0; i < data.length; i++) {
         let time = Number(data[i].killmail_time.substring(11, 13));
         const day = data[i].weekday;
