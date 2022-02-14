@@ -83,9 +83,9 @@ const insertIntoZkill = async (num, client) => {
                     // console.log('floop')
                 });
             }
-            client.end()
         }
     })
+    client.end()
 }
 
 const lookUpEsi = async (num) => {
