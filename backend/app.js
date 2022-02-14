@@ -26,8 +26,19 @@ if (port == null || port == "") {
 
 const path = require('path')
 
+if (process.env.NODE_ENV === 'production') {
+  // Exprees will serve up production assets
+  app.use(express.static('frontend/build'));
+
+  // Express serve up index.html file if it doesn't recognize route
+  const path = require('path');
+  app.get('*', (req, res) => {
+    res.sendFile(path.resolve(__dirname, 'client', 'build', 'index.html'));
+  });
+}
+
 // Serve static files from the React frontend app
-app.use(express.static(path.join(__dirname, '/../frontend/src/index.js')))
+app.use(express.static(path.join(__dirname + '/../frontend/src/index.js'))) //changed comma to a + here
 
 // AFTER defining routes: Anything that doesn't match what's above, send back index.html; (the beginning slash ('/') in the string is important!)
 app.get('*', (req, res) => {
