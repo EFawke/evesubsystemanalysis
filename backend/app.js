@@ -31,7 +31,9 @@ app.use(express.static(path.join(__dirname, '/../frontend/src/index.js')))
 
 // AFTER defining routes: Anything that doesn't match what's above, send back index.html; (the beginning slash ('/') in the string is important!)
 app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname + '/../frontend/public/index.html'))
+  // res.sendFile(path.join(__dirname + '/../frontend/public/index.html'))
+  res.sendFile(path.join(__dirname + '/../frontend/src/index.js'))
+
 })
 
 app.listen(port, () => console.log(`listening on port ${port}`));
