@@ -28,7 +28,6 @@ shipTypeRouter.get(`/:shipName`, (req, response, next) => {
         Saturday: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
         Sunday: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
       };
-
       var d = new Date();
       d.setMonth(d.getMonth() - 3);
       for (let i = 0; i < data.length; i++) {
