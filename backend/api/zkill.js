@@ -146,7 +146,9 @@ const insertIntoEsi = async (num) => {
         });
         client.connect();
         for (let i = 0; i < killmails.length; i++) {
-            console.log(killmails[i])
+            if(killmails[i] === undefined){
+                return;
+            }
             const id = killmails[i].id;
             const date = killmails[i].date;
             const ship = killmails[i].ship;

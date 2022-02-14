@@ -33,8 +33,11 @@ class Info extends React.Component {
     fetchTotalDestroyed = () => {
         //Homepage automatically displays Herons.
         if (window.location.pathname === "/") {
-            axios.get(`/api/info/totalDestroyed/Heron`).then(response => {
+            axios.get(`/api/info/totalDestroyed/Heron`)
+            .then(response => {
                 this.setState({ totalDestroyed: response.data.totalDestroyed });
+            })
+            .then(() => {
                 this.setState({isLoaded: true})
             })
         }
@@ -47,6 +50,8 @@ class Info extends React.Component {
             .then(response => {
                 console.log(response)
                 this.setState({ totalDestroyed: response.data.totalDestroyed })
+            })
+            .then(() => {
                 this.setState({isLoaded: true})
             })
         }
