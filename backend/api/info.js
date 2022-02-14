@@ -17,7 +17,6 @@ infoRouter.get(`/totalDestroyed/:shipName`, (req, response, next) => {
     pool.connect()
     pool.query(`SELECT COUNT(*) FROM esi WHERE ship_type_id = '${shipTypeId}';`, (err, res) => {
         if (err) {
-            console.log(err + 'poop')
         } else {
             // var d = new Date();
             // d.setMonth(d.getMonth() - 3);
@@ -32,14 +31,11 @@ infoRouter.get(`/totalDestroyed/:shipName`, (req, response, next) => {
             // const totalDestroyed = JSON.parse(data);
             // response.send({ totalDestroyed })
             const data = res.rows;
-            console.log(data + 'is data in info.js')
-            // const totalClassDestroyed = JSON.parse(data);
             const floop = data[0].count
             response.status(200).send(floop)
             pool.end()
         }
     })
-    // next()
 })
 
 const shipSelector = (shipType) => {
