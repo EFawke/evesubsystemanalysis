@@ -4,7 +4,7 @@ const shipTypeRouter = express.Router();
 // const db = new sqlite3.Database('zkill.db');
 const { Client } = require('pg');
 
-shipTypeRouter.get(`/:shipName`, (req, res, next) => {
+shipTypeRouter.get(`/:shipName`, (req, response, next) => {
   const shipName = req.params.shipName;
   const shipTypeId = shipSelector(shipName);
   const client = new Client({
@@ -59,7 +59,7 @@ shipTypeRouter.get(`/:shipName`, (req, res, next) => {
           heatmap.Sunday[time] += 1;
         }
       }
-      res.status(200).send(heatmap);
+      response.status(200).send(heatmap);
       client.end()
     }
   })
