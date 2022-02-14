@@ -19,7 +19,6 @@ shipTypeRouter.get(`/:shipName`, (req, res, next) => {
       console.log(err)
     } else {
       const data = JSON.stringify(res.rows)
-      console.log(data)
       let heatmap = {
         Monday: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
         Tuesday: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
@@ -32,7 +31,7 @@ shipTypeRouter.get(`/:shipName`, (req, res, next) => {
 
       var d = new Date();
       d.setMonth(d.getMonth() - 3);
-
+      console.log(data.length)
       for (let i = 0; i < data.length; i++) {
         let time = Number(data[i].killmail_time.substring(11, 13));
         const day = data[i].weekday;
