@@ -182,7 +182,6 @@ const insertIntoEsi = async (num) => {
                 return
             }
             client.connect();
-            console.log(killmails)
             for (let i = 0; i < killmails.length; i++) {
                 if (killmails[i] === undefined) {
                     return;
@@ -194,11 +193,14 @@ const insertIntoEsi = async (num) => {
                 client.query(`INSERT INTO esi (killmail_id, killmail_time, ship_type_id, weekday) VALUES('${id}', '${date}', '${ship}', '${day}');`, (err, res) => {
                     if (err) {
                         return;
+                    } else {
+                        console.log('row inserted')
                     }
                 })
             }
         })
         .then((res) => {
+            console.log('operation complete')
             client.end()
         })
 }
