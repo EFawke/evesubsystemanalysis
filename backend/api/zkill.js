@@ -144,8 +144,6 @@ const insertIntoZkill = async (num) => {
 }
 
 const insertIntoEsi = (counter, res) => {
-    console.log(counter)
-    console.log(res)
     var values = []
     for(let i = 0; i < res.length; i++){
         values[i] = [res[i].id, res[i].date, res[i].ship, res[i].day]
@@ -155,11 +153,11 @@ const insertIntoEsi = (counter, res) => {
     .then(client => {
         return client.query(format('INSERT INTO esi (killmail_id, killmail_time, ship_type_id, weekday) VALUES %L'), [values]) // your query string here
           .then(res => {
-            client.release()
+            client.end()
             console.log(res.rows[0]) // your callback here
           })
           .catch(e => {
-            client.release()
+            client.end()
             console.log(err.stack) // your callback here
           })
     })
