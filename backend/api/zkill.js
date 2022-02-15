@@ -164,13 +164,22 @@ const insertIntoEsi = (counter, res) => {
 }
 
 const insertThings = async (counter) => {
-    await lookUpEsi(counter).then(res => {
-        for (let i = 1; i <= 20; i++) {
-            counter = i;
-            insertIntoZkill(counter)
+    for(let i = 0; i <=20; i++){
+        counter = i;
+        await lookUpEsi(counter).then(res => {
+            insertIntoZkill(counter);
             insertIntoEsi(counter, res)
-        }
-    })
+        })
+    }
+
+
+    // await lookUpEsi(counter).then(res => {
+    //     for (let i = 1; i <= 20; i++) {
+    //         counter = i;
+    //         insertIntoZkill(counter)
+    //         insertIntoEsi(counter, res)
+    //     }
+    // })
 }
 
 const fillDbs = async () => {
