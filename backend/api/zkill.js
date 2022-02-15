@@ -150,21 +150,29 @@ const insertIntoEsi = (counter, res) => {
     }
     pool.connect()
     .then(client => {
-        var sql = `INSERT INTO esi (killmail_id, killmail_time, ship_type_id, weekday) VALUES ?`;
-        return client.query(`INSERT INTO esi (killmail_id, killmail_time, ship_type_id, weekday) VALUES ?`, [values], (err, result) => {
+        client.query(`INSERT INTO esi (killmail_id, killmail_time, ship_type_id, weekday) VALUES`, values, (err, result) => {
             if(err){
-                console.log("floop" + err)
-                client.end()
+                console.log(err)
             }
         })
-        .catch((err) => {
+        .then(() => {
             client.end()
-        })
-        .then((result) => {
-            client.end()
-            console.log(result)
         })
     })
+    //     return client.query(`INSERT INTO esi (killmail_id, killmail_time, ship_type_id, weekday) VALUES ?`, [values], (err, result) => {
+    //         if(err){
+    //             console.log("floop" + err)
+    //             client.end()
+    //         }
+    //     })
+    //     .catch((err) => {
+    //         client.end()
+    //     })
+    //     .then((result) => {
+    //         client.end()
+    //         console.log(result)
+    //     })
+    // })
 }
 
 const insertThings = async (counter) => {
