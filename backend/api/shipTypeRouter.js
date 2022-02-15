@@ -25,6 +25,7 @@ shipTypeRouter.get(`/:shipName`, (req, res, next) => {
   pool.connect()
   pool.query(`SELECT * FROM esi WHERE ship_type_id = '${shipTypeId}';`, (err, response) => {
     if (err) {
+      console.log('floop ' + err)
       pool.end()
       //warning, can throw h13 errors if you hammer the connections
       res.status(404).send(heatmap);
