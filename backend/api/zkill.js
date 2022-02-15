@@ -144,6 +144,7 @@ const insertIntoZkill = async (num) => {
         })
         .then((wormholeData) => {
             if (wormholeData) {
+                console.log(wormholeData)
                 for (let i = 0; i < Object.keys(wormholeData).length; i++) {
                     const currentZKillId = Object.keys(wormholeData)[i]
                     const currentHash = Object.values(wormholeData)[i]
@@ -151,15 +152,16 @@ const insertIntoZkill = async (num) => {
                     const hash = currentHash
                     client.query(`INSERT INTO zkill (zkill_id, hash) VALUES ('${zkill_id}', '${hash}')`, (err, res) => {
                         if (err) {
+                            console.log(err)
                             client.end()
                             return
                         }
                     });
                 }
-                client.end()
             }
         })
         .then(() => {
+            console.log('operation complete')
             client.end()
         })
 }
