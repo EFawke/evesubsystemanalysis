@@ -153,7 +153,7 @@ const insertIntoEsi = (counter, res) => {
         var sql = `INSERT INTO esi (killmail_id, killmail_time, ship_type_id, weekday) VALUES ?`;
         return client.query(`INSERT INTO esi (killmail_id, killmail_time, ship_type_id, weekday) VALUES ?`, [values], (err, result) => {
             if(err){
-                console.log(err)
+                console.log("floop" + err)
                 client.end()
             }
         })
@@ -173,6 +173,8 @@ const insertThings = async (counter) => {
         await lookUpEsi(counter).then(res => {
             insertIntoZkill(counter);
             insertIntoEsi(counter, res)
+        }).catch(e => {
+            console.log("bloop" + e)
         })
     }
 }
