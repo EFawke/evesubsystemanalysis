@@ -90,6 +90,9 @@ const lookUpEsi = async (num) => {
         }
     }
     const wormholeData = await axiosZkillData(pageNum);
+    if(wormholeData === undefined){
+        return;
+    }
     for (let i = 0; i < Object.keys(wormholeData).length; i++) {
         const currentZKillId = Object.keys(wormholeData)[i]
         const currentHash = Object.values(wormholeData)[i]
