@@ -150,14 +150,13 @@ const insertIntoEsi = (counter, res) => {
     }
     pool.connect()
     .then(client => {
-        return client.query(format('INSERT INTO esi (killmail_id, killmail_time, ship_type_id, weekday) VALUES %L'), [values]) // your query string here
+        return client.query(format('INSERT INTO esi (killmail_id, killmail_time, ship_type_id, weekday) VALUES %L', [], [values]) // your query string here
           .then(res => {
-            client.release()
-            console.log(res.rows[0]) // your callback here
+            client.end()
           })
           .catch(e => {
-            client.release()
-            console.log(err.stack) // your callback here
+            client.end()
+            console.log(err.stack)
           })
     })
 }
