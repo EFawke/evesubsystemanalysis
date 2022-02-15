@@ -3,25 +3,32 @@ const shipTypeRouter = express.Router();
 const { Client } = require('pg');
 const { Pool } = require('pg');
 
-const pool = new Pool({
-  connectionString: process.env.DATABASE_URL,
-  ssl: {
-    rejectUnauthorized: false
-  }, 
-  allowExitOnIdle: true
-});
+// const pool = new Pool({
+//   connectionString: process.env.DATABASE_URL,
+//   ssl: {
+//     rejectUnauthorized: false
+//   }, 
+//   allowExitOnIdle: true
+// });
 
-const client = new Client({
-  connectionString: process.env.DATABASE_URL,
-  ssl: {
-    rejectUnauthorized: false
-  }, 
-  allowExitOnIdle: true
-});
+// const client = new Client({
+//   connectionString: process.env.DATABASE_URL,
+//   ssl: {
+//     rejectUnauthorized: false
+//   }, 
+//   allowExitOnIdle: true
+// });
 
 shipTypeRouter.get(`/:shipName`, (req, res, next) => {
   const shipName = req.params.shipName;
   const shipTypeId = shipSelector(shipName);
+  const client = new Client({
+    connectionString: process.env.DATABASE_URL,
+    ssl: {
+      rejectUnauthorized: false
+    }, 
+    allowExitOnIdle: true
+  });
   let heatmap = {
     Monday: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
     Tuesday: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
@@ -31,13 +38,14 @@ shipTypeRouter.get(`/:shipName`, (req, res, next) => {
     Saturday: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
     Sunday: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
   };
-  pool.connect()
+  client.connect()
   client.query(`SELECT * FROM esi WHERE ship_type_id = '${shipTypeId}';`, (err, response) => {
     if (err) {
       console.log('floop ' + err)
-      pool.end()
+      client.end()
       res.status(404).send(heatmap);
     } else {
+      client.end()
       const data = response.rows
       var d = new Date();
       d.setMonth(d.getMonth() - 3);
@@ -68,7 +76,6 @@ shipTypeRouter.get(`/:shipName`, (req, res, next) => {
         }
       }
       res.status(200).send(heatmap);
-      pool.end()
     }
   })
 })
