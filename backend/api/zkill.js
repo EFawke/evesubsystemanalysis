@@ -154,15 +154,16 @@ const insertIntoEsi = async (num) => {
             const day = killmails[i].day;
             client.query(`INSERT INTO esi (killmail_id, killmail_time, ship_type_id, weekday) VALUES('${id}', '${date}', '${ship}', '${day}');`, (err, res) => {
                 if (err){
-                    return;
+                    client.end()
                     // console.log(err)
                 }
             });
         }
+        client.end()
     })
 }
 
-const findTopZkillId = () => {
+const findTopZkillId = async () => {
     const client = new Client({
         connectionString: process.env.DATABASE_URL,
         ssl: {
@@ -170,23 +171,16 @@ const findTopZkillId = () => {
         }
     });
     client.connect();
-    client.query(`SELECT MAX (killmail_id) FROM esi`, (err, rows) => {
+    client.query(`SELECT MAX (killmail_id) FROM esi`, (err, res) => {
         if(err){
-            // console.log(err);
+            client.end()
         }
-        // return Object.values(rows)[0];
-       
+        client.end()
+        console.log(res.rows[0])
     })
-    client.query('SELECT MAX (killmail_id) FROM esi', (err, rows) => {
-        if (err) {
-            console.log(err);
-        }
-        // console.log(rows)
-    })
-    client.end()
 }
 
-const highestZkillId = findTopZkillId()
+const highestZkillId = await findTopZkillId()
 
 const insertThings = async (counter, client) => {
     for (let i = 1; i <= 20; i++) {
