@@ -149,6 +149,10 @@ const insertIntoZkill = async (num) => {
 const insertIntoEsi = async (counter) => {
     const res = await lookUpEsi(counter)
     var values = []
+    console.log(res)
+    if(res === undefined){
+        return
+    }
     for (let i = 0; i < res.length; i++) {
         values[i] = [res[i].id, res[i].date, res[i].ship, res[i].day]
     }
