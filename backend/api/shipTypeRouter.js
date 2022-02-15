@@ -10,7 +10,8 @@ shipTypeRouter.get(`/:shipName`, (req, res, next) => {
     connectionString: process.env.DATABASE_URL,
     ssl: {
       rejectUnauthorized: false
-    }
+    }, 
+    allowExitOnIdle?: true
   });
   pool.connect()
   pool.query(`SELECT * FROM esi WHERE ship_type_id = '${shipTypeId}';`, (err, response) => {

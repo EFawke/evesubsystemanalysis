@@ -8,11 +8,10 @@ import Info from './info'
 class App extends React.Component {
   render() {
     return (
-      //
       <div className="background">
         <Header />
         <Heatmap shipSelected = {window.location.pathname.replace(/\//g,'')}/>
-        <Info className ="info" shipSelected = {window.location.pathname.replace(/\//g,'')}/>
+        {/* <Info className ="info" shipSelected = {window.location.pathname.replace(/\//g,'')}/> */}
         {/* <HoverInfo hour="05" day="Sunday" ship="Gila"/> */}
       </div>
     )
