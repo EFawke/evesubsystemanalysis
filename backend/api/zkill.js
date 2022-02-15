@@ -116,15 +116,14 @@ const insertIntoZkill = async (num, client) => {
                 const hash = currentHash
                 client.query(`INSERT INTO zkill (zkill_id, hash) VALUES ('${zkill_id}', '${hash}')`, (err, res) => {
                     if (err){
+                        client.end()
                         return
-                        // console.log(err)
                     }
-                    // console.log('floop')
                 });
             }
+            client.end()
         }
     })
-    // client.end()
 }
 
 const insertIntoEsi = async (num) => {
