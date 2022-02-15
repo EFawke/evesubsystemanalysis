@@ -9,6 +9,77 @@ const { query, response } = require('express');
 esiDbInit();
 zkillDbInit();
 
+
+const { Pool } = require('pg')
+
+const pool = new Pool()
+
+pool.on('error', (err, client) => {
+    console.error('Unexpected error on idle client', err) // your callback here
+    process.exit(-1)
+})
+
+// promise - checkout a client
+    // pool.connect()
+    //     .then(client => {
+    //         return client.query('SELECT * FROM users WHERE id = $1', [1])
+    //             .then(res => {
+    //                 client.release()
+    //                 console.log(res.rows[0])
+    //                 return
+    //             })
+    //             .catch(e => {
+    //                 client.release()
+    //                 console.log(err.stack)
+    //             })
+    //     })
+
+
+const insertIntoEsi = async (num) => {
+    let pageNum = num
+    await lookUpEsi(pageNum)
+        .catch((err) => {
+            console.log(err)
+            return;
+        })
+        .then((killmails) => {
+            if (!killmails || killmails === undefined) {
+                return
+            } else {
+                // return killmails
+                console.log('killmails are there')
+            }
+            pool.connect(killmails)
+                .then(client => {
+                    for (let i = 0; i < killmails.length; i++) {
+                        if (killmails[i] === undefined) {
+                            return;
+                        }
+                        const id = killmails[i].id;
+                        const date = killmails[i].date;
+                        const ship = killmails[i].ship;
+                        const day = killmails[i].day;
+                        return client.query(`INSERT INTO esi (killmail_id, killmail_time, ship_type_id, weekday) VALUES('${id}', '${date}', '${ship}', '${day}');`, (err, res) => {
+                            if (err) {
+                                console.log('first error')
+                                return;
+                            } else {
+                                console.log('first - row inserted')
+                            }
+                        })
+                    }
+                })
+                .then(res => {
+                    client.release()
+                    console.log(res.rows[0]) // your callback here
+                  })
+                  .catch(e => {
+                    client.release()
+                    console.log(err.stack) // your callback here
+                  })
+        })
+    }
+
 const dateToDay = (date) => {
     const killDate = new Date(date);
     const dayIndex = killDate.getDay();
@@ -161,51 +232,6 @@ const insertIntoZkill = async (num) => {
         })
         .then(() => {
             client.end()
-        })
-}
-
-const insertIntoEsi = async (num) => {
-    let pageNum = num
-    const client = new Client({
-        connectionString: process.env.DATABASE_URL,
-        ssl: {
-            rejectUnauthorized: false
-        }
-    });
-    await lookUpEsi(pageNum)
-        .catch((err) => {
-            console.log(err)
-            return;
-        })
-        .then((killmails) => {
-            if (!killmails || killmails === undefined) {
-                return
-            }
-            client.connect((killmails) => {
-                for (let i = 0; i < killmails.length; i++) {
-                    if (killmails[i] === undefined) {
-                        return;
-                    }
-                    const id = killmails[i].id;
-                    const date = killmails[i].date;
-                    const ship = killmails[i].ship;
-                    const day = killmails[i].day;
-                    client.query(`INSERT INTO esi (killmail_id, killmail_time, ship_type_id, weekday) VALUES('${id}', '${date}', '${ship}', '${day}');`, (err, res) => {
-                        if (err) {
-                            console.log('first error')
-                            return;
-                        } else {
-                            console.log('first - row inserted')
-                        }
-                    })
-                }
-                let ret = 1;
-                return ret
-            })
-            .then((res) => {
-                console.log('second')
-                client.end()
-            })
         })
 }
 
