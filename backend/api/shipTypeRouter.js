@@ -11,7 +11,7 @@ shipTypeRouter.get(`/:shipName`, (req, res, next) => {
     ssl: {
       rejectUnauthorized: false
     }, 
-    allowExitOnIdle?: true
+    allowExitOnIdle: true
   });
   pool.connect()
   pool.query(`SELECT * FROM esi WHERE ship_type_id = '${shipTypeId}';`, (err, response) => {
