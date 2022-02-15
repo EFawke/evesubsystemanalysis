@@ -186,9 +186,10 @@ const insertIntoEsi = async (num) => {
                         client.end()
                         // console.log(err)
                     }
-                });
+                }).then(() => {
+                    client.end()
+                })
             }
-            client.end()
         })
 }
 
