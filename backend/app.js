@@ -4,17 +4,8 @@ const cors = require('cors');
 const { Client } = require('pg');
 const app = express();
 const errorHandler = require('errorhandler');
-
-console.log('backend is online')
-
-//makes a router for all express api routes.
-//UNCOMMENT THIS AFTER TEST
 const apiRouter = require('./api/apiRouter')
 app.use('/api', apiRouter);
-
-// const port = 5000;
-
-//using dependencies
 app.use(morgan('dev'));
 app.use(cors());
 app.use(errorHandler());

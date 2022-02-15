@@ -3,6 +3,22 @@ const shipTypeRouter = express.Router();
 const { Client } = require('pg');
 const { Pool } = require('pg');
 
+const pool = new Pool({
+  connectionString: process.env.DATABASE_URL,
+  ssl: {
+    rejectUnauthorized: false
+  }, 
+  allowExitOnIdle: true
+});
+
+const client = new Client({
+  connectionString: process.env.DATABASE_URL,
+  ssl: {
+    rejectUnauthorized: false
+  }, 
+  allowExitOnIdle: true
+});
+
 shipTypeRouter.get(`/:shipName`, (req, res, next) => {
   const shipName = req.params.shipName;
   const shipTypeId = shipSelector(shipName);
@@ -15,21 +31,12 @@ shipTypeRouter.get(`/:shipName`, (req, res, next) => {
     Saturday: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
     Sunday: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
   };
-  const pool = new Pool({
-    connectionString: process.env.DATABASE_URL,
-    ssl: {
-      rejectUnauthorized: false
-    }, 
-    allowExitOnIdle: true
-  });
   pool.connect()
-  pool.query(`SELECT * FROM esi WHERE ship_type_id = '${shipTypeId}';`, (err, response) => {
+  client.query(`SELECT * FROM esi WHERE ship_type_id = '${shipTypeId}';`, (err, response) => {
     if (err) {
       console.log('floop ' + err)
       pool.end()
-      //warning, can throw h13 errors if you hammer the connections
       res.status(404).send(heatmap);
-      return;
     } else {
       const data = response.rows
       var d = new Date();
