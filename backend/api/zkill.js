@@ -19,67 +19,6 @@ pool.on('error', (err, client) => {
     process.exit(-1)
 })
 
-// promise - checkout a client
-    // pool.connect()
-    //     .then(client => {
-    //         return client.query('SELECT * FROM users WHERE id = $1', [1])
-    //             .then(res => {
-    //                 client.release()
-    //                 console.log(res.rows[0])
-    //                 return
-    //             })
-    //             .catch(e => {
-    //                 client.release()
-    //                 console.log(err.stack)
-    //             })
-    //     })
-
-
-const insertIntoEsi = async (num) => {
-    let pageNum = num
-    await lookUpEsi(pageNum)
-        .catch((err) => {
-            console.log(err)
-            return;
-        })
-        .then((killmails) => {
-            if (!killmails || killmails === undefined) {
-                return
-            } else {
-                // return killmails
-                console.log('killmails are there')
-            }
-            pool.connect(killmails)
-                .then(client => {
-                    for (let i = 0; i < killmails.length; i++) {
-                        if (killmails[i] === undefined) {
-                            return;
-                        }
-                        const id = killmails[i].id;
-                        const date = killmails[i].date;
-                        const ship = killmails[i].ship;
-                        const day = killmails[i].day;
-                        return client.query(`INSERT INTO esi (killmail_id, killmail_time, ship_type_id, weekday) VALUES('${id}', '${date}', '${ship}', '${day}');`, (err, res) => {
-                            if (err) {
-                                console.log('first error')
-                                return;
-                            } else {
-                                console.log('first - row inserted')
-                            }
-                        })
-                    }
-                })
-                .then(res => {
-                    client.release()
-                    console.log(res.rows[0]) // your callback here
-                  })
-                  .catch(e => {
-                    client.release()
-                    console.log(err.stack) // your callback here
-                  })
-        })
-    }
-
 const dateToDay = (date) => {
     const killDate = new Date(date);
     const dayIndex = killDate.getDay();
@@ -138,27 +77,7 @@ const axiosZkillData = async (page) => {
     }
 }
 
-// let highestZkillId;
-
-// const findTopZkillId = async () => {
-//     const client = new Client({
-//         connectionString: process.env.DATABASE_URL,
-//         ssl: {
-//             rejectUnauthorized: false
-//         }
-//     });
-//     client.connect();
-//     client.query(`SELECT MAX (killmail_id) FROM esi`, (err, res) => {
-//         if (err) {
-//             client.end()
-//         }
-//         client.end()
-//         return res.rows[0].max
-//     })
-// }
-
 const lookUpEsi = async (num) => {
-    // console.log(highestZkillId)
     let pageNum = num
     let killmails = [];
     class Killmail {
@@ -169,21 +88,9 @@ const lookUpEsi = async (num) => {
             this.day = day;
         }
     }
-    // await findTopZkillId()
-    // .catch(err => {
-    //     if (err) {
-    //         console.log(err)
-    //     }
-    // })
-    // .then(response => {
-    //     highestZkillId = response;
-    // })
     const wormholeData = await axiosZkillData(pageNum);
     for (let i = 0; i < Object.keys(wormholeData).length; i++) {
         const currentZKillId = Object.keys(wormholeData)[i]
-        // if (currentZKillId < highestZkillId) {
-        //     return;
-        // }
         const currentHash = Object.values(wormholeData)[i]
         await axios.get(`https://esi.evetech.net/latest/killmails/${currentZKillId}/${currentHash}/?datasource=tranquility`)
             .catch(err => {
@@ -235,12 +142,19 @@ const insertIntoZkill = async (num) => {
         })
 }
 
+const insertIntoEsi = (counter, res) => {
+    console.log(counter)
+    console.log(res)
+}
+
 const insertThings = async (counter) => {
-    for (let i = 1; i <= 20; i++) {
-        counter = i;
-        await insertIntoZkill(counter)
-        await insertIntoEsi(counter)
-    }
+    await lookUpEsi(counter).then(res => {
+        for (let i = 1; i <= 20; i++) {
+            counter = i;
+            insertIntoZkill(counter)
+            insertIntoEsi(counter, res)
+        }
+    })
 }
 
 const fillDbs = async () => {
