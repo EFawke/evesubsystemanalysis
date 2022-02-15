@@ -4,7 +4,7 @@ const axios = require('axios');
 const zkillDbInit = require('../utils/zkillTableInit');
 const esiDbInit = require('../utils/esiDbInit');
 const { Client } = require('pg');
-const { query } = require('express');
+const { query, response } = require('express');
 
 esiDbInit();
 zkillDbInit();
@@ -78,6 +78,16 @@ const lookUpEsi = async (num) => {
             this.day = day;
         }
     }
+    let highestZkillId;
+    await findTopZkillId()
+    .catch(err => {
+        if(err){
+            console.log(err)
+        }
+    })
+    .then(response => {
+        highestZkillId = response;
+    })
     const wormholeData = await axiosZkillData(pageNum);
     for (let i = 0; i < Object.keys(wormholeData).length; i++) {
         const currentZKillId = Object.keys(wormholeData)[i]
@@ -180,8 +190,6 @@ const findTopZkillId = async () => {
     })
 }
 
-const highestZkillId = await findTopZkillId()
-
 const insertThings = async (counter, client) => {
     for (let i = 1; i <= 20; i++) {
         counter = i;
@@ -206,6 +214,6 @@ const fillDbs = async () => {
 }
 
 fillDbs();
-setInterval(fillDbs, 1000 * 60 * 60 * 24);
+setInterval(fillDbs, 1000 * 60 * 10);
 
 module.exports = zkillRouter;
