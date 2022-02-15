@@ -151,14 +151,17 @@ const insertIntoEsi = (counter, res) => {
     pool.connect()
     .then(client => {
         var sql = `INSERT INTO esi (killmail_id, killmail_time, ship_type_id, weekday) VALUES ?`;
-        return client.query(sql, [values], function(err, result) {
-        })
-        .catch((err) => {
+        return client.query(`INSERT INTO esi (killmail_id, killmail_time, ship_type_id, weekday) VALUES ?`, [values], (err, result) => {
             if(err){
                 console.log(err)
+                client.end()
             }
         })
+        .catch((err) => {
+            client.end()
+        })
         .then((result) => {
+            client.end()
             console.log(result)
         })
     })
