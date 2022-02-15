@@ -166,7 +166,7 @@ const insertThings = async (counter) => {
     for(let i = 0; i <=20; i++){
         counter = i;
         insertIntoZkill(counter);
-        insertIntoEsi(counter)
+        // insertIntoEsi(counter)
     }
 }
 
