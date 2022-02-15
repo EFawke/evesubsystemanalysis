@@ -143,7 +143,7 @@ const insertIntoZkill = async (num) => {
         })
 }
 
-const insertIntoEsi = (counter) => {
+const insertIntoEsi = async (counter) => {
     await lookUpEsi(counter)
     .catch((e) => {
         console.log(e)
