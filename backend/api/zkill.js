@@ -70,7 +70,7 @@ const axiosZkillData = async (page) => {
 let highestZkillId;
 
 const lookUpEsi = async (num) => {
-    console.log(num)
+    console.log(highestZkillId)
     let pageNum = num
     let killmails = [];
     class Killmail {
