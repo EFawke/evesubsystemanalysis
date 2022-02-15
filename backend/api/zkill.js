@@ -144,7 +144,6 @@ const insertIntoZkill = async (num) => {
         })
         .then((wormholeData) => {
             if (wormholeData) {
-                console.log(wormholeData)
                 for (let i = 0; i < Object.keys(wormholeData).length; i++) {
                     const currentZKillId = Object.keys(wormholeData)[i]
                     const currentHash = Object.values(wormholeData)[i]
@@ -161,7 +160,6 @@ const insertIntoZkill = async (num) => {
             }
         })
         .then(() => {
-            console.log('operation complete')
             client.end()
         })
 }
@@ -184,6 +182,7 @@ const insertIntoEsi = async (num) => {
                 return
             }
             client.connect();
+            console.log(killmails)
             for (let i = 0; i < killmails.length; i++) {
                 if (killmails[i] === undefined) {
                     return;
