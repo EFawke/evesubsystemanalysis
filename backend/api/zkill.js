@@ -181,28 +181,29 @@ const insertIntoEsi = async (num) => {
             if (!killmails || killmails === undefined) {
                 return
             }
-            client.connect();
-            for (let i = 0; i < killmails.length; i++) {
-                if (killmails[i] === undefined) {
-                    return;
-                }
-                const id = killmails[i].id;
-                const date = killmails[i].date;
-                const ship = killmails[i].ship;
-                const day = killmails[i].day;
-                client.query(`INSERT INTO esi (killmail_id, killmail_time, ship_type_id, weekday) VALUES('${id}', '${date}', '${ship}', '${day}');`, (err, res) => {
-                    if (err) {
-                        console.log('second')
+            client.connect((killmails) => {
+                for (let i = 0; i < killmails.length; i++) {
+                    if (killmails[i] === undefined) {
                         return;
-                    } else {
-                        console.log('row inserted')
                     }
-                })
-            }
-        })
-        .then((res) => {
-            console.log('first')
-            client.end()
+                    const id = killmails[i].id;
+                    const date = killmails[i].date;
+                    const ship = killmails[i].ship;
+                    const day = killmails[i].day;
+                    client.query(`INSERT INTO esi (killmail_id, killmail_time, ship_type_id, weekday) VALUES('${id}', '${date}', '${ship}', '${day}');`, (err, res) => {
+                        if (err) {
+                            console.log('first error')
+                            return;
+                        } else {
+                            console.log('first - row inserted')
+                        }
+                    })
+                }
+            })
+            .then((res) => {
+                console.log('second')
+                client.end()
+            })
         })
 }
 
