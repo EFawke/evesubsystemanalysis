@@ -60,14 +60,17 @@ const axiosZkillData = async (page) => {
                 return;
             }
         })
-    if(response === undefined){
+    if (response === undefined) {
         return
     } else {
         return response.data;
     }
 }
 
+let highestZkillId;
+
 const lookUpEsi = async (num) => {
+    console.log(num)
     let pageNum = num
     let killmails = [];
     class Killmail {
@@ -78,10 +81,9 @@ const lookUpEsi = async (num) => {
             this.day = day;
         }
     }
-    let highestZkillId;
     await findTopZkillId()
     .catch(err => {
-        if(err){
+        if (err) {
             console.log(err)
         }
     })
@@ -96,16 +98,16 @@ const lookUpEsi = async (num) => {
         }
         const currentHash = Object.values(wormholeData)[i]
         await axios.get(`https://esi.evetech.net/latest/killmails/${currentZKillId}/${currentHash}/?datasource=tranquility`)
-        .catch(err => {
-            if (err) {
-                return;
-            }
-        })
-        .then((response) => {
-            if(response){
-                killmails[i] = new Killmail(response.data.killmail_id, response.data.killmail_time, response.data.victim.ship_type_id, dateToDay(response.data.killmail_time))
-            }
-        })
+            .catch(err => {
+                if (err) {
+                    return;
+                }
+            })
+            .then((response) => {
+                if (response) {
+                    killmails[i] = new Killmail(response.data.killmail_id, response.data.killmail_time, response.data.victim.ship_type_id, dateToDay(response.data.killmail_time))
+                }
+            })
     }
     return killmails;
 }
@@ -113,64 +115,64 @@ const lookUpEsi = async (num) => {
 const insertIntoZkill = async (num, client) => {
     pageNum = num
     await axiosZkillData(pageNum)
-    .catch((err) => {
-        console.log(err);
-        return;
-    })
-    .then((wormholeData) => {
-        if(wormholeData){
-            for (let i = 0; i < Object.keys(wormholeData).length; i++) {
-                const currentZKillId = Object.keys(wormholeData)[i]
-                const currentHash = Object.values(wormholeData)[i]
-                const zkill_id = currentZKillId
-                const hash = currentHash
-                client.query(`INSERT INTO zkill (zkill_id, hash) VALUES ('${zkill_id}', '${hash}')`, (err, res) => {
-                    if (err){
-                        client.end()
-                        return
-                    }
-                });
+        .catch((err) => {
+            console.log(err);
+            return;
+        })
+        .then((wormholeData) => {
+            if (wormholeData) {
+                for (let i = 0; i < Object.keys(wormholeData).length; i++) {
+                    const currentZKillId = Object.keys(wormholeData)[i]
+                    const currentHash = Object.values(wormholeData)[i]
+                    const zkill_id = currentZKillId
+                    const hash = currentHash
+                    client.query(`INSERT INTO zkill (zkill_id, hash) VALUES ('${zkill_id}', '${hash}')`, (err, res) => {
+                        if (err) {
+                            client.end()
+                            return
+                        }
+                    });
+                }
+                client.end()
             }
-            client.end()
-        }
-    })
+        })
 }
 
 const insertIntoEsi = async (num) => {
     let pageNum = num
     await lookUpEsi(pageNum)
-    .catch((err) => {
-        console.log(err)
-        return;
-    })
-    .then((killmails) => {
-        if(!killmails || killmails === undefined){
-            return
-        }
-        const client = new Client({
-            connectionString: process.env.DATABASE_URL,
-            ssl: {
-                rejectUnauthorized: false
+        .catch((err) => {
+            console.log(err)
+            return;
+        })
+        .then((killmails) => {
+            if (!killmails || killmails === undefined) {
+                return
             }
-        });
-        client.connect();
-        for (let i = 0; i < killmails.length; i++) {
-            if(killmails[i] === undefined){
-                return;
-            }
-            const id = killmails[i].id;
-            const date = killmails[i].date;
-            const ship = killmails[i].ship;
-            const day = killmails[i].day;
-            client.query(`INSERT INTO esi (killmail_id, killmail_time, ship_type_id, weekday) VALUES('${id}', '${date}', '${ship}', '${day}');`, (err, res) => {
-                if (err){
-                    client.end()
-                    // console.log(err)
+            const client = new Client({
+                connectionString: process.env.DATABASE_URL,
+                ssl: {
+                    rejectUnauthorized: false
                 }
             });
-        }
-        client.end()
-    })
+            client.connect();
+            for (let i = 0; i < killmails.length; i++) {
+                if (killmails[i] === undefined) {
+                    return;
+                }
+                const id = killmails[i].id;
+                const date = killmails[i].date;
+                const ship = killmails[i].ship;
+                const day = killmails[i].day;
+                client.query(`INSERT INTO esi (killmail_id, killmail_time, ship_type_id, weekday) VALUES('${id}', '${date}', '${ship}', '${day}');`, (err, res) => {
+                    if (err) {
+                        client.end()
+                        // console.log(err)
+                    }
+                });
+            }
+            client.end()
+        })
 }
 
 const findTopZkillId = async () => {
@@ -182,11 +184,11 @@ const findTopZkillId = async () => {
     });
     client.connect();
     client.query(`SELECT MAX (killmail_id) FROM esi`, (err, res) => {
-        if(err){
+        if (err) {
             client.end()
         }
         client.end()
-        console.log(res.rows[0])
+        return res.rows[0].max
     })
 }
 
