@@ -18,7 +18,8 @@ shipTypeRouter.get(`/:shipName`, (req, res, next) => {
     if (err) {
       //warning, can throw h13 errors if you hammer the connections
       res.sendStatus(404)
-      throw err
+      pool.end()
+      return;
     } else {
       const data = response.rows
       let heatmap = {
