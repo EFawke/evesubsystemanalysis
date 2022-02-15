@@ -148,16 +148,15 @@ const insertIntoEsi = (counter, res) => {
     for(let i = 0; i < res.length; i++){
         values[i] = [res[i].id, res[i].date, res[i].ship, res[i].day]
     }
-    console.log(values);
     pool.connect()
     .then(client => {
         return client.query(format('INSERT INTO esi (killmail_id, killmail_time, ship_type_id, weekday) VALUES %L'), [values]) // your query string here
           .then(res => {
-            client.end()
+            client.release()
             console.log(res.rows[0]) // your callback here
           })
           .catch(e => {
-            client.end()
+            client.release()
             console.log(err.stack) // your callback here
           })
     })
@@ -171,15 +170,6 @@ const insertThings = async (counter) => {
             insertIntoEsi(counter, res)
         })
     }
-
-
-    // await lookUpEsi(counter).then(res => {
-    //     for (let i = 1; i <= 20; i++) {
-    //         counter = i;
-    //         insertIntoZkill(counter)
-    //         insertIntoEsi(counter, res)
-    //     }
-    // })
 }
 
 const fillDbs = async () => {
