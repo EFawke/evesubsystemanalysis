@@ -144,6 +144,7 @@ const insertIntoZkill = async (num) => {
 }
 
 const insertIntoEsi = (counter, res) => {
+    const res = await lookUpEsi(counter)
     var values = []
     for(let i = 0; i < res.length; i++){
         values[i] = [res[i].id, res[i].date, res[i].ship, res[i].day]
@@ -164,12 +165,8 @@ const insertIntoEsi = (counter, res) => {
 const insertThings = async (counter) => {
     for(let i = 0; i <=20; i++){
         counter = i;
-        await lookUpEsi(counter).then(res => {
-            insertIntoZkill(counter);
-            insertIntoEsi(counter, res)
-        }).catch(e => {
-            console.log("bloop" + e)
-        })
+        insertIntoZkill(counter);
+        insertIntoEsi(counter)
     }
 }
 
@@ -180,7 +177,7 @@ const fillDbs = async () => {
     })
 }
 
-// fillDbs();
+fillDbs();
 setInterval(fillDbs, 1000 * 60 * 10);
 
 module.exports = zkillRouter;
