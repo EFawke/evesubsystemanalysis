@@ -67,10 +67,27 @@ const axiosZkillData = async (page) => {
     }
 }
 
-let highestZkillId;
+// let highestZkillId;
+
+// const findTopZkillId = async () => {
+//     const client = new Client({
+//         connectionString: process.env.DATABASE_URL,
+//         ssl: {
+//             rejectUnauthorized: false
+//         }
+//     });
+//     client.connect();
+//     client.query(`SELECT MAX (killmail_id) FROM esi`, (err, res) => {
+//         if (err) {
+//             client.end()
+//         }
+//         client.end()
+//         return res.rows[0].max
+//     })
+// }
 
 const lookUpEsi = async (num) => {
-    console.log(highestZkillId)
+    // console.log(highestZkillId)
     let pageNum = num
     let killmails = [];
     class Killmail {
@@ -81,21 +98,21 @@ const lookUpEsi = async (num) => {
             this.day = day;
         }
     }
-    await findTopZkillId()
-    .catch(err => {
-        if (err) {
-            console.log(err)
-        }
-    })
-    .then(response => {
-        highestZkillId = response;
-    })
+    // await findTopZkillId()
+    // .catch(err => {
+    //     if (err) {
+    //         console.log(err)
+    //     }
+    // })
+    // .then(response => {
+    //     highestZkillId = response;
+    // })
     const wormholeData = await axiosZkillData(pageNum);
     for (let i = 0; i < Object.keys(wormholeData).length; i++) {
         const currentZKillId = Object.keys(wormholeData)[i]
-        if (currentZKillId < highestZkillId) {
-            return;
-        }
+        // if (currentZKillId < highestZkillId) {
+        //     return;
+        // }
         const currentHash = Object.values(wormholeData)[i]
         await axios.get(`https://esi.evetech.net/latest/killmails/${currentZKillId}/${currentHash}/?datasource=tranquility`)
             .catch(err => {
@@ -173,23 +190,6 @@ const insertIntoEsi = async (num) => {
             }
             client.end()
         })
-}
-
-const findTopZkillId = async () => {
-    const client = new Client({
-        connectionString: process.env.DATABASE_URL,
-        ssl: {
-            rejectUnauthorized: false
-        }
-    });
-    client.connect();
-    client.query(`SELECT MAX (killmail_id) FROM esi`, (err, res) => {
-        if (err) {
-            client.end()
-        }
-        client.end()
-        return res.rows[0].max
-    })
 }
 
 const insertThings = async (counter, client) => {
