@@ -144,31 +144,27 @@ const insertIntoZkill = async (num) => {
 }
 
 const insertIntoEsi = async (counter) => {
-    await lookUpEsi(counter)
-    .catch((e) => {
-        console.log(e)
-    })
-    .then((res)=> {
-        var values = []
-        for(let i = 0; i < res.length; i++){
-            values[i] = [res[i].id, res[i].date, res[i].ship, res[i].day]
-        }
-        pool.connect()
+    const res = await lookUpEsi(counter)
+    var values = []
+    for (let i = 0; i < res.length; i++) {
+        values[i] = [res[i].id, res[i].date, res[i].ship, res[i].day]
+    }
+    pool.connect()
         .then(client => {
             client.query(`INSERT INTO esi (killmail_id, killmail_time, ship_type_id, weekday) VALUES`, values, (err, result) => {
-                if(err){
+                if (err) {
                     console.log(err)
                 }
             })
-            .then(() => {
-                client.end()
-            })
+                .then(() => {
+                    client.end()
+                })
         })
-    })
+
 }
 
 const insertThings = async (counter) => {
-    for(let i = 0; i <=20; i++){
+    for (let i = 0; i <= 20; i++) {
         counter = i;
         insertIntoZkill(counter);
         insertIntoEsi(counter)
