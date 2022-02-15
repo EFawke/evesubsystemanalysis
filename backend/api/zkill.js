@@ -159,20 +159,6 @@ const insertIntoEsi = (counter, res) => {
             client.end()
         })
     })
-    //     return client.query(`INSERT INTO esi (killmail_id, killmail_time, ship_type_id, weekday) VALUES ?`, [values], (err, result) => {
-    //         if(err){
-    //             console.log("floop" + err)
-    //             client.end()
-    //         }
-    //     })
-    //     .catch((err) => {
-    //         client.end()
-    //     })
-    //     .then((result) => {
-    //         client.end()
-    //         console.log(result)
-    //     })
-    // })
 }
 
 const insertThings = async (counter) => {
@@ -194,7 +180,7 @@ const fillDbs = async () => {
     })
 }
 
-fillDbs();
+// fillDbs();
 setInterval(fillDbs, 1000 * 60 * 10);
 
 module.exports = zkillRouter;
