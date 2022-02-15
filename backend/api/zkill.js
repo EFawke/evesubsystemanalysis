@@ -129,8 +129,14 @@ const lookUpEsi = async (num) => {
     return killmails;
 }
 
-const insertIntoZkill = async (num, client) => {
+const insertIntoZkill = async (num) => {
     pageNum = num
+    const client = new Client({
+        connectionString: process.env.DATABASE_URL,
+        ssl: {
+            rejectUnauthorized: false
+        }
+    });
     await axiosZkillData(pageNum)
         .catch((err) => {
             console.log(err);
@@ -152,6 +158,9 @@ const insertIntoZkill = async (num, client) => {
                 }
                 client.end()
             }
+        })
+        .then(() => {
+            client.end()
         })
 }
 
@@ -193,26 +202,18 @@ const insertIntoEsi = async (num) => {
         })
 }
 
-const insertThings = async (counter, client) => {
+const insertThings = async (counter) => {
     for (let i = 1; i <= 20; i++) {
         counter = i;
-        await insertIntoZkill(counter, client)
+        await insertIntoZkill(counter)
         await insertIntoEsi(counter)
     }
 }
 
 const fillDbs = async () => {
     let counter;
-    const client = new Client({
-        connectionString: process.env.DATABASE_URL,
-        ssl: {
-            rejectUnauthorized: false
-        }
-    });
-    client.connect();
-    await insertThings(counter, client).then(() => {
+    await insertThings(counter).then(() => {
         console.log('done')
-        client.end()
     })
 }
 
