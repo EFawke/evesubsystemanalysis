@@ -134,7 +134,7 @@ const insertIntoZkill = async (num) => {
                             client.end()
                             return
                         }
-                    });
+                    })
                 }
             }
         })
@@ -150,14 +150,17 @@ const insertIntoEsi = (counter, res) => {
     }
     pool.connect()
     .then(client => {
-        return client.query(format('INSERT INTO esi (killmail_id, killmail_time, ship_type_id, weekday) VALUES %L', [], [values]) // your query string here
-          .then(res => {
-            client.end()
-          })
-          .catch(e => {
-            client.end()
-            console.log(err.stack)
-          })
+        var sql = `INSERT INTO esi (killmail_id, killmail_time, ship_type_id, weekday) VALUES ?`;
+        return client.query(sql, [values], function(err, result) {
+        })
+        .catch((err) => {
+            if(err){
+                console.log(err)
+            }
+        })
+        .then((result) => {
+            console.log(result)
+        })
     })
 }
 
