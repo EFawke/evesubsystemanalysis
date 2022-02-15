@@ -157,6 +157,12 @@ const insertIntoZkill = async (num, client) => {
 
 const insertIntoEsi = async (num) => {
     let pageNum = num
+    const client = new Client({
+        connectionString: process.env.DATABASE_URL,
+        ssl: {
+            rejectUnauthorized: false
+        }
+    });
     await lookUpEsi(pageNum)
         .catch((err) => {
             console.log(err)
@@ -166,12 +172,6 @@ const insertIntoEsi = async (num) => {
             if (!killmails || killmails === undefined) {
                 return
             }
-            const client = new Client({
-                connectionString: process.env.DATABASE_URL,
-                ssl: {
-                    rejectUnauthorized: false
-                }
-            });
             client.connect();
             for (let i = 0; i < killmails.length; i++) {
                 if (killmails[i] === undefined) {
@@ -183,14 +183,12 @@ const insertIntoEsi = async (num) => {
                 const day = killmails[i].day;
                 client.query(`INSERT INTO esi (killmail_id, killmail_time, ship_type_id, weekday) VALUES('${id}', '${date}', '${ship}', '${day}');`, (err, res) => {
                     if (err) {
-                        client.end()
-                        // console.log(err)
+                        return;
                     }
                 })
             }
         })
         .then((res) => {
-            console.log(res)
             client.end()
         })
 }
