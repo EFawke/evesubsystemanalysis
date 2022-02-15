@@ -199,6 +199,8 @@ const insertIntoEsi = async (num) => {
                         }
                     })
                 }
+                let ret = 1;
+                return ret
             })
             .then((res) => {
                 console.log('second')
