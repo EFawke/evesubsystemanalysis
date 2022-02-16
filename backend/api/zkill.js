@@ -175,6 +175,7 @@ const insertionsForEsi = async (client, values) => {
 }
 
 const performEsiInsertions = async (values) => {
+    console.log('inserting this into esi ' + values + 'inserting this into esi')
         const client = new Client({
         connectionString: process.env.DATABASE_URL,
         ssl: {
@@ -197,7 +198,6 @@ const insertIntoEsi = async (counter) => {
     await lookUpEsi(counter).then((res) => {
         var values = []
         if(res === undefined){
-            console.log('line 151')
             return
         }
         for (let i = 0; i < res.length; i++) {
