@@ -117,48 +117,31 @@ const insertIntoZkill = async (num) => {
     if(wormholeData === undefined){
         return;
     }
-    for (let i = 0; i < wormholeData.length; i++) {
-        console.log(wormholeData[i])
-        // if(!wormholeData[i].zkill_id){
-        //     return;
-        // } else {
-        //     values[i] = [res[i].id, res[i].date, res[i].ship, res[i].day]
-        // }
+    if (wormholeData) {
+        for (let i = 0; i < Object.keys(wormholeData).length; i++) {
+            const currentZKillId = Object.keys(wormholeData)[i]
+            const currentHash = Object.values(wormholeData)[i]
+            const zkill_id = currentZKillId
+            const hash = currentHash
+            values[i] = [zkill_id, hash]
+        }
     }
-    //remove return when done
-    return;
-
     const client = new Client({
         connectionString: process.env.DATABASE_URL,
         ssl: {
             rejectUnauthorized: false
         }
     });
-    await axiosZkillData(pageNum)
-        .catch((err) => {
-            console.log(err);
-            return;
-        })
-        .then((wormholeData) => {
-            if (wormholeData) {
-                for (let i = 0; i < Object.keys(wormholeData).length; i++) {
-                    const currentZKillId = Object.keys(wormholeData)[i]
-                    const currentHash = Object.values(wormholeData)[i]
-                    const zkill_id = currentZKillId
-                    const hash = currentHash
-                    client.query(`INSERT INTO zkill (zkill_id, hash) VALUES ('${zkill_id}', '${hash}')`, (err, res) => {
-                        if (err) {
-                            console.log(err)
-                            client.end()
-                            return
-                        }
-                    })
-                }
-            }
-        })
-        .then(() => {
+    var sql = format(`INSERT INTO zkill (zkill_id, hash) VALUES %L`, values)
+    client.query(sql, (err, res) => {
+        if(err){
+            console.log(err)
             client.end()
-        })
+        } else {
+            client.end()
+            console.log('floop')
+        }
+    })
 }
 
 const insertIntoEsi = async (counter) => {
@@ -186,9 +169,7 @@ const insertIntoEsi = async (counter) => {
     client.query(sql, (err, result) => {
         if (err) {
             client.end()
-            // console.log(err)
         } else {
-            // console.log('floop')
             client.end()
         }
     })
