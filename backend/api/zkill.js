@@ -134,6 +134,7 @@ const insertIntoZkill = async (num) => {
         });
         var sql = format(`INSERT INTO zkill (zkill_id, hash) VALUES %L`, values)
         client.query(sql, (err, res) => {
+            console.log(res)
             if(err){
                 console.log('line 137')
                 console.log(err)
