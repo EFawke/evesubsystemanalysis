@@ -115,6 +115,7 @@ const lookUpEsi = async (num) => {
 
 const insertionsForZkill = async (client, wormholeData) => {
     for(let i = 0; i < Object.keys(wormholeData).length; i ++){
+        console.log(wormholeData[i])
         client.query(`INSERT INTO zkill (zkill_id, hash) VALUES ('${Object.keys(wormholeData)[i]}', '${Object.values(wormholeData)[i]}')`, (err, res) => {
             if(err){
                 // console.log('zkill duplicate key')
