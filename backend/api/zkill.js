@@ -111,6 +111,39 @@ const lookUpEsi = async (num) => {
     return killmails;
 }
 
+const insertionsForZkill = async (client, values) => {
+    for(let i = 0; i < values.length; i ++){
+        client.query(`INSERT INTO esi (killmail_id, killmail_time, ship_type_id, weekday) VALUES ('${values[i][0]}', '${values[i][1]}', '${values[i][2]}')`, (err, res) => {
+            if(err){
+                console.log(err)
+            } else {
+                console.log('value inserted');
+            }
+        })
+    }
+}
+
+const performzKillInsertions = async (values) => {
+    const client = new Client({
+    connectionString: process.env.DATABASE_URL,
+    ssl: {
+        rejectUnauthorized: false
+    },
+    allowExitOnIdle: true
+    });
+    client.connect()
+    await insertionsForZkill(client, values)
+    .then((res) => {
+        if(res){
+            client.end()
+        }
+    })
+    .catch((e) => {
+        console.log(e)
+        client.end()
+    })
+}
+
 const insertIntoZkill = async (num) => {
     await axiosZkillData(num).then((wormholeData) => {
         console.log('zkill counter ' + num)
@@ -126,34 +159,35 @@ const insertIntoZkill = async (num) => {
                 values[i] = [currentZKillId, currentHash]
             }
         }
-        const client = new Client({
-            connectionString: process.env.DATABASE_URL,
-            ssl: {
-                rejectUnauthorized: false
-            }
-        });
-        var sql = format(`INSERT INTO zkill (zkill_id, hash) VALUES %L`, values)
-        client.query(sql, (err, res) => {
-            console.log(res)
-            if(err){
-                console.log('line 137')
-                console.log(err)
-                client.end()
-            } else {
-                console.log('floop')
-                client.end()
-            }
-        })
+        performzKillInsertions(values)
+        // const client = new Client({
+        //     connectionString: process.env.DATABASE_URL,
+        //     ssl: {
+        //         rejectUnauthorized: false
+        //     }
+        // });
+        // var sql = format(`INSERT INTO zkill (zkill_id, hash) VALUES %L`, values)
+        // client.query(sql, (err, res) => {
+        //     console.log(res)
+        //     if(err){
+        //         console.log('line 137')
+        //         console.log(err)
+        //         client.end()
+        //     } else {
+        //         console.log('floop')
+        //         client.end()
+        //     }
+        // })
     })
 }
 
-const insertionsFor = async (client, values) => {
+const insertionsForEsi = async (client, values) => {
     for(let i = 0; i < values.length; i ++){
         client.query(`INSERT INTO esi (killmail_id, killmail_time, ship_type_id, weekday) VALUES ('${values[i][0]}', '${values[i][1]}', '${values[i][2]}', '${values[i][3]}')`, (err, res) => {
             if(err){
-                // console.log(err)
+                console.log(err)
             } else {
-                console.log('value inserted');
+                // console.log('value inserted');
             }
         })
     }
@@ -168,7 +202,7 @@ const performEsiInsertions = async (values) => {
         allowExitOnIdle: true
         });
         client.connect()
-        await insertionsFor(client, values)
+        await insertionsForEsi(client, values)
         .then((res) => {
             if(res){
                 client.end()
@@ -195,25 +229,7 @@ const insertIntoEsi = async (counter) => {
                 values[i] = [res[i].id, res[i].date, res[i].ship, res[i].day]
             }
         }
-        // const client = new Client({
-        //     connectionString: process.env.DATABASE_URL,
-        //     ssl: {
-        //       rejectUnauthorized: false
-        //     },
-        //     allowExitOnIdle: true
-        // });
-        // var sql = format(`INSERT INTO esi (killmail_id, killmail_time, ship_type_id, weekday) VALUES %L`, values)
-        // client.connect()
         performEsiInsertions(values)
-        // client.query(sql, (err, result) => {
-        //     if (err) {
-        //         console.log('duplicate key error')
-        //         client.end()
-        //     } else {
-        //         console.log('new values added to esi')
-        //         client.end()
-        //     }
-        // })
     })
 }
 
