@@ -149,12 +149,9 @@ const insertIntoZkill = async (num) => {
 
 const insertionsFor = async (client, values) => {
     for(let i = 0; i < values.length; i ++){
-        if(i === values.length - 1){
-            return "joop"
-        }
         client.query(`INSERT INTO esi (killmail_id, killmail_time, ship_type_id, weekday) VALUES ('${values[i][0]}', '${values[i][1]}', '${values[i][2]}', '${values[i][3]}')`, (err, res) => {
             if(err){
-                console.log(err)
+                // console.log(err)
             } else {
                 console.log('value inserted');
             }
@@ -171,8 +168,14 @@ const performEsiInsertions = async (values) => {
         allowExitOnIdle: true
         });
         client.connect()
-        await insertionsFor(client, values).then((res) => {
-            console.log(res);
+        await insertionsFor(client, values)
+        .then((res) => {
+            if(res){
+                client.end()
+            }
+        })
+        .catch((e) => {
+            console.log(e)
             client.end()
         })
 }
