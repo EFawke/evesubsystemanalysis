@@ -115,7 +115,7 @@ const insertionsForZkill = async (client, values) => {
     for(let i = 0; i < values.length; i ++){
         client.query(`INSERT INTO zkill (zkill_id, hash) VALUES ('${values[i][0]}', '${values[i][1]}')`, (err, res) => {
             if(err){
-                console.log('zkill duplicate key')
+                // console.log('zkill duplicate key')
             } else {
                 console.log('zkill value inserted');
             }
@@ -134,9 +134,7 @@ const performzKillInsertions = async (values) => {
     client.connect()
     await insertionsForZkill(client, values)
     .then((res) => {
-        if(res){
-            client.end()
-        }
+        client.end()
     })
     .catch((e) => {
         console.log(e)
@@ -167,7 +165,7 @@ const insertionsForEsi = async (client, values) => {
     for(let i = 0; i < values.length; i ++){
         client.query(`INSERT INTO esi (killmail_id, killmail_time, ship_type_id, weekday) VALUES ('${values[i][0]}', '${values[i][1]}', '${values[i][2]}', '${values[i][3]}')`, (err, res) => {
             if(err){
-                console.log('duplicate esi key')
+
             } else {
                 console.log('esi value inserted');
             }
@@ -186,9 +184,7 @@ const performEsiInsertions = async (values) => {
         client.connect()
         await insertionsForEsi(client, values)
         .then((res) => {
-            if(res){
-                client.end()
-            }
+            client.end()
         })
         .catch((e) => {
             console.log(e)
