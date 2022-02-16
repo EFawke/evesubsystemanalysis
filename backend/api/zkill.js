@@ -1,9 +1,9 @@
 const express = require('express');
 const zkillRouter = express.Router();
 const axios = require('axios');
-// const zkillDbInit = require('../utils/zkillTableInit');
+const zkillDbInit = require('../utils/zkillTableInit');
 const esiDbInit = require('../utils/esiDbInit');
-// var format = require('pg-format');
+var format = require('pg-format');
 const { Client } = require('pg');
 const { query, response } = require('express');
 
@@ -102,7 +102,7 @@ const lookUpEsi = async (num) => {
 }
 
 const sqlInject = async (data) => {
-    // console.log(data.id)
+    console.log(data.id)
     const client = new Client({
         connectionString: process.env.DATABASE_URL,
         ssl: {
