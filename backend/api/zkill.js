@@ -102,6 +102,7 @@ const lookUpEsi = async (num) => {
 }
 
 const sqlInject = async (data) => {
+    console.log(data.id)
     const client = new Client({
         connectionString: process.env.DATABASE_URL,
         ssl: {
@@ -124,7 +125,6 @@ const sqlInject = async (data) => {
 const insertIntoEsiDatabase = async (num) => {
     const data = await lookUpEsi(num)
     for (let i = 0; i < data.length; i++) {
-        console.log(data[i])
         await sqlInject(data[i])
     }
 }
