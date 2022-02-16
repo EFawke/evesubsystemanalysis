@@ -6,25 +6,25 @@ const { Pool } = require('pg')
 infoRouter.get(`/totalDestroyed/:shipName`, (req, response, next) => {
     const shipName = req.params.shipName;
     const shipTypeId = shipSelector(shipName);
-    const pool = new Pool({
+    const client = new Client({
         connectionString: process.env.DATABASE_URL,
         ssl: {
             rejectUnauthorized: false
         }
     });
-    pool.connect()
-    pool.query(`SELECT COUNT(*) FROM esi WHERE ship_type_id = '${shipTypeId}';`, (err, res) => {
+    client.connect()
+    client.query(`SELECT COUNT(*) FROM esi WHERE ship_type_id = '${shipTypeId}';`, (err, res) => {
         if (err) {
-            pool.end()
+            client.end()
             // response.sendStatus(404)
             // throw err
         } else {
-            pool.end()
+            client.end()
             const data = res.rows;
             const floop = data[0].count
             response.status(200).send(floop)
         }
-        pool.end()
+        client.end()
     })
 })
 
