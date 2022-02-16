@@ -131,7 +131,6 @@ const insertIntoZkill = async (num) => {
                 rejectUnauthorized: false
             }
         });
-        console.log(values)
         var sql = format(`INSERT INTO zkill (zkill_id, hash) VALUES %L`, values)
         client.query(sql, (err, res) => {
             if(err){
@@ -180,9 +179,11 @@ const insertIntoEsi = async (counter) => {
 const insertThings = async (counter) => {
     for (let i = 0; i <= 20; i++) {
         counter = i;
+        console.log(counter)
         insertIntoZkill(counter);
         insertIntoEsi(counter)
     }
+    console.log('process complete')
 }
 
 const fillDbs = async () => {
