@@ -115,15 +115,14 @@ const insertIntoZkill = async (num) => {
     const wormholeData = await axiosZkillData(num)
     var values = [];
     if(wormholeData === undefined){
+        console.log('the api failed')
         return;
     }
     if (wormholeData) {
         for (let i = 0; i < Object.keys(wormholeData).length; i++) {
             const currentZKillId = Object.keys(wormholeData)[i]
             const currentHash = Object.values(wormholeData)[i]
-            const zkill_id = currentZKillId
-            const hash = currentHash
-            values[i] = [zkill_id, hash]
+            values[i] = [currentZKillId, currentHash]
         }
     }
     const client = new Client({
