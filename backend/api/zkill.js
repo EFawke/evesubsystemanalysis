@@ -145,7 +145,6 @@ const performzKillInsertions = async (values) => {
 
 const insertIntoZkill = async (num) => {
     await axiosZkillData(num).then((wormholeData) => {
-        console.log('zkill counter ' + num)
         var values = [];
         if(wormholeData === undefined){
             console.log('the api failed')
@@ -158,6 +157,7 @@ const insertIntoZkill = async (num) => {
                 values[i] = [currentZKillId, currentHash]
             }
         }
+        console.log(values)
         performzKillInsertions(values)
     })
 }
@@ -195,7 +195,6 @@ const performEsiInsertions = async (values) => {
 
 const insertIntoEsi = async (counter) => {
     await lookUpEsi(counter).then((res) => {
-        console.log('esi counter ' + counter)
         var values = []
         if(res === undefined){
             console.log('line 151')
