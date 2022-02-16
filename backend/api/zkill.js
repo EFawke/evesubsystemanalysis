@@ -81,7 +81,7 @@ const lookUpEsi = async (num) => {
         }
     }
     const wormholeData = await axiosZkillData(pageNum);
-    if(wormholeData === undefined){
+    if (wormholeData === undefined) {
         return;
     }
     for (let i = 0; i < Object.keys(wormholeData).length; i++) {
@@ -103,9 +103,9 @@ const lookUpEsi = async (num) => {
 }
 
 const insertionsForZkill = async (client, wormholeData) => {
-    for(let i = 0; i < Object.keys(wormholeData).length; i ++){
+    for (let i = 0; i < Object.keys(wormholeData).length; i++) {
         client.query(`INSERT INTO zkill (zkill_id, hash) VALUES ('${Object.keys(wormholeData)[i]}', '${Object.values(wormholeData)[i]}')`, (err, res) => {
-            if(err){
+            if (err) {
                 // console.log('zkill duplicate key')
             } else {
                 console.log('zkill value inserted');
@@ -116,26 +116,26 @@ const insertionsForZkill = async (client, wormholeData) => {
 
 const performzKillInsertions = async (wormholeData) => {
     const client = new Client({
-    connectionString: process.env.DATABASE_URL,
-    ssl: {
-        rejectUnauthorized: false
-    },
-    allowExitOnIdle: true
+        connectionString: process.env.DATABASE_URL,
+        ssl: {
+            rejectUnauthorized: false
+        },
+        allowExitOnIdle: true
     });
     client.connect()
     await insertionsForZkill(client, wormholeData)
-    .then((res) => {
-        client.end()
-    })
-    .catch((e) => {
-        console.log(e)
-        client.end()
-    })
+        .then((res) => {
+            client.end()
+        })
+        .catch((e) => {
+            console.log(e)
+            client.end()
+        })
 }
 
 const insertIntoZkill = async (num) => {
     await axiosZkillData(num).then((wormholeData) => {
-        if(wormholeData === undefined){
+        if (wormholeData === undefined) {
             console.log('the api failed')
             return;
         }
@@ -147,7 +147,7 @@ const insertIntoZkill = async (num) => {
 
 const sqlEsi = async (id, date, ship, day, client) => {
     client.query(`INSERT INTO esi (killmail_id, killmail_time, ship_type_id, weekday) VALUES ('${id}', '${date}', '${ship}', '${day}')`, (err, res) => {
-        if(err){
+        if (err) {
             console.log(err)
         } else {
             console.log('esi value inserted');
@@ -156,29 +156,29 @@ const sqlEsi = async (id, date, ship, day, client) => {
 }
 
 const insertionsForEsi = async (client, values) => {
-    for(let i = 0; i < values.length; i++){
+    for (let i = 0; i < values.length; i++) {
         await sqlEsi(values[i].id, values[i].date, values[i].ship, values[i].day, client)
     }
 }
 
 const performEsiInsertions = async (values, client) => {
     // console.log('inserting this into esi ' + values + 'inserting this into esi')
-        await insertionsForEsi(client, values)
-        // .then((res) => {
-        //     client.end()
-        // })
-        // .catch((e) => {
-        //     console.log(e)
-        //     client.end()
-        // })
+    await insertionsForEsi(client, values)
+    // .then((res) => {
+    //     client.end()
+    // })
+    // .catch((e) => {
+    //     console.log(e)
+    //     client.end()
+    // })
 }
 
-const insertIntoEsi = async (counter) => {
+const insertIntoEsi = async (counter, client) => {
     await lookUpEsi(counter).then((res) => {
-        if(res === undefined){
+        if (res === undefined) {
             return
         }
-        performEsiInsertions(res)
+        performEsiInsertions(res, client)
     })
 }
 
@@ -194,8 +194,8 @@ const insertThings = async () => {
                 rejectUnauthorized: false
             },
             allowExitOnIdle: true
-            });
-            client.connect()
+        });
+        client.connect()
         await insertIntoEsi(i, client)
             .catch(e => {
                 console.log(e)
