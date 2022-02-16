@@ -11,14 +11,14 @@ esiDbInit();
 zkillDbInit();
 
 
-const { Pool } = require('pg')
+// const { Pool } = require('pg')
 
-const pool = new Pool()
+// const pool = new Pool()
 
-pool.on('error', (err, client) => {
-    console.error('Unexpected error on idle client', err) // your callback here
-    process.exit(-1)
-})
+// pool.on('error', (err, client) => {
+//     console.error('Unexpected error on idle client', err) // your callback here
+//     process.exit(-1)
+// })
 
 const dateToDay = (date) => {
     const killDate = new Date(date);
@@ -156,17 +156,23 @@ const insertIntoEsi = async (counter) => {
     for (let i = 0; i < res.length; i++) {
         values[i] = [res[i].id, res[i].date, res[i].ship, res[i].day]
     }
-    pool.connect()
-        .then(client => {
-            client.query(`INSERT INTO esi (killmail_id, killmail_time, ship_type_id, weekday) VALUES`, values, (err, result) => {
-                if (err) {
-                    console.log(err)
-                }
-            })
-                .then(() => {
-                    client.end()
-                })
-        })
+    const client = new Client({
+        connectionString: process.env.DATABASE_URL,
+        ssl: {
+          rejectUnauthorized: false
+        }, 
+        allowExitOnIdle: true
+    });
+    client.connect()
+    client.query(`INSERT INTO esi (killmail_id, killmail_time, ship_type_id, weekday) VALUES`, values, (err, result) => {
+        if (err) {
+            client.end()
+            console.log(err)
+        } else {
+            console.log('floop')
+            client.end()
+        }
+    })
 
 }
 
