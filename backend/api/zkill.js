@@ -147,6 +147,36 @@ const insertIntoZkill = async (num) => {
     })
 }
 
+const insertionsFor = async (client, values) => {
+    for(let i = 0; i < values.length; i ++){
+        if(i === values.length - 1){
+            return "joop"
+        }
+        client.query(`INSERT INTO esi (killmail_id, killmail_time, ship_type_id, weekday) VALUES ('${values[i][0]}', '${values[i][1]}', '${values[i][2]}', '${values[i][3]}')`, (err, res) => {
+            if(err){
+                console.log(err)
+            } else {
+                console.log('value inserted');
+            }
+        })
+    }
+}
+
+const performEsiInsertions = async (values) => {
+        const client = new Client({
+        connectionString: process.env.DATABASE_URL,
+        ssl: {
+            rejectUnauthorized: false
+        },
+        allowExitOnIdle: true
+        });
+        client.connect()
+        await insertionsFor(client, values).then((res) => {
+            console.log(res);
+            client.end()
+        })
+}
+
 const insertIntoEsi = async (counter) => {
     await lookUpEsi(counter).then((res) => {
         console.log('esi counter ' + counter)
@@ -162,24 +192,25 @@ const insertIntoEsi = async (counter) => {
                 values[i] = [res[i].id, res[i].date, res[i].ship, res[i].day]
             }
         }
-        const client = new Client({
-            connectionString: process.env.DATABASE_URL,
-            ssl: {
-              rejectUnauthorized: false
-            },
-            allowExitOnIdle: true
-        });
-        var sql = format(`INSERT INTO esi (killmail_id, killmail_time, ship_type_id, weekday) VALUES %L`, values)
-        client.connect()
-        client.query(sql, (err, result) => {
-            if (err) {
-                console.log('duplicate key error')
-                client.end()
-            } else {
-                console.log('new values added to esi')
-                client.end()
-            }
-        })
+        // const client = new Client({
+        //     connectionString: process.env.DATABASE_URL,
+        //     ssl: {
+        //       rejectUnauthorized: false
+        //     },
+        //     allowExitOnIdle: true
+        // });
+        // var sql = format(`INSERT INTO esi (killmail_id, killmail_time, ship_type_id, weekday) VALUES %L`, values)
+        // client.connect()
+        performEsiInsertions(values)
+        // client.query(sql, (err, result) => {
+        //     if (err) {
+        //         console.log('duplicate key error')
+        //         client.end()
+        //     } else {
+        //         console.log('new values added to esi')
+        //         client.end()
+        //     }
+        // })
     })
 }
 
