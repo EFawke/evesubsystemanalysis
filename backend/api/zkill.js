@@ -147,7 +147,7 @@ const insertIntoZkill = async (num) => {
 
 const insertionsForEsi = async (client, values) => {
     for(let i = 0; i < values.length; i++){
-        console.log(`('${values[i].id}', '${values[i].date}', '${values[i].ship}', '${values[i].day}')`)
+        // console.log(`('${values[i].id}', '${values[i].date}', '${values[i].ship}', '${values[i].day}')`)
         client.query(`INSERT INTO esi (killmail_id, killmail_time, ship_type_id, weekday) VALUES ('${values[i].id}', '${values[i].date}', '${values[i].ship}', '${values[i].day}')`, (err, res) => {
             if(err){
                 console.log(err)
