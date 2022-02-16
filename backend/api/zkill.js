@@ -103,7 +103,6 @@ const lookUpEsi = async (num) => {
 }
 
 const insertionsForZkill = async (client, wormholeData) => {
-    console.log(wormholeData)
     for(let i = 0; i < Object.keys(wormholeData).length; i ++){
         console.log(Object.keys(wormholeData)[i])
         console.log(Object.values(wormholeData)[i])
