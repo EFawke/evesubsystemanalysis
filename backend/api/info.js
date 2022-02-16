@@ -15,14 +15,16 @@ infoRouter.get(`/totalDestroyed/:shipName`, (req, response, next) => {
     pool.connect()
     pool.query(`SELECT COUNT(*) FROM esi WHERE ship_type_id = '${shipTypeId}';`, (err, res) => {
         if (err) {
-            response.sendStatus(404)
-            throw err
+            pool.end()
+            // response.sendStatus(404)
+            // throw err
         } else {
+            pool.end()
             const data = res.rows;
             const floop = data[0].count
             response.status(200).send(floop)
-            pool.end()
         }
+        pool.end()
     })
 })
 
