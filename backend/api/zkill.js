@@ -131,7 +131,7 @@ const insertIntoEsiDatabase = async (num) => {
     }
 }
 
-const fillDbs = async () => {
+const fillDbs = () => {
     console.log('filling db')
     for (let i = 0; i <= 20; i++) {
         await insertIntoEsiDatabase(i)
