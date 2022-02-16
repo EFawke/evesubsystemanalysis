@@ -8,7 +8,6 @@ const { Client } = require('pg');
 const { query, response } = require('express');
 
 esiDbInit();
-zkillDbInit();
 
 const dateToDay = (date) => {
     const killDate = new Date(date);
@@ -102,19 +101,7 @@ const lookUpEsi = async (num) => {
     return killmails;
 }
 
-const insertionsForZkill = async (client, wormholeData) => {
-    for (let i = 0; i < Object.keys(wormholeData).length; i++) {
-        client.query(`INSERT INTO zkill (zkill_id, hash) VALUES ('${Object.keys(wormholeData)[i]}', '${Object.values(wormholeData)[i]}')`, (err, res) => {
-            if (err) {
-                // console.log('zkill duplicate key')
-            } else {
-                console.log('zkill value inserted');
-            }
-        })
-    }
-}
-
-const performzKillInsertions = async (wormholeData) => {
+const sqlInject = async (data) => {
     const client = new Client({
         connectionString: process.env.DATABASE_URL,
         ssl: {
@@ -123,97 +110,91 @@ const performzKillInsertions = async (wormholeData) => {
         allowExitOnIdle: true
     });
     client.connect()
-    await insertionsForZkill(client, wormholeData)
-        .then((res) => {
-            client.end()
-        })
-        .catch((e) => {
-            console.log(e)
-            client.end()
-        })
-}
-
-const insertIntoZkill = async (num) => {
-    await axiosZkillData(num).then((wormholeData) => {
-        if (wormholeData === undefined) {
-            console.log('the api failed')
-            return;
-        }
-        if (wormholeData) {
-            performzKillInsertions(wormholeData)
-        }
-    })
-}
-
-const sqlEsi = async (id, date, ship, day, client) => {
-    client.query(`INSERT INTO esi (killmail_id, killmail_time, ship_type_id, weekday) VALUES ('${id}', '${date}', '${ship}', '${day}')`, (err, res) => {
+    client.query(`INSERT INTO esi (killmail_id, killmail_time, ship_type_id, weekday) VALUES ('${data.id}', '${data.date}', '${data.ship}', '${data.day}')`, (err, res) => {
         if (err) {
             console.log(err)
+            client.end()
         } else {
+            client.end()
             console.log('esi value inserted');
         }
     })
 }
 
-const insertionsForEsi = async (client, values) => {
-    for (let i = 0; i < values.length; i++) {
-        await sqlEsi(values[i].id, values[i].date, values[i].ship, values[i].day, client)
-    }
-}
-
-const performEsiInsertions = async (values, client) => {
-    // console.log('inserting this into esi ' + values + 'inserting this into esi')
-    await insertionsForEsi(client, values)
-    // .then((res) => {
-    //     client.end()
-    // })
-    // .catch((e) => {
-    //     console.log(e)
-    //     client.end()
-    // })
-}
-
-const insertIntoEsi = async (counter, client) => {
-    await lookUpEsi(counter).then((res) => {
-        if (res === undefined) {
-            return
+const insertIntoEsiDatabase = async (num) => {
+    await lookUpEsi(num).then((data) => {
+        for (let i = 0; i < data.length; i++) {
+            await sqlInject(data[i])
         }
-        performEsiInsertions(res, client)
     })
-}
-
-const insertThings = async () => {
-    for (let i = 0; i <= 20; i++) {
-        // await insertIntoZkill(i)
-        //     .catch(e => {
-        //         console.log('error inserting into zkill on line 186')
-        //     })
-        const client = new Client({
-            connectionString: process.env.DATABASE_URL,
-            ssl: {
-                rejectUnauthorized: false
-            },
-            allowExitOnIdle: true
-        });
-        client.connect()
-        await insertIntoEsi(i, client)
-            .catch(e => {
-                console.log(e)
-                console.log('error inserting into esi on line 190')
-            })
-            .then(() => {
-                client.end()
-            })
-    }
 }
 
 const fillDbs = async () => {
-    await insertThings().then(() => {
-        console.log('done')
-    })
+    for (let i = 0; i === 20; i++) {
+        await insertIntoEsiDatabase(i)
+    }
 }
 
-fillDbs();
+fillDbs()
 setInterval(fillDbs, 1000 * 60 * 10);
 
 module.exports = zkillRouter;
+
+
+// const sqlEsi = async (id, date, ship, day, client) => {
+//     client.query(`INSERT INTO esi (killmail_id, killmail_time, ship_type_id, weekday) VALUES ('${id}', '${date}', '${ship}', '${day}')`, (err, res) => {
+//         if (err) {
+//             console.log(err)
+//         } else {
+//             console.log('esi value inserted');
+//         }
+//     })
+// }
+
+// const insertionsForEsi = async (client, values) => {
+//     for (let i = 0; i < values.length; i++) {
+//         await sqlEsi(values[i].id, values[i].date, values[i].ship, values[i].day, client)
+//     }
+// }
+
+// const performEsiInsertions = async (values, client) => {
+//     await insertionsForEsi(client, values)
+// }
+
+// const insertIntoEsi = async (counter, client) => {
+//     await lookUpEsi(counter).then((res) => {
+//         if (res === undefined) {
+//             return
+//         }
+//         performEsiInsertions(res, client)
+//     })
+// }
+
+// const insertThings = async () => {
+//     for (let i = 0; i <= 20; i++) {
+//         const client = new Client({
+//             connectionString: process.env.DATABASE_URL,
+//             ssl: {
+//                 rejectUnauthorized: false
+//             },
+//             allowExitOnIdle: true
+//         });
+//         client.connect()
+//         await insertIntoEsi(i, client)
+//             .catch(e => {
+//                 console.log(e)
+//                 console.log('error inserting into esi on line 190')
+//             })
+//             .then(() => {
+//                 client.end()
+//             })
+//     }
+// }
+
+// const fillDbs = async () => {
+//     await insertThings().then(() => {
+//         console.log('done')
+//     })
+// }
+
+// fillDbs();
