@@ -146,35 +146,35 @@ const insertIntoZkill = async (num) => {
 }
 
 const insertIntoEsi = async (counter) => {
-    const res = await lookUpEsi(counter)
-    var values = []
-    if(res === undefined){
-        return
-    }
-    for (let i = 0; i < res.length; i++) {
-        if(!res[i].id){
-            return;
-        } else {
-            values[i] = [res[i].id, res[i].date, res[i].ship, res[i].day]
+    await lookUpEsi(counter).then((res) => {
+        var values = []
+        if(res === undefined){
+            return
         }
-    }
-    const client = new Client({
-        connectionString: process.env.DATABASE_URL,
-        ssl: {
-          rejectUnauthorized: false
-        },
-        allowExitOnIdle: true
-    });
-    var sql = format(`INSERT INTO esi (killmail_id, killmail_time, ship_type_id, weekday) VALUES %L`, values)
-    client.connect()
-    client.query(sql, (err, result) => {
-        if (err) {
-            client.end()
-        } else {
-            client.end()
+        for (let i = 0; i < res.length; i++) {
+            if(!res[i].id){
+                return;
+            } else {
+                values[i] = [res[i].id, res[i].date, res[i].ship, res[i].day]
+            }
         }
+        const client = new Client({
+            connectionString: process.env.DATABASE_URL,
+            ssl: {
+              rejectUnauthorized: false
+            },
+            allowExitOnIdle: true
+        });
+        var sql = format(`INSERT INTO esi (killmail_id, killmail_time, ship_type_id, weekday) VALUES %L`, values)
+        client.connect()
+        client.query(sql, (err, result) => {
+            if (err) {
+                client.end()
+            } else {
+                client.end()
+            }
+        })
     })
-
 }
 
 const insertThings = async (counter) => {
