@@ -118,10 +118,9 @@ const sqlInject = async (data) => {
             client.end()
             console.log('esi value inserted');
         }
+        return "ok"
     }).then((res) => {
-        if(res){
-            client.end()
-        }
+        client.end()
     })
 }
 
