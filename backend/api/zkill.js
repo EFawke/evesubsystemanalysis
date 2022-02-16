@@ -111,8 +111,8 @@ const sqlInject = async (data) => {
     client.connect()
     client.query(`INSERT INTO esi (killmail_id, killmail_time, ship_type_id, weekday) VALUES ('${data.id}', '${data.date}', '${data.ship}', '${data.day}')`, (err, res) => {
         if (err) {
-            client.end()
             console.log(JSON.stringify(err))
+            client.end()
         } else {
             client.end()
             console.log('esi value inserted');
@@ -131,7 +131,7 @@ const insertIntoEsiDatabase = async (num) => {
     }
 }
 
-const fillDbs = () => {
+const fillDbs = async () => {
     console.log('filling db')
     for (let i = 0; i <= 20; i++) {
         await insertIntoEsiDatabase(i)
