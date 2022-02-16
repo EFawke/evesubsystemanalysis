@@ -131,7 +131,8 @@ const insertIntoEsiDatabase = async (num) => {
 }
 
 const fillDbs = async () => {
-    for (let i = 0; i === 20; i++) {
+    console.log('filling db')
+    for (let i = 0; i <= 20; i++) {
         await insertIntoEsiDatabase(i)
     }
 }
@@ -173,14 +174,6 @@ module.exports = zkillRouter;
 
 // const insertThings = async () => {
 //     for (let i = 0; i <= 20; i++) {
-//         const client = new Client({
-//             connectionString: process.env.DATABASE_URL,
-//             ssl: {
-//                 rejectUnauthorized: false
-//             },
-//             allowExitOnIdle: true
-//         });
-//         client.connect()
 //         await insertIntoEsi(i, client)
 //             .catch(e => {
 //                 console.log(e)
