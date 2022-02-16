@@ -118,12 +118,12 @@ const sqlInject = async (data) => {
     client.connect()
     return client.query(`INSERT INTO esi (killmail_id, killmail_time, ship_type_id, weekday) VALUES ('${data.id}', '${data.date}', '${data.ship}', '${data.day}')`, (err, res) => {
         if (err) {
+            client.end()
             const error = JSON.stringify(err)
             if(error["code"] === "23505"){
                 flag = true;
             }
             console.log(JSON.stringify(err))
-            client.end()
         } else {
             client.end()
             console.log('esi value inserted');
