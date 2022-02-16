@@ -134,6 +134,7 @@ const insertIntoZkill = async (num) => {
         var sql = format(`INSERT INTO zkill (zkill_id, hash) VALUES %L`, values)
         client.query(sql, (err, res) => {
             if(err){
+                console.log('line 137')
                 console.log(err)
                 client.end()
             } else {
@@ -169,7 +170,7 @@ const insertIntoEsi = async (counter) => {
         client.connect()
         client.query(sql, (err, result) => {
             if (err) {
-                console.log("line 171")
+                console.log(err)
                 client.end()
             } else {
                 console.log('new values added to esi')
