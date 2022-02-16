@@ -105,6 +105,8 @@ const lookUpEsi = async (num) => {
 const insertionsForZkill = async (client, wormholeData) => {
     console.log(wormholeData)
     for(let i = 0; i < Object.keys(wormholeData).length; i ++){
+        console.log(Object.keys(wormholeData)[i])
+        console.log(Object.values(wormholeData)[i])
         client.query(`INSERT INTO zkill (zkill_id, hash) VALUES ('${Object.keys(wormholeData)[i]}', '${Object.values(wormholeData)[i]}')`, (err, res) => {
             if(err){
                 // console.log('zkill duplicate key')
@@ -136,7 +138,6 @@ const performzKillInsertions = async (wormholeData) => {
 
 const insertIntoZkill = async (num) => {
     await axiosZkillData(num).then((wormholeData) => {
-        var values = [];
         if(wormholeData === undefined){
             console.log('the api failed')
             return;
