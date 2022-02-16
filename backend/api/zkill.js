@@ -145,16 +145,19 @@ const insertIntoZkill = async (num) => {
     })
 }
 
+const sqlEsi = async (id, date, ship, day, client) => {
+    client.query(`INSERT INTO esi (killmail_id, killmail_time, ship_type_id, weekday) VALUES ('${id}', '${date}', '${ship}', '${day}')`, (err, res) => {
+        if(err){
+            console.log(err)
+        } else {
+            console.log('esi value inserted');
+        }
+    })
+}
+
 const insertionsForEsi = async (client, values) => {
     for(let i = 0; i < values.length; i++){
-        // console.log(`('${values[i].id}', '${values[i].date}', '${values[i].ship}', '${values[i].day}')`)
-        client.query(`INSERT INTO esi (killmail_id, killmail_time, ship_type_id, weekday) VALUES ('${values[i].id}', '${values[i].date}', '${values[i].ship}', '${values[i].day}')`, (err, res) => {
-            if(err){
-                console.log(err)
-            } else {
-                console.log('esi value inserted');
-            }
-        })
+        await sqlEsi(values[i].id, values[i].date, values[i].ship, values[i].day, client)
     }
 }
 
