@@ -172,10 +172,10 @@ const performEsiInsertions = async (values) => {
         .then((res) => {
             client.end()
         })
-        .catch((e) => {
-            console.log(e)
-            client.end()
-        })
+        // .catch((e) => {
+        //     console.log(e)
+        //     client.end()
+        // })
 }
 
 const insertIntoEsi = async (counter) => {
