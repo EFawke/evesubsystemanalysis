@@ -112,35 +112,36 @@ const lookUpEsi = async (num) => {
 }
 
 const insertIntoZkill = async (num) => {
-    const wormholeData = await axiosZkillData(num)
-    var values = [];
-    if(wormholeData === undefined){
-        console.log('the api failed')
-        return;
-    }
-    if (wormholeData) {
-        for (let i = 0; i < Object.keys(wormholeData).length; i++) {
-            const currentZKillId = Object.keys(wormholeData)[i]
-            const currentHash = Object.values(wormholeData)[i]
-            values[i] = [currentZKillId, currentHash]
+    await axiosZkillData(num).then((wormholeData) => {
+        var values = [];
+        if(wormholeData === undefined){
+            console.log('the api failed')
+            return;
         }
-    }
-    const client = new Client({
-        connectionString: process.env.DATABASE_URL,
-        ssl: {
-            rejectUnauthorized: false
+        if (wormholeData) {
+            for (let i = 0; i < Object.keys(wormholeData).length; i++) {
+                const currentZKillId = Object.keys(wormholeData)[i]
+                const currentHash = Object.values(wormholeData)[i]
+                values[i] = [currentZKillId, currentHash]
+            }
         }
-    });
-    console.log(values)
-    var sql = format(`INSERT INTO zkill (zkill_id, hash) VALUES %L`, values)
-    client.query(sql, (err, res) => {
-        if(err){
-            console.log(err)
-            client.end()
-        } else {
-            console.log('floop')
-            client.end()
-        }
+        const client = new Client({
+            connectionString: process.env.DATABASE_URL,
+            ssl: {
+                rejectUnauthorized: false
+            }
+        });
+        console.log(values)
+        var sql = format(`INSERT INTO zkill (zkill_id, hash) VALUES %L`, values)
+        client.query(sql, (err, res) => {
+            if(err){
+                console.log(err)
+                client.end()
+            } else {
+                console.log('floop')
+                client.end()
+            }
+        })
     })
 }
 
