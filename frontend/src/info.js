@@ -22,14 +22,15 @@ class Info extends React.Component {
         // this.HomeCheck();
         if (window.location.pathname === "/") {
             axios.get(`/api/counter/totalDestroyed/Heron`).then(response => {
-                const totalDes = response.data;
+                const totalDes = response.data.number;
                 this.setState({ totalDestroyed: totalDes })
+                this.setState({shipSelected: "Heron"})
             }).then(() => {
                 this.setState({ isLoaded: true })
             })
         } else {
             axios.get(`/api/counter/totalDestroyed/${this.props.shipSelected}`).then(response => {
-                const totalDes = response.data;
+                const totalDes = response.data.number;
                 this.setState({ totalDestroyed: totalDes })
             }).then(() => {
                 this.setState({ isLoaded: true })
