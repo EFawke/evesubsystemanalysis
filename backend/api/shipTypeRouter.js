@@ -21,10 +21,6 @@ shipTypeRouter.get(`/:shipName`, (req, res, next) => {
     Friday: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
     Saturday: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
     Sunday: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-    info: {
-      ship: null,
-      quantity: 0
-    }
   };
   client.connect()
   client.query(`SELECT * FROM esi WHERE ship_type_id = '${shipTypeId}';`, (err, response) => {
@@ -37,8 +33,8 @@ shipTypeRouter.get(`/:shipName`, (req, res, next) => {
       const data = response.rows
       var d = new Date();
       d.setMonth(d.getMonth() - 3);
-      heatmap.info.quantity = data.length;
-      heatmap.info.ship = shipName;
+      // heatmap.info.quantity = data.length;
+      // heatmap.info.ship = shipName;
       for (let i = 0; i < data.length; i++) {
         let time = Number(data[i].killmail_time.substring(11, 13));
         const day = data[i].weekday;
