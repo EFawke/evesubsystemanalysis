@@ -113,9 +113,9 @@ const lookUpEsi = async (num) => {
     return killmails;
 }
 
-const insertionsForZkill = async (client, values) => {
-    for(let i = 0; i < values.length; i ++){
-        client.query(`INSERT INTO zkill (zkill_id, hash) VALUES ('${values[i][0]}', '${values[i][1]}')`, (err, res) => {
+const insertionsForZkill = async (client, wormholeData) => {
+    for(let i = 0; i < Object.keys(wormholeData).length; i ++){
+        client.query(`INSERT INTO zkill (zkill_id, hash) VALUES ('${Object.keys(wormholeData)[i]}', '${Object.values(wormholeData)[i]}')`, (err, res) => {
             if(err){
                 // console.log('zkill duplicate key')
             } else {
@@ -125,7 +125,7 @@ const insertionsForZkill = async (client, values) => {
     }
 }
 
-const performzKillInsertions = async (values) => {
+const performzKillInsertions = async (wormholeData) => {
     const client = new Client({
     connectionString: process.env.DATABASE_URL,
     ssl: {
@@ -134,7 +134,7 @@ const performzKillInsertions = async (values) => {
     allowExitOnIdle: true
     });
     client.connect()
-    await insertionsForZkill(client, values)
+    await insertionsForZkill(client, wormholeData)
     .then((res) => {
         client.end()
     })
@@ -152,19 +152,14 @@ const insertIntoZkill = async (num) => {
             return;
         }
         if (wormholeData) {
-            for (let i = 0; i < Object.keys(wormholeData).length; i++) {
-                const currentZKillId = Object.keys(wormholeData)[i]
-                const currentHash = Object.values(wormholeData)[i]
-                values[i] = [currentZKillId, currentHash]
-            }
+            performzKillInsertions(wormholeData)
         }
-        performzKillInsertions(values)
     })
 }
 
 const insertionsForEsi = async (client, values) => {
-    for(let i = 0; i < values.length; i ++){
-        client.query(`INSERT INTO esi (killmail_id, killmail_time, ship_type_id, weekday) VALUES ('${values[i][0]}', '${values[i][1]}', '${values[i][2]}', '${values[i][3]}')`, (err, res) => {
+    for(let i = 0; i < values.length; i++){
+        client.query(`INSERT INTO esi (killmail_id, killmail_time, ship_type_id, weekday) VALUES ('${values[i].id}', '${values[i].date}', '${values[i].ship}', '${values[i].day}')`, (err, res) => {
             if(err){
 
             } else {
@@ -196,18 +191,10 @@ const performEsiInsertions = async (values) => {
 
 const insertIntoEsi = async (counter) => {
     await lookUpEsi(counter).then((res) => {
-        var values = []
         if(res === undefined){
             return
         }
-        for (let i = 0; i < res.length; i++) {
-            if(!res[i]){
-                return
-            } else {
-                values[i] = [res[i].id, res[i].date, res[i].ship, res[i].day]
-            }
-        }
-        performEsiInsertions(values)
+        performEsiInsertions(res)
     })
 }
 
