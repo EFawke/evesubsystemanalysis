@@ -170,9 +170,7 @@ const insertIntoEsi = async (counter) => {
         client.connect()
         client.query(sql, (err, result) => {
             if (err) {
-                if(err.code === 23505){
-                    console.log('duplicate key error')
-                }
+                console.log('duplicate key error')
                 client.end()
             } else {
                 console.log('new values added to esi')
