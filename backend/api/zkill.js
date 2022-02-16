@@ -113,7 +113,7 @@ const lookUpEsi = async (num) => {
 
 const insertionsForZkill = async (client, values) => {
     for(let i = 0; i < values.length; i ++){
-        client.query(`INSERT INTO esi (killmail_id, killmail_time, ship_type_id, weekday) VALUES ('${values[i][0]}', '${values[i][1]}')`, (err, res) => {
+        client.query(`INSERT INTO zkill (zkill_id, hash) VALUES ('${values[i][0]}', '${values[i][1]}')`, (err, res) => {
             if(err){
                 console.log(err)
             } else {
