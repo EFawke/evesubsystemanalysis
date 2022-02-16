@@ -109,6 +109,7 @@ const lookUpEsi = async (num) => {
                 }
             })
     }
+    console.log(killmails)
     return killmails;
 }
 
@@ -157,7 +158,6 @@ const insertIntoZkill = async (num) => {
                 values[i] = [currentZKillId, currentHash]
             }
         }
-        console.log(values)
         performzKillInsertions(values)
     })
 }
@@ -201,8 +201,8 @@ const insertIntoEsi = async (counter) => {
             return
         }
         for (let i = 0; i < res.length; i++) {
-            if(!res[i].id){
-                return;
+            if(!res[i]){
+                return
             } else {
                 values[i] = [res[i].id, res[i].date, res[i].ship, res[i].day]
             }
