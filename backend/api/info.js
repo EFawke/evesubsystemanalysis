@@ -16,8 +16,6 @@ infoRouter.get(`/totalDestroyed/:shipName`, (req, response, next) => {
     client.query(`SELECT COUNT(*) FROM esi WHERE ship_type_id = '${shipTypeId}';`, (err, res) => {
         if (err) {
             client.end()
-            // response.sendStatus(404)
-            // throw err
         } else {
             client.end()
             const data = res.rows;

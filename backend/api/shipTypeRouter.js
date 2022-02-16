@@ -29,8 +29,8 @@ shipTypeRouter.get(`/:shipName`, (req, res, next) => {
   client.connect()
   client.query(`SELECT * FROM esi WHERE ship_type_id = '${shipTypeId}';`, (err, response) => {
     if (err) {
-      console.log('floop ' + err)
       client.end()
+      console.log('floop ' + err)
       res.status(404).send(heatmap);
     } else {
       client.end()
