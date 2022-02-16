@@ -124,7 +124,7 @@ const sqlInject = async (data) => {
 const insertIntoEsiDatabase = async (num) => {
     await lookUpEsi(num).then((data) => {
         for (let i = 0; i < data.length; i++) {
-            await sqlInject(data[i])
+            sqlInject(data[i])
         }
     })
 }
