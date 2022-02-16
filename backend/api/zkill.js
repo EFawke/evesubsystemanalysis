@@ -42,7 +42,7 @@ const axiosZkillData = async (page) => {
     if (pageNumber > 20) {
         return;
     }
-    console.log(page)
+    // console.log(page)
     let query;
     if (page === 0) {
         query = 'https://zkillboard.com/api/kills/w-space/'
@@ -102,7 +102,7 @@ const lookUpEsi = async (num) => {
 }
 
 const sqlInject = async (data) => {
-    console.log(data.id)
+    // console.log(data.id)
     const client = new Client({
         connectionString: process.env.DATABASE_URL,
         ssl: {
@@ -113,6 +113,7 @@ const sqlInject = async (data) => {
     client.connect()
     return client.query(`INSERT INTO esi (killmail_id, killmail_time, ship_type_id, weekday) VALUES ('${data.id}', '${data.date}', '${data.ship}', '${data.day}')`, (err, res) => {
         if (err) {
+            console.log(err)
             client.end()
         } else {
             client.end()
@@ -139,54 +140,3 @@ fillDbs()
 setInterval(fillDbs, 1000 * 60 * 10);
 
 module.exports = zkillRouter;
-
-
-// const sqlEsi = async (id, date, ship, day, client) => {
-//     client.query(`INSERT INTO esi (killmail_id, killmail_time, ship_type_id, weekday) VALUES ('${id}', '${date}', '${ship}', '${day}')`, (err, res) => {
-//         if (err) {
-//             console.log(err)
-//         } else {
-//             console.log('esi value inserted');
-//         }
-//     })
-// }
-
-// const insertionsForEsi = async (client, values) => {
-//     for (let i = 0; i < values.length; i++) {
-//         await sqlEsi(values[i].id, values[i].date, values[i].ship, values[i].day, client)
-//     }
-// }
-
-// const performEsiInsertions = async (values, client) => {
-//     await insertionsForEsi(client, values)
-// }
-
-// const insertIntoEsi = async (counter, client) => {
-//     await lookUpEsi(counter).then((res) => {
-//         if (res === undefined) {
-//             return
-//         }
-//         performEsiInsertions(res, client)
-//     })
-// }
-
-// const insertThings = async () => {
-//     for (let i = 0; i <= 20; i++) {
-//         await insertIntoEsi(i, client)
-//             .catch(e => {
-//                 console.log(e)
-//                 console.log('error inserting into esi on line 190')
-//             })
-//             .then(() => {
-//                 client.end()
-//             })
-//     }
-// }
-
-// const fillDbs = async () => {
-//     await insertThings().then(() => {
-//         console.log('done')
-//     })
-// }
-
-// fillDbs();
