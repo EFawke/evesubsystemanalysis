@@ -38,21 +38,10 @@ const dateToDay = (date) => {
 }
 
 const axiosZkillData = async (page) => {
-    // const client = new Client({
-    //     connectionString: process.env.DATABASE_URL,
-    //     ssl: {
-    //         rejectUnauthorized: false
-    //     },
-    //     allowExitOnIdle: true
-    // });
-    // client.connect()
-    // const highestKillmail = client.query(`SELECT MAX(killmail_id) FROM esi`)
-    // client.end()
     let pageNumber = page;
     if (pageNumber > 20) {
         return;
     }
-    // console.log(page)
     let query;
     if (page === 0) {
         query = 'https://zkillboard.com/api/kills/w-space/'
@@ -74,8 +63,6 @@ const axiosZkillData = async (page) => {
     if (response === undefined) {
         return
     } else {
-        // console.log(highestKillmail)
-        // console.log(response.data)
         return response.data;
     }
 }
@@ -125,7 +112,7 @@ const sqlInject = async (data) => {
     return client.query(`INSERT INTO esi (killmail_id, killmail_time, ship_type_id, weekday) VALUES ('${data.id}', '${data.date}', '${data.ship}', '${data.day}')`, (err, res) => {
         if (err) {
             client.end()
-            // console.log(JSON.stringify(err))
+            console.log(JSON.stringify(err))
         } else {
             client.end()
             console.log('esi value inserted');
