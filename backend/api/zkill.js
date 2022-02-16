@@ -55,7 +55,7 @@ const axiosZkillData = async (page) => {
     }
     console.log(page)
     let query;
-    if (page == null) {
+    if (page === 0) {
         query = 'https://zkillboard.com/api/kills/w-space/'
     } else {
         query = `https://zkillboard.com/api/kills/w-space/page/${pageNumber}/`
