@@ -148,6 +148,7 @@ const insertIntoEsi = async (counter) => {
     await lookUpEsi(counter).then((res) => {
         var values = []
         if(res === undefined){
+            console.log('line 151')
             return
         }
         for (let i = 0; i < res.length; i++) {
@@ -168,8 +169,10 @@ const insertIntoEsi = async (counter) => {
         client.connect()
         client.query(sql, (err, result) => {
             if (err) {
+                console.log("line 171")
                 client.end()
             } else {
+                console.log('new values added to esi')
                 client.end()
             }
         })
@@ -178,8 +181,14 @@ const insertIntoEsi = async (counter) => {
 
 const insertThings = async () => {
     for (let i = 0; i <= 20; i++) {
-        insertIntoZkill(i);
-        insertIntoEsi(i)
+        await insertIntoZkill(i)
+            .catch(e => {
+                console.log('error inserting into zkill on line 186')
+            })
+        await insertIntoEsi(i)
+            .catch(e => {
+                console.log('error inserting into esi on line 190')
+            })
     }
 }
 
