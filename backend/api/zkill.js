@@ -53,6 +53,7 @@ const axiosZkillData = async (page) => {
     if (pageNumber > 20) {
         return;
     }
+    console.log(page)
     let query;
     if (page == null) {
         query = 'https://zkillboard.com/api/kills/w-space/'
@@ -219,6 +220,7 @@ const insertThings = async () => {
             })
         await insertIntoEsi(i)
             .catch(e => {
+                console.log(e)
                 console.log('error inserting into esi on line 190')
             })
     }
