@@ -176,19 +176,15 @@ const insertIntoEsi = async (counter) => {
     })
 }
 
-const insertThings = async (counter) => {
+const insertThings = async () => {
     for (let i = 0; i <= 20; i++) {
-        counter = i;
-        console.log(counter)
-        insertIntoZkill(counter);
-        insertIntoEsi(counter)
+        insertIntoZkill(i);
+        insertIntoEsi(i)
     }
-    console.log('process complete')
 }
 
 const fillDbs = async () => {
-    let counter;
-    await insertThings(counter).then(() => {
+    await insertThings().then(() => {
         console.log('done')
     })
 }
