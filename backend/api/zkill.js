@@ -115,7 +115,7 @@ const insertionsForZkill = async (client, values) => {
     for(let i = 0; i < values.length; i ++){
         client.query(`INSERT INTO zkill (zkill_id, hash) VALUES ('${values[i][0]}', '${values[i][1]}')`, (err, res) => {
             if(err){
-                console.log(err)
+                console.log('duplicate key')
             } else {
                 console.log('value inserted');
             }
