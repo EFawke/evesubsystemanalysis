@@ -112,7 +112,22 @@ const lookUpEsi = async (num) => {
 }
 
 const insertIntoZkill = async (num) => {
-    pageNum = num
+    const wormholeData = await axiosZkillData(num)
+    var values = [];
+    if(wormholeData === undefined){
+        return;
+    }
+    for (let i = 0; i < wormholeData.length; i++) {
+        console.log(wormholeData[i])
+        // if(!wormholeData[i].zkill_id){
+        //     return;
+        // } else {
+        //     values[i] = [res[i].id, res[i].date, res[i].ship, res[i].day]
+        // }
+    }
+    //remove return when done
+    return;
+
     const client = new Client({
         connectionString: process.env.DATABASE_URL,
         ssl: {
@@ -171,9 +186,9 @@ const insertIntoEsi = async (counter) => {
     client.query(sql, (err, result) => {
         if (err) {
             client.end()
-            console.log(err)
+            // console.log(err)
         } else {
-            console.log('floop')
+            // console.log('floop')
             client.end()
         }
     })
