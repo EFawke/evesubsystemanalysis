@@ -132,14 +132,15 @@ const insertIntoZkill = async (num) => {
             rejectUnauthorized: false
         }
     });
+    console.log(values)
     var sql = format(`INSERT INTO zkill (zkill_id, hash) VALUES %L`, values)
     client.query(sql, (err, res) => {
         if(err){
             console.log(err)
             client.end()
         } else {
-            client.end()
             console.log('floop')
+            client.end()
         }
     })
 }
