@@ -10,7 +10,7 @@ shipTypeRouter.get(`/:shipName`, (req, res, next) => {
     connectionString: process.env.DATABASE_URL,
     ssl: {
       rejectUnauthorized: false
-    }, 
+    },
     allowExitOnIdle: true
   });
   let heatmap = {
