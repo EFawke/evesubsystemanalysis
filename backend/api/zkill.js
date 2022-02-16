@@ -9,8 +9,6 @@ const { query, response } = require('express');
 
 esiDbInit();
 
-let flag = false;
-
 const dateToDay = (date) => {
     const killDate = new Date(date);
     const dayIndex = killDate.getDay();
@@ -104,10 +102,6 @@ const lookUpEsi = async (num) => {
 }
 
 const sqlInject = async (data) => {
-    if(data.id === 98944636){
-        console.log('vinegar douche')
-    }
-    // console.log(data.id)
     const client = new Client({
         connectionString: process.env.DATABASE_URL,
         ssl: {
@@ -119,15 +113,12 @@ const sqlInject = async (data) => {
     return client.query(`INSERT INTO esi (killmail_id, killmail_time, ship_type_id, weekday) VALUES ('${data.id}', '${data.date}', '${data.ship}', '${data.day}')`, (err, res) => {
         if (err) {
             client.end()
-            const error = JSON.stringify(err)
-            if(error["code"] === "23505"){
-                flag = true;
-            }
             console.log(JSON.stringify(err))
         } else {
             client.end()
             console.log('esi value inserted');
         }
+        client.end()
     })
 }
 
@@ -139,12 +130,8 @@ const insertIntoEsiDatabase = async (num) => {
 }
 
 const fillDbs = async () => {
-    flag = false;
     console.log('filling db')
     for (let i = 0; i <= 20; i++) {
-        if(flag === true){
-            return
-        }
         await insertIntoEsiDatabase(i)
     }
 }
