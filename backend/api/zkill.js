@@ -38,16 +38,16 @@ const dateToDay = (date) => {
 }
 
 const axiosZkillData = async (page) => {
-    const client = new Client({
-        connectionString: process.env.DATABASE_URL,
-        ssl: {
-            rejectUnauthorized: false
-        },
-        allowExitOnIdle: true
-    });
-    client.connect()
-    const highestKillmail = client.query(`SELECT MAX(killmail_id) FROM esi`)
-    client.end()
+    // const client = new Client({
+    //     connectionString: process.env.DATABASE_URL,
+    //     ssl: {
+    //         rejectUnauthorized: false
+    //     },
+    //     allowExitOnIdle: true
+    // });
+    // client.connect()
+    // const highestKillmail = client.query(`SELECT MAX(killmail_id) FROM esi`)
+    // client.end()
     let pageNumber = page;
     if (pageNumber > 20) {
         return;
@@ -74,8 +74,8 @@ const axiosZkillData = async (page) => {
     if (response === undefined) {
         return
     } else {
-        console.log(highestKillmail)
-        console.log(response.data)
+        // console.log(highestKillmail)
+        // console.log(response.data)
         return response.data;
     }
 }
