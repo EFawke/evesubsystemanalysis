@@ -161,20 +161,12 @@ const insertionsForEsi = async (client, values) => {
     }
 }
 
-const performEsiInsertions = async (values) => {
+const performEsiInsertions = async (values, client) => {
     // console.log('inserting this into esi ' + values + 'inserting this into esi')
-        const client = new Client({
-        connectionString: process.env.DATABASE_URL,
-        ssl: {
-            rejectUnauthorized: false
-        },
-        allowExitOnIdle: true
-        });
-        client.connect()
         await insertionsForEsi(client, values)
-        .then((res) => {
-            client.end()
-        })
+        // .then((res) => {
+        //     client.end()
+        // })
         // .catch((e) => {
         //     console.log(e)
         //     client.end()
@@ -192,14 +184,25 @@ const insertIntoEsi = async (counter) => {
 
 const insertThings = async () => {
     for (let i = 0; i <= 20; i++) {
-        await insertIntoZkill(i)
-            .catch(e => {
-                console.log('error inserting into zkill on line 186')
-            })
-        await insertIntoEsi(i)
+        // await insertIntoZkill(i)
+        //     .catch(e => {
+        //         console.log('error inserting into zkill on line 186')
+        //     })
+        const client = new Client({
+            connectionString: process.env.DATABASE_URL,
+            ssl: {
+                rejectUnauthorized: false
+            },
+            allowExitOnIdle: true
+            });
+            client.connect()
+        await insertIntoEsi(i, client)
             .catch(e => {
                 console.log(e)
                 console.log('error inserting into esi on line 190')
+            })
+            .then(() => {
+                client.end()
             })
     }
 }
