@@ -10,16 +10,6 @@ const { query, response } = require('express');
 esiDbInit();
 zkillDbInit();
 
-
-// const { Pool } = require('pg')
-
-// const pool = new Pool()
-
-// pool.on('error', (err, client) => {
-//     console.error('Unexpected error on idle client', err) // your callback here
-//     process.exit(-1)
-// })
-
 const dateToDay = (date) => {
     const killDate = new Date(date);
     const dayIndex = killDate.getDay();
@@ -109,13 +99,12 @@ const lookUpEsi = async (num) => {
                 }
             })
     }
-    console.log(killmails)
     return killmails;
 }
 
 const insertionsForZkill = async (client, wormholeData) => {
+    console.log(wormholeData)
     for(let i = 0; i < Object.keys(wormholeData).length; i ++){
-        console.log(wormholeData[i])
         client.query(`INSERT INTO zkill (zkill_id, hash) VALUES ('${Object.keys(wormholeData)[i]}', '${Object.values(wormholeData)[i]}')`, (err, res) => {
             if(err){
                 // console.log('zkill duplicate key')
@@ -171,7 +160,7 @@ const insertionsForEsi = async (client, values) => {
 }
 
 const performEsiInsertions = async (values) => {
-    console.log('inserting this into esi ' + values + 'inserting this into esi')
+    // console.log('inserting this into esi ' + values + 'inserting this into esi')
         const client = new Client({
         connectionString: process.env.DATABASE_URL,
         ssl: {
