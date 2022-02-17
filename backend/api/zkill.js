@@ -55,7 +55,8 @@ const axiosZkillData = async (page) => {
                 'user-agent': 'Johnson Kanjus - rage-roll.com - teduardof@gmail.com',
                 'connection': 'close'
             }
-        }).catch(err => {
+        })
+        .catch(err => {
             if (err) {
                 return;
             }
@@ -110,14 +111,14 @@ const sqlInject = async (data) => {
     });
     client.connect()
     client.query(`INSERT INTO esi (killmail_id, killmail_time, ship_type_id, weekday) VALUES ('${data.id}', '${data.date}', '${data.ship}', '${data.day}')`, (err, res) => {
+        client.end()
         if (err) {
-            console.log(JSON.stringify(err))
-            client.end()
+            var error = JSON.stringify(err)
+            console.log(error["code"])
+
         } else {
-            client.end()
             console.log('esi value inserted');
         }
-        client.end()
     })
 }
 
