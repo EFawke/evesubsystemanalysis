@@ -68,7 +68,7 @@ const axiosZkillData = async (page) => {
     }
 }
 
-const lookUpEsi = async (num) => {
+const lookUpEsi = async (num, id) => {
     let pageNum = num
     let killmails = [];
     class Killmail {
@@ -86,6 +86,9 @@ const lookUpEsi = async (num) => {
     for (let i = 0; i < Object.keys(wormholeData).length; i++) {
         const currentZKillId = Object.keys(wormholeData)[i]
         const currentHash = Object.values(wormholeData)[i]
+        if(id > currentZKillId){
+            continue
+        }
         await axios.get(`https://esi.evetech.net/latest/killmails/${currentZKillId}/${currentHash}/?datasource=tranquility`)
             .catch(err => {
                 if (err) {
@@ -121,21 +124,43 @@ const sqlInject = async (data) => {
     })
 }
 
-const insertIntoEsiDatabase = async (num) => {
-    const data = await lookUpEsi(num)
-    for (let i = 0; i < data.length; i++) {
-        if(!data[i]){
-            return;
+const insertIntoEsiDatabase = async (num, id) => {
+    await lookUpEsi(num, id)
+    .then((data) => {
+        for (let i = 0; i < data.length; i++) {
+            if(!data[i]){
+                return;
+            }
+            sqlInject(data[i])
         }
-        sqlInject(data[i])
-    }
+    })
+}
+
+const getMaxKillmailId = () => {
+    const client = new Client({
+        connectionString: process.env.DATABASE_URL,
+        ssl: {
+            rejectUnauthorized: false
+        },
+        allowExitOnIdle: true
+    });
+    client.connect()
+    client.query(`SELECT MAX (killmail_id) FROM esi`, (err, res) => {
+        client.end()
+        if(err){
+            console.log(err)
+        }
+        return res
+    })
 }
 
 const fillDbs = async () => {
-    console.log('filling db')
-    for (let i = 0; i <= 20; i++) {
-        await insertIntoEsiDatabase(i)
-    }
+    await getMaxKillmailId().then((id) => {
+        console.log('filling db')
+        for (let i = 0; i <= 20; i++) {
+            insertIntoEsiDatabase(i, id)
+        }
+    })
 }
 
 fillDbs()
