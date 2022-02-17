@@ -69,6 +69,7 @@ const axiosZkillData = async (page) => {
 }
 
 const lookUpEsi = async (num, id) => {
+    console.log(num)
     const wormholeData = await axiosZkillData(num);
     if (wormholeData === undefined) {
         return;
@@ -87,6 +88,7 @@ const lookUpEsi = async (num, id) => {
             })
             .then((response) => {
                 if (response) {
+                    console.log(response)
                     sqlInject(response)
                     // killmails[i] = new Killmail(response.data.killmail_id, response.data.killmail_time, response.data.victim.ship_type_id, dateToDay(response.data.killmail_time))
                 }
