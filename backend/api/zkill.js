@@ -114,7 +114,7 @@ const sqlInject = async (data) => {
         client.end()
         if (err) {
             client.end()
-            var errObj = JSON.stringify(err)
+            var errObj = JSON.parse(err)
             console.log(errObj)
 
         } else {
