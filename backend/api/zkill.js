@@ -138,7 +138,7 @@ const fillDbs = () => {
         let id = res.rows[0].max
         console.log(id)
         console.log('filling db')
-        for (let i = 20; i === 0; i--) {
+        for (let i = 20; i < 0; i--) {
             lookUpEsi(i, id)
         }
     })
