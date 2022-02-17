@@ -155,7 +155,7 @@ const fillDbs = () => {
         if(err){
             console.log(err)
         }
-        console.log(res)
+        console.log(res.rows[0].max)
         console.log('filling db')
         for (let i = 0; i <= 20; i++) {
             insertIntoEsiDatabase(i, res)
