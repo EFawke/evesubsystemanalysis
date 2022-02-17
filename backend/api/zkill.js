@@ -69,16 +69,6 @@ const axiosZkillData = async (page) => {
 }
 
 const lookUpEsi = async (num, id) => {
-    // let pageNum = num
-    // let killmails = [];
-    // class Killmail {
-    //     constructor(id, date, ship, day) {
-    //         this.id = id;
-    //         this.date = date;
-    //         this.ship = ship;
-    //         this.day = day;
-    //     }
-    // }
     const wormholeData = await axiosZkillData(num);
     if (wormholeData === undefined) {
         return;
@@ -92,7 +82,7 @@ const lookUpEsi = async (num, id) => {
         await axios.get(`https://esi.evetech.net/latest/killmails/${currentZKillId}/${currentHash}/?datasource=tranquility`)
             .catch(err => {
                 if (err) {
-                    return;
+                    console.log(err)
                 }
             })
             .then((response) => {
@@ -105,7 +95,11 @@ const lookUpEsi = async (num, id) => {
     // return killmails;
 }
 
-const sqlInject = async (data) => {
+const sqlInject = async (response) => {
+    const id = response.data.killmail_id;
+    const date = response.data.killmail_time;
+    const ship = response.data.victim.ship_type_id;
+    const day = dateToDay(response.data.killmail_time)
     const client = new Client({
         connectionString: process.env.DATABASE_URL,
         ssl: {
@@ -114,7 +108,7 @@ const sqlInject = async (data) => {
         allowExitOnIdle: true
     });
     client.connect()
-    client.query(`INSERT INTO esi (killmail_id, killmail_time, ship_type_id, weekday) VALUES ('${data.id}', '${data.date}', '${data.ship}', '${data.day}')`, (err, res) => {
+    client.query(`INSERT INTO esi (killmail_id, killmail_time, ship_type_id, weekday) VALUES ('${id}', '${date}', '${ship}', '${day}')`, (err, res) => {
         client.end()
         if (err) {
             client.end()
@@ -124,25 +118,6 @@ const sqlInject = async (data) => {
         }
     })
 }
-
-// const insertIntoEsiDatabase = async (num, id) => {
-//     await lookUpEsi(num, id)
-//     .then((data) => {
-//         // if(!data){
-//         //     console.log('no new values')
-//         //     return;
-//         // }
-//         console.log(data)
-//         for (let i = 0; i < data.length; i++) {
-//             if(!data[i]){
-//                 return;
-//             } else {
-//                 console.log(i)
-//                 sqlInject(data[i])
-//             }
-//         }
-//     })
-// }
 
 const fillDbs = () => {
     const client = new Client({
@@ -167,6 +142,13 @@ const fillDbs = () => {
     })
 }
 
+fillDbs()
+setInterval(fillDbs, 1000 * 60 * 10);
+
+module.exports = zkillRouter;
+
+
+
 // const fillDbs = async () => {
 //     await getMaxKillmailId().then((id) => {
 //         console.log('filling db')
@@ -176,7 +158,32 @@ const fillDbs = () => {
 //     })
 // }
 
-fillDbs()
-setInterval(fillDbs, 1000 * 60 * 10);
+// const insertIntoEsiDatabase = async (num, id) => {
+//     await lookUpEsi(num, id)
+//     .then((data) => {
+//         // if(!data){
+//         //     console.log('no new values')
+//         //     return;
+//         // }
+//         console.log(data)
+//         for (let i = 0; i < data.length; i++) {
+//             if(!data[i]){
+//                 return;
+//             } else {
+//                 console.log(i)
+//                 sqlInject(data[i])
+//             }
+//         }
+//     })
+// }
 
-module.exports = zkillRouter;
+    // let pageNum = num
+    // let killmails = [];
+    // class Killmail {
+    //     constructor(id, date, ship, day) {
+    //         this.id = id;
+    //         this.date = date;
+    //         this.ship = ship;
+    //         this.day = day;
+    //     }
+    // }
