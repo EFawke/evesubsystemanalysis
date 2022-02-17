@@ -127,6 +127,9 @@ const sqlInject = async (data) => {
 const insertIntoEsiDatabase = async (num, id) => {
     await lookUpEsi(num, id)
     .then((data) => {
+        if(!data){
+            return;
+        }
         for (let i = 0; i < data.length; i++) {
             if(!data[i]){
                 return;
