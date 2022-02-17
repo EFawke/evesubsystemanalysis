@@ -101,6 +101,7 @@ const lookUpEsi = async (num, id) => {
                 }
             })
     }
+    console.log(killmails)
     return killmails;
 }
 
@@ -154,6 +155,7 @@ const fillDbs = () => {
         if(err){
             console.log(err)
         }
+        console.log(res)
         console.log('filling db')
         for (let i = 0; i <= 20; i++) {
             insertIntoEsiDatabase(i, res)
