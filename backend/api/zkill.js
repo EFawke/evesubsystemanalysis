@@ -127,7 +127,7 @@ const insertIntoEsiDatabase = async (num) => {
         if(!data[i]){
             return;
         }
-        await sqlInject(data[i])
+        sqlInject(data[i])
     }
 }
 
