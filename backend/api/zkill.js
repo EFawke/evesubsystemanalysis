@@ -101,7 +101,6 @@ const lookUpEsi = async (num, id) => {
                 }
             })
     }
-    console.log(killmails)
     return killmails;
 }
 
@@ -128,10 +127,11 @@ const sqlInject = async (data) => {
 const insertIntoEsiDatabase = async (num, id) => {
     await lookUpEsi(num, id)
     .then((data) => {
-        if(!data){
-            console.log('no new values')
-            return;
-        }
+        // if(!data){
+        //     console.log('no new values')
+        //     return;
+        // }
+        console.log(data)
         for (let i = 0; i < data.length; i++) {
             if(!data[i]){
                 return;
