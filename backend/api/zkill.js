@@ -46,24 +46,19 @@ const axiosZkillData = async (page) => {
         } else {
             query = `https://zkillboard.com/api/kills/w-space/page/${page}/`
         }
-        const response = axios.get(query,
+        await axios.get(query,
             {
                 headers: {
                     'accept-encoding': 'gzip',
                     'user-agent': 'Johnson Kanjus - rage-roll.com - teduardof@gmail.com',
                     'connection': 'close'
                 }
-            })
-            .catch(err => {
-                if (err) {
-                    return;
+            }, (err, res) => {
+                if(err){
+                    console.log(err)
                 }
+                else zkillData.push(res)
             })
-        if (response === undefined) {
-            return
-        } else {
-            zkillData.push(response.data)
-        }
     }
     return zkillData
 }
