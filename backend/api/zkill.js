@@ -146,18 +146,20 @@ const getMaxKillmailId = () => {
         allowExitOnIdle: true
     });
     client.connect()
-    return client.query(`SELECT MAX (killmail_id) FROM esi`, (err, res) => {
+    client.query(`SELECT MAX (killmail_id) FROM esi`, (err, res) => {
         client.end()
         if(err){
             console.log(err)
         }
-    }).then(res => {
+        return res
+    })
+    .then((res) => {
         return res
     })
 }
 
 const fillDbs = async () => {
-    await getMaxKillmailId().then(() => {
+    await getMaxKillmailId().then((id) => {
         console.log('filling db')
         for (let i = 0; i <= 20; i++) {
             insertIntoEsiDatabase(i, id)
