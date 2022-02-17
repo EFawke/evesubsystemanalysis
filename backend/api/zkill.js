@@ -143,6 +143,13 @@ const insertIntoEsiDatabase = async (num, id) => {
     })
 }
 
+const go = async (id) => {
+    for (let i = 20; i <= 0; i--) {
+        console.log(i)
+        await insertIntoEsiDatabase(i, id)
+    }
+}
+
 const fillDbs = () => {
     const client = new Client({
         connectionString: process.env.DATABASE_URL,
@@ -160,10 +167,7 @@ const fillDbs = () => {
         let id = res.rows[0].max
         console.log(id)
         console.log('filling db')
-        for (let i = 20; i <= 0; i--) {
-            console.log(i)
-            insertIntoEsiDatabase(i, id)
-        }
+        go(id)
     })
 }
 
