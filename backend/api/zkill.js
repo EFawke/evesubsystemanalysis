@@ -130,8 +130,9 @@ const insertIntoEsiDatabase = async (num, id) => {
         for (let i = 0; i < data.length; i++) {
             if(!data[i]){
                 return;
+            } else {
+                sqlInject(data[i])
             }
-            sqlInject(data[i])
         }
     })
 }
@@ -145,17 +146,18 @@ const getMaxKillmailId = () => {
         allowExitOnIdle: true
     });
     client.connect()
-    client.query(`SELECT MAX (killmail_id) FROM esi`, (err, res) => {
+    return client.query(`SELECT MAX (killmail_id) FROM esi`, (err, res) => {
         client.end()
         if(err){
             console.log(err)
         }
+    }).then(res => {
         return res
     })
 }
 
 const fillDbs = async () => {
-    await getMaxKillmailId().then((id) => {
+    await getMaxKillmailId().then(() => {
         console.log('filling db')
         for (let i = 0; i <= 20; i++) {
             insertIntoEsiDatabase(i, id)
