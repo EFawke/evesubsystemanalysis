@@ -68,6 +68,51 @@ const axiosZkillData = async (page) => {
     }
 }
 
+const sqlInject = async (response) => {
+    const id = response.data.killmail_id;
+    const date = response.data.killmail_time;
+    const ship = response.data.victim.ship_type_id;
+    const day = dateToDay(response.data.killmail_time)
+    const client = new Client({
+        connectionString: process.env.DATABASE_URL,
+        ssl: {
+            rejectUnauthorized: false
+        },
+        allowExitOnIdle: true
+    });
+    client.connect()
+    client.query(`INSERT INTO esi (killmail_id, killmail_time, ship_type_id, weekday) VALUES ('${id}', '${date}', '${ship}', '${day}')`, (err, res) => {
+        client.end()
+        if (err) {
+            client.end()
+        } else {
+            client.end()
+            console.log('esi value inserted');
+        }
+    })
+}
+
+const fillDbs = async () => {
+    const client = new Client({
+        connectionString: process.env.DATABASE_URL,
+        ssl: {
+            rejectUnauthorized: false
+        },
+        allowExitOnIdle: true
+    });
+    client.connect()
+    client.query(`SELECT MAX (killmail_id) FROM esi`, (err, res) => {
+        client.end()
+        if(err){
+            console.log(err)
+        }
+        let id = res.rows[0].max
+        for (let i = 20; i < 1; i--) {
+            await lookUpEsi(i, id)
+        }
+    })
+}
+
 const lookUpEsi = async (num, id) => {
     console.log(num)
     const wormholeData = await axiosZkillData(num);
@@ -95,53 +140,6 @@ const lookUpEsi = async (num, id) => {
             })
     }
     // return killmails;
-}
-
-const sqlInject = async (response) => {
-    const id = response.data.killmail_id;
-    const date = response.data.killmail_time;
-    const ship = response.data.victim.ship_type_id;
-    const day = dateToDay(response.data.killmail_time)
-    const client = new Client({
-        connectionString: process.env.DATABASE_URL,
-        ssl: {
-            rejectUnauthorized: false
-        },
-        allowExitOnIdle: true
-    });
-    client.connect()
-    client.query(`INSERT INTO esi (killmail_id, killmail_time, ship_type_id, weekday) VALUES ('${id}', '${date}', '${ship}', '${day}')`, (err, res) => {
-        client.end()
-        if (err) {
-            client.end()
-        } else {
-            client.end()
-            console.log('esi value inserted');
-        }
-    })
-}
-
-const fillDbs = () => {
-    const client = new Client({
-        connectionString: process.env.DATABASE_URL,
-        ssl: {
-            rejectUnauthorized: false
-        },
-        allowExitOnIdle: true
-    });
-    client.connect()
-    client.query(`SELECT MAX (killmail_id) FROM esi`, (err, res) => {
-        client.end()
-        if(err){
-            console.log(err)
-        }
-        let id = res.rows[0].max
-        console.log(id)
-        console.log('filling db')
-        for (let i = 20; i < 0; i--) {
-            lookUpEsi(i, id)
-        }
-    })
 }
 
 fillDbs()
