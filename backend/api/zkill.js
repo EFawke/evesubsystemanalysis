@@ -38,37 +38,74 @@ const dateToDay = (date) => {
 }
 
 const axiosZkillData = async (page) => {
-    let zkillData = [];
-    for(let i = 20; i < 0; i --){
-        let query;
-        if (page === 0) {
-            query = 'https://zkillboard.com/api/kills/w-space/'
-        } else {
-            query = `https://zkillboard.com/api/kills/w-space/page/${page}/`
-        }
-        await axios.get(query,
-            {
-                headers: {
-                    'accept-encoding': 'gzip',
-                    'user-agent': 'Johnson Kanjus - rage-roll.com - teduardof@gmail.com',
-                    'connection': 'close'
-                }
-            }, (err, res) => {
-                if(err){
-                    console.log(err)
-                } else {
-                    zkillData.push(res)
-                }
-            })
-        console.log(zkillData)
+    let pageNumber = page;
+    if (pageNumber > 20) {
+        return;
+    }
+    let query;
+    if (page === 0) {
+        query = 'https://zkillboard.com/api/kills/w-space/'
+    } else {
+        query = `https://zkillboard.com/api/kills/w-space/page/${pageNumber}/`
+    }
+    const response = await axios.get(query,
+        {
+            headers: {
+                'accept-encoding': 'gzip',
+                'user-agent': 'Johnson Kanjus - rage-roll.com - teduardof@gmail.com',
+                'connection': 'close'
+            }
+        })
+        .catch(err => {
+            if (err) {
+                return;
+            }
+        })
+    if (response === undefined) {
+        return
+    } else {
+        return response.data;
     }
 }
 
-const sqlInject = async (response) => {
-    const id = response.data.killmail_id;
-    const date = response.data.killmail_time;
-    const ship = response.data.victim.ship_type_id;
-    const day = dateToDay(response.data.killmail_time)
+const lookUpEsi = async (num, id) => {
+    let pageNum = num
+    let killmails = [];
+    class Killmail {
+        constructor(id, date, ship, day) {
+            this.id = id;
+            this.date = date;
+            this.ship = ship;
+            this.day = day;
+        }
+    }
+    const wormholeData = await axiosZkillData(pageNum);
+    if (wormholeData === undefined) {
+        return;
+    }
+    console.log(wormholeData)
+    for (let i = 0; i < Object.keys(wormholeData).length; i++) {
+        const currentZKillId = Object.keys(wormholeData)[i]
+        const currentHash = Object.values(wormholeData)[i]
+        if(id > currentZKillId){
+            continue
+        }
+        await axios.get(`https://esi.evetech.net/latest/killmails/${currentZKillId}/${currentHash}/?datasource=tranquility`)
+            .catch(err => {
+                if (err) {
+                    return;
+                }
+            })
+            .then((response) => {
+                if (response) {
+                    killmails[i] = new Killmail(response.data.killmail_id, response.data.killmail_time, response.data.victim.ship_type_id, dateToDay(response.data.killmail_time))
+                }
+            })
+    }
+    return killmails;
+}
+
+const sqlInject = async (data) => {
     const client = new Client({
         connectionString: process.env.DATABASE_URL,
         ssl: {
@@ -77,7 +114,7 @@ const sqlInject = async (response) => {
         allowExitOnIdle: true
     });
     client.connect()
-    client.query(`INSERT INTO esi (killmail_id, killmail_time, ship_type_id, weekday) VALUES ('${id}', '${date}', '${ship}', '${day}')`, (err, res) => {
+    client.query(`INSERT INTO esi (killmail_id, killmail_time, ship_type_id, weekday) VALUES ('${data.id}', '${data.date}', '${data.ship}', '${data.day}')`, (err, res) => {
         client.end()
         if (err) {
             client.end()
@@ -88,7 +125,25 @@ const sqlInject = async (response) => {
     })
 }
 
-const fillDbs = async () => {
+const insertIntoEsiDatabase = async (num, id) => {
+    await lookUpEsi(num, id)
+    .then((data) => {
+        if(!data){
+            console.log
+            return;
+        }
+        for (let i = 0; i < data.length; i++) {
+            if(!data[i]){
+                return;
+            } else {
+                console.log(i)
+                sqlInject(data[i])
+            }
+        }
+    })
+}
+
+const fillDbs = () => {
     const client = new Client({
         connectionString: process.env.DATABASE_URL,
         ssl: {
@@ -103,81 +158,16 @@ const fillDbs = async () => {
             console.log(err)
         }
         let id = res.rows[0].max
-        lookUpEsi(id)
+        console.log(id)
+        console.log('filling db')
+        for (let i = 20; i <= 0; i--) {
+            console.log(i)
+            insertIntoEsiDatabase(i, id)
+        }
     })
-}
-
-const lookUpEsi = async (id) => {
-    const wormholeData = await axiosZkillData()
-    if (wormholeData === undefined) {
-        return;
-    }
-    console.log(wormholeData)
-    // for (let i = 0; i < Object.keys(wormholeData).length; i++) {
-    //     const currentZKillId = Object.keys(wormholeData)[i]
-    //     const currentHash = Object.values(wormholeData)[i]
-    //     if(Number(id) > Number(currentZKillId)){
-    //         continue
-    //     }
-    //     await axios.get(`https://esi.evetech.net/latest/killmails/${currentZKillId}/${currentHash}/?datasource=tranquility`)
-    //         .catch(err => {
-    //             if (err) {
-    //                 console.log(err)
-    //             }
-    //         })
-    //         .then((response) => {
-    //             if (response) {
-    //                 console.log(response)
-    //                 sqlInject(response)
-    //                 // killmails[i] = new Killmail(response.data.killmail_id, response.data.killmail_time, response.data.victim.ship_type_id, dateToDay(response.data.killmail_time))
-    //             }
-    //         })
-    // }
-    // return killmails;
 }
 
 fillDbs()
 setInterval(fillDbs, 1000 * 60 * 10);
 
 module.exports = zkillRouter;
-
-
-
-// const fillDbs = async () => {
-//     await getMaxKillmailId().then((id) => {
-//         console.log('filling db')
-//         for (let i = 0; i <= 20; i++) {
-//             insertIntoEsiDatabase(i, id)
-//         }
-//     })
-// }
-
-// const insertIntoEsiDatabase = async (num, id) => {
-//     await lookUpEsi(num, id)
-//     .then((data) => {
-//         // if(!data){
-//         //     console.log('no new values')
-//         //     return;
-//         // }
-//         console.log(data)
-//         for (let i = 0; i < data.length; i++) {
-//             if(!data[i]){
-//                 return;
-//             } else {
-//                 console.log(i)
-//                 sqlInject(data[i])
-//             }
-//         }
-//     })
-// }
-
-    // let pageNum = num
-    // let killmails = [];
-    // class Killmail {
-    //     constructor(id, date, ship, day) {
-    //         this.id = id;
-    //         this.date = date;
-    //         this.ship = ship;
-    //         this.day = day;
-    //     }
-    // }
