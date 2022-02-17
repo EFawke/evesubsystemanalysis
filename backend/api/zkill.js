@@ -86,7 +86,6 @@ const lookUpEsi = async (num, id) => {
     for (let i = 0; i < Object.keys(wormholeData).length; i++) {
         const currentZKillId = Object.keys(wormholeData)[i]
         const currentHash = Object.values(wormholeData)[i]
-        console.log(id + ' ' + currentZKillId)
         if(id > currentZKillId){
             continue
         }
@@ -102,7 +101,6 @@ const lookUpEsi = async (num, id) => {
                 }
             })
     }
-    console.log(killmails)
     return killmails;
 }
 
@@ -136,6 +134,7 @@ const insertIntoEsiDatabase = async (num, id) => {
             if(!data[i]){
                 return;
             } else {
+                console.log(i)
                 sqlInject(data[i])
             }
         }
