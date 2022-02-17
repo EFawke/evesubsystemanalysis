@@ -137,7 +137,7 @@ const insertIntoEsiDatabase = async (num, id) => {
     })
 }
 
-const getMaxKillmailId = () => {
+const fillDbs = () => {
     const client = new Client({
         connectionString: process.env.DATABASE_URL,
         ssl: {
@@ -151,21 +151,21 @@ const getMaxKillmailId = () => {
         if(err){
             console.log(err)
         }
-        return res
-    })
-    .then((res) => {
-        return res
-    })
-}
-
-const fillDbs = async () => {
-    await getMaxKillmailId().then((id) => {
         console.log('filling db')
         for (let i = 0; i <= 20; i++) {
-            insertIntoEsiDatabase(i, id)
+            insertIntoEsiDatabase(i, res)
         }
     })
 }
+
+// const fillDbs = async () => {
+//     await getMaxKillmailId().then((id) => {
+//         console.log('filling db')
+//         for (let i = 0; i <= 20; i++) {
+//             insertIntoEsiDatabase(i, id)
+//         }
+//     })
+// }
 
 fillDbs()
 setInterval(fillDbs, 1000 * 60 * 10);
