@@ -83,6 +83,7 @@ const lookUpEsi = async (num, id) => {
     if (wormholeData === undefined) {
         return;
     }
+    console.log(wormholeData)
     for (let i = 0; i < Object.keys(wormholeData).length; i++) {
         const currentZKillId = Object.keys(wormholeData)[i]
         const currentHash = Object.values(wormholeData)[i]
@@ -128,6 +129,7 @@ const insertIntoEsiDatabase = async (num, id) => {
     await lookUpEsi(num, id)
     .then((data) => {
         if(!data){
+            console.log('no new values')
             return;
         }
         for (let i = 0; i < data.length; i++) {
