@@ -83,11 +83,10 @@ const lookUpEsi = async (num, id) => {
     if (wormholeData === undefined) {
         return;
     }
-    console.log(wormholeData)
     for (let i = 0; i < Object.keys(wormholeData).length; i++) {
         const currentZKillId = Object.keys(wormholeData)[i]
         const currentHash = Object.values(wormholeData)[i]
-        if(id < currentZKillId){
+        if(id > currentZKillId){
             continue
         }
         await axios.get(`https://esi.evetech.net/latest/killmails/${currentZKillId}/${currentHash}/?datasource=tranquility`)
@@ -97,15 +96,17 @@ const lookUpEsi = async (num, id) => {
                 }
             })
             .then((response) => {
-                if (response) {
-                    killmails[i] = new Killmail(response.data.killmail_id, response.data.killmail_time, response.data.victim.ship_type_id, dateToDay(response.data.killmail_time))
-                }
+                sqlInject(response)
             })
     }
     return killmails;
 }
 
-const sqlInject = async (data) => {
+const sqlInject = async (response) => {
+    const id = response.data.killmail_id
+    const date = response.data.killmail_time
+    const ship = response.data.victim.ship_type_id
+    const day = dateToDay(response.data.killmail_time)
     const client = new Client({
         connectionString: process.env.DATABASE_URL,
         ssl: {
@@ -114,10 +115,11 @@ const sqlInject = async (data) => {
         allowExitOnIdle: true
     });
     client.connect()
-    client.query(`INSERT INTO esi (killmail_id, killmail_time, ship_type_id, weekday) VALUES ('${data.id}', '${data.date}', '${data.ship}', '${data.day}')`, (err, res) => {
+    client.query(`INSERT INTO esi (killmail_id, killmail_time, ship_type_id, weekday) VALUES ('${id}', '${date}', '${ship}', '${day}')`, (err, res) => {
         client.end()
         if (err) {
             client.end()
+            console.log('value already present')
         } else {
             client.end()
             console.log('esi value inserted');
@@ -127,26 +129,24 @@ const sqlInject = async (data) => {
 
 const insertIntoEsiDatabase = async (num, id) => {
     await lookUpEsi(num, id)
-    .then((data) => {
-        if(!data){
-            console.log
-            return;
-        }
-        for (let i = 0; i < data.length; i++) {
-            if(!data[i]){
-                return;
-            } else {
-                console.log(i)
-                sqlInject(data[i])
-            }
-        }
-    })
+    // .then((data) => {
+    //     if(!data){
+    //         return;
+    //     }
+    //     for (let i = 0; i < data.length; i++) {
+    //         if(!data[i]){
+    //             return;
+    //         } else {
+    //             sqlInject(data[i])
+    //         }
+    //     }
+    // })
 }
 
 const go = async (id) => {
     for (let i = 20; i >= 0; i--) {
         console.log(i)
-        await insertIntoEsiDatabase(i, id)
+        insertIntoEsiDatabase(i, id)
     }
 }
 
@@ -165,8 +165,6 @@ const fillDbs = () => {
             console.log(err)
         }
         let id = res.rows[0].max
-        console.log(id)
-        console.log('filling db')
         go(id)
     })
 }
