@@ -83,10 +83,10 @@ const lookUpEsi = async (num, id) => {
     if (wormholeData === undefined) {
         return;
     }
-    console.log(wormholeData)
     for (let i = 0; i < Object.keys(wormholeData).length; i++) {
         const currentZKillId = Object.keys(wormholeData)[i]
         const currentHash = Object.values(wormholeData)[i]
+        console.log(currentZKillId + ' ' + id) 
         if(id > currentZKillId){
             continue
         }
