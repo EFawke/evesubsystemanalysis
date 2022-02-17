@@ -38,34 +38,34 @@ const dateToDay = (date) => {
 }
 
 const axiosZkillData = async (page) => {
-    let pageNumber = page;
-    if (pageNumber > 20) {
-        return;
+    let zkillData = [];
+    for(let i = 20; i < 0; i --){
+        let query;
+        if (page === 0) {
+            query = 'https://zkillboard.com/api/kills/w-space/'
+        } else {
+            query = `https://zkillboard.com/api/kills/w-space/page/${page}/`
+        }
+        const response = axios.get(query,
+            {
+                headers: {
+                    'accept-encoding': 'gzip',
+                    'user-agent': 'Johnson Kanjus - rage-roll.com - teduardof@gmail.com',
+                    'connection': 'close'
+                }
+            })
+            .catch(err => {
+                if (err) {
+                    return;
+                }
+            })
+        if (response === undefined) {
+            return
+        } else {
+            zkillData.push(response.data)
+        }
     }
-    let query;
-    if (page === 0) {
-        query = 'https://zkillboard.com/api/kills/w-space/'
-    } else {
-        query = `https://zkillboard.com/api/kills/w-space/page/${pageNumber}/`
-    }
-    const response = await axios.get(query,
-        {
-            headers: {
-                'accept-encoding': 'gzip',
-                'user-agent': 'Johnson Kanjus - rage-roll.com - teduardof@gmail.com',
-                'connection': 'close'
-            }
-        })
-        .catch(err => {
-            if (err) {
-                return;
-            }
-        })
-    if (response === undefined) {
-        return
-    } else {
-        return response.data;
-    }
+    return zkillData
 }
 
 const sqlInject = async (response) => {
@@ -107,38 +107,36 @@ const fillDbs = async () => {
             console.log(err)
         }
         let id = res.rows[0].max
-        for (let i = 20; i < 1; i--) {
-            await lookUpEsi(i, id)
-        }
+        lookUpEsi(id)
     })
 }
 
-const lookUpEsi = async (num, id) => {
-    console.log(num)
-    const wormholeData = await axiosZkillData(num);
+const lookUpEsi = async (id) => {
+    const wormholeData = await axiosZkillData()
     if (wormholeData === undefined) {
         return;
     }
-    for (let i = 0; i < Object.keys(wormholeData).length; i++) {
-        const currentZKillId = Object.keys(wormholeData)[i]
-        const currentHash = Object.values(wormholeData)[i]
-        if(Number(id) > Number(currentZKillId)){
-            continue
-        }
-        await axios.get(`https://esi.evetech.net/latest/killmails/${currentZKillId}/${currentHash}/?datasource=tranquility`)
-            .catch(err => {
-                if (err) {
-                    console.log(err)
-                }
-            })
-            .then((response) => {
-                if (response) {
-                    console.log(response)
-                    sqlInject(response)
-                    // killmails[i] = new Killmail(response.data.killmail_id, response.data.killmail_time, response.data.victim.ship_type_id, dateToDay(response.data.killmail_time))
-                }
-            })
-    }
+    console.log(wormholeData)
+    // for (let i = 0; i < Object.keys(wormholeData).length; i++) {
+    //     const currentZKillId = Object.keys(wormholeData)[i]
+    //     const currentHash = Object.values(wormholeData)[i]
+    //     if(Number(id) > Number(currentZKillId)){
+    //         continue
+    //     }
+    //     await axios.get(`https://esi.evetech.net/latest/killmails/${currentZKillId}/${currentHash}/?datasource=tranquility`)
+    //         .catch(err => {
+    //             if (err) {
+    //                 console.log(err)
+    //             }
+    //         })
+    //         .then((response) => {
+    //             if (response) {
+    //                 console.log(response)
+    //                 sqlInject(response)
+    //                 // killmails[i] = new Killmail(response.data.killmail_id, response.data.killmail_time, response.data.victim.ship_type_id, dateToDay(response.data.killmail_time))
+    //             }
+    //         })
+    // }
     // return killmails;
 }
 
