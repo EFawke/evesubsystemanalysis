@@ -69,17 +69,17 @@ const axiosZkillData = async (page) => {
 }
 
 const lookUpEsi = async (num, id) => {
-    let pageNum = num
-    let killmails = [];
-    class Killmail {
-        constructor(id, date, ship, day) {
-            this.id = id;
-            this.date = date;
-            this.ship = ship;
-            this.day = day;
-        }
-    }
-    const wormholeData = await axiosZkillData(pageNum);
+    // let pageNum = num
+    // let killmails = [];
+    // class Killmail {
+    //     constructor(id, date, ship, day) {
+    //         this.id = id;
+    //         this.date = date;
+    //         this.ship = ship;
+    //         this.day = day;
+    //     }
+    // }
+    const wormholeData = await axiosZkillData(num);
     if (wormholeData === undefined) {
         return;
     }
@@ -97,11 +97,12 @@ const lookUpEsi = async (num, id) => {
             })
             .then((response) => {
                 if (response) {
-                    killmails[i] = new Killmail(response.data.killmail_id, response.data.killmail_time, response.data.victim.ship_type_id, dateToDay(response.data.killmail_time))
+                    sqlInject(response)
+                    // killmails[i] = new Killmail(response.data.killmail_id, response.data.killmail_time, response.data.victim.ship_type_id, dateToDay(response.data.killmail_time))
                 }
             })
     }
-    return killmails;
+    // return killmails;
 }
 
 const sqlInject = async (data) => {
@@ -124,24 +125,24 @@ const sqlInject = async (data) => {
     })
 }
 
-const insertIntoEsiDatabase = async (num, id) => {
-    await lookUpEsi(num, id)
-    .then((data) => {
-        // if(!data){
-        //     console.log('no new values')
-        //     return;
-        // }
-        console.log(data)
-        for (let i = 0; i < data.length; i++) {
-            if(!data[i]){
-                return;
-            } else {
-                console.log(i)
-                sqlInject(data[i])
-            }
-        }
-    })
-}
+// const insertIntoEsiDatabase = async (num, id) => {
+//     await lookUpEsi(num, id)
+//     .then((data) => {
+//         // if(!data){
+//         //     console.log('no new values')
+//         //     return;
+//         // }
+//         console.log(data)
+//         for (let i = 0; i < data.length; i++) {
+//             if(!data[i]){
+//                 return;
+//             } else {
+//                 console.log(i)
+//                 sqlInject(data[i])
+//             }
+//         }
+//     })
+// }
 
 const fillDbs = () => {
     const client = new Client({
@@ -160,8 +161,8 @@ const fillDbs = () => {
         let id = res.rows[0].max
         console.log(id)
         console.log('filling db')
-        for (let i = 0; i <= 20; i++) {
-            insertIntoEsiDatabase(i, id)
+        for (let i = 20; i === 0; i--) {
+            lookUpEsi(i, id)
         }
     })
 }
