@@ -114,7 +114,7 @@ const sqlInject = async (data) => {
         client.end()
         if (err) {
             var error = JSON.stringify(err)
-            console.log(error["code"])
+            console.log(Object.keys(error))
 
         } else {
             console.log('esi value inserted');
