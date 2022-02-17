@@ -56,11 +56,12 @@ const axiosZkillData = async (page) => {
             }, (err, res) => {
                 if(err){
                     console.log(err)
+                } else {
+                    zkillData.push(res)
                 }
-                else zkillData.push(res)
             })
+        console.log(zkillData)
     }
-    return zkillData
 }
 
 const sqlInject = async (response) => {
