@@ -68,7 +68,7 @@ const axiosZkillData = async (page) => {
     }
 }
 
-const lookUpEsi = async (num, id) => {
+const lookUpEsi = async (num, currentHighestid) => {
     let pageNum = num
     let killmails = [];
     class Killmail {
@@ -84,12 +84,12 @@ const lookUpEsi = async (num, id) => {
         return;
     }
     for (let i = 0; i < Object.keys(wormholeData).length; i++) {
-        const currentZKillId = Object.keys(wormholeData)[i]
+        const newzKillId = Number(Object.keys(wormholeData)[i])
         const currentHash = Object.values(wormholeData)[i]
-        if(id > currentZKillId){
+        if(Number(currentHighestid) > newzKillId){
             continue
         }
-        await axios.get(`https://esi.evetech.net/latest/killmails/${currentZKillId}/${currentHash}/?datasource=tranquility`)
+        await axios.get(`https://esi.evetech.net/latest/killmails/${newzKillId}/${currentHash}/?datasource=tranquility`)
             .catch(err => {
                 if (err) {
                     return;
@@ -119,7 +119,7 @@ const sqlInject = async (response) => {
         client.end()
         if (err) {
             client.end()
-            console.log('value already present')
+            console.log(err)
         } else {
             client.end()
             console.log('esi value inserted');
