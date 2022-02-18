@@ -68,22 +68,13 @@ const axiosZkillData = async (page) => {
     }
 }
 
-const lookUpEsi = async (num, currentHighestid) => {
-    let pageNum = num
-    let killmails = [];
-    class Killmail {
-        constructor(id, date, ship, day) {
-            this.id = id;
-            this.date = date;
-            this.ship = ship;
-            this.day = day;
-        }
-    }
-    const wormholeData = await axiosZkillData(pageNum);
+const lookUpEsi = async (currentHighestid, wormholeData) => {
+    // let pageNum = num
+    // let killmails = [];
+    // const wormholeData = await axiosZkillData(pageNum);
     if (wormholeData === undefined) {
         return;
     }
-    console.log(wormholeData)
     for (let i = 0; i < Object.keys(wormholeData).length; i++) {
         const newzKillId = Number(Object.keys(wormholeData)[i])
         const currentHash = Object.values(wormholeData)[i]
@@ -104,8 +95,8 @@ const lookUpEsi = async (num, currentHighestid) => {
 }
 
 const sqlInject = async (response) => {
-    console.log('sqlInject' + response)
     if(response === undefined){
+        //responses come back undefined during downtime, causing the app to crash
         return
     }
     const id = response.data.killmail_id
@@ -133,19 +124,10 @@ const sqlInject = async (response) => {
 }
 
 const insertIntoEsiDatabase = async (num, id) => {
-    await lookUpEsi(num, id)
-    // .then((data) => {
-    //     if(!data){
-    //         return;
-    //     }
-    //     for (let i = 0; i < data.length; i++) {
-    //         if(!data[i]){
-    //             return;
-    //         } else {
-    //             sqlInject(data[i])
-    //         }
-    //     }
-    // })
+    await axiosZkillData(num).then((wormholeData) => {
+        lookUpEsi(id, wormholeData)
+    })
+    // await lookUpEsi(num, id)
 }
 
 const go = async (id) => {
