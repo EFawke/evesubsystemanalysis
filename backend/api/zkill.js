@@ -75,6 +75,7 @@ const lookUpEsi = async (currentHighestid, wormholeData) => {
     for (let i = 0; i < Object.keys(wormholeData).length; i++) {
         const newzKillId = Number(Object.keys(wormholeData)[i])
         const currentHash = Object.values(wormholeData)[i]
+        console.log(currentHighestid)
         if(Number(currentHighestid) > newzKillId){
             continue
         }
@@ -123,7 +124,6 @@ const insertIntoEsiDatabase = async (num, id) => {
     await axiosZkillData(num).then((wormholeData) => {
         lookUpEsi(id, wormholeData)
     })
-    // await lookUpEsi(num, id)
 }
 
 const go = async (id) => {
