@@ -71,7 +71,10 @@ const lookUpEsi = async (wormholeData, id) => {
     for (let i = 0; i < Object.keys(wormholeData).length; i++) {
         const newzKillId = Object.keys(wormholeData)[i]
         const currentHash = Object.values(wormholeData)[i]
-        if(Number(id) > Number(newzKillId)){
+        if(i === 0){
+            console.log(Number(newzKillId) +  " = new zkill id and " + Number(id) + ' is the id')
+        }
+        if(Number(id) < Number(newzKillId)){
             continue
         }
         await axios.get(`https://esi.evetech.net/latest/killmails/${newzKillId}/${currentHash}/?datasource=tranquility`)
