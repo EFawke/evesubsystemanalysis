@@ -131,7 +131,7 @@ const go = async (id) => {
     }
 }
 
-const fillDbs = () => {
+const fillDbs = async () => {
     const client = new Client({
         connectionString: process.env.DATABASE_URL,
         ssl: {
@@ -140,7 +140,7 @@ const fillDbs = () => {
         allowExitOnIdle: true
     });
     client.connect()
-    client.query(`SELECT MAX (killmail_id) FROM esi`, (err, res) => {
+    await client.query(`SELECT MAX (killmail_id) FROM esi`, (err, res) => {
         client.end()
     })
     .then((id) => {
