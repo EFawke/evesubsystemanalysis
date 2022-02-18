@@ -110,10 +110,10 @@ const sqlInject = async (response) => {
         client.end()
         if (err) {
             client.end()
-            console.log('value already inserted, probably')
+            // console.log('value already inserted, probably')
         } else {
             client.end()
-            console.log('esi value inserted');
+            // console.log('esi value inserted');
         }
     })
 }
