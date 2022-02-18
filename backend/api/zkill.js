@@ -77,7 +77,7 @@ const lookUpEsi = async (wormholeData, id) => {
         if(Number(id) > newzKillId){
             continue
         } else {
-            // console.log('querying the esi')
+            console.log('querying the esi')
         }
         await axios.get(`https://esi.evetech.net/latest/killmails/${newzKillId}/${currentHash}/?datasource=tranquility`)
             .catch(err => {
@@ -110,10 +110,10 @@ const sqlInject = async (response) => {
         client.end()
         if (err) {
             client.end()
-            // console.log('value already inserted, probably')
+            console.log('value already inserted, probably')
         } else {
             client.end()
-            // console.log('esi value inserted');
+            console.log('esi value inserted');
         }
     })
 }
@@ -125,6 +125,7 @@ const insertIntoEsiDatabase = async (num, id) => {
 }
 
 const go = async (id) => {
+    console.log(id)
     for (let i = 20; i >= 0; i--) {
         console.log(i)
         await insertIntoEsiDatabase(i, id)
