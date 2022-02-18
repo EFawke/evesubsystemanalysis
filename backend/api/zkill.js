@@ -131,7 +131,7 @@ const go = async (id) => {
     }
 }
 
-const fillDbs = async () => {
+const findMax = () => {
     const client = new Client({
         connectionString: process.env.DATABASE_URL,
         ssl: {
@@ -140,11 +140,19 @@ const fillDbs = async () => {
         allowExitOnIdle: true
     });
     client.connect()
-    await client.query(`SELECT MAX (killmail_id) FROM esi`, (err, res) => {
+    client.query(`SELECT MAX (killmail_id) FROM esi`, (err, res) => {
         client.end()
+        if(err){
+            console.log(err)
+        }
+        console.log(res)
+        return res
     })
-    .then((id) => {
-        go(id)
+}
+
+const fillDbs = async () => {
+    findMax((res) => {
+        go(res)
     })
 }
 
