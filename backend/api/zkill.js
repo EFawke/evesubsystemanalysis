@@ -37,17 +37,15 @@ const dateToDay = (date) => {
     return day;
 }
 
-const axiosZkillData = async (page) => {
-    console.log(page)
-    let pageNumber = page;
-    if (pageNumber > 20) {
+const axiosZkillData = async (page, id) => {
+    if (page > 20) {
         return;
     }
     let query;
     if (page === 0) {
         query = 'https://zkillboard.com/api/kills/w-space/'
     } else {
-        query = `https://zkillboard.com/api/kills/w-space/page/${pageNumber}/`
+        query = `https://zkillboard.com/api/kills/w-space/page/${page}/`
     }
     const response = await axios.get(query,
         {
@@ -65,21 +63,26 @@ const axiosZkillData = async (page) => {
     if (response === undefined) {
         return
     } else {
-        return response.data;
+        let arr = []
+        for(let i = 0; i < response.data.length; i++){
+            const zkillId = Number(Object.keys(response.data[i]))
+            if(Number(id) < zkillId){
+                console.log('one coming up')
+                arr.push(response.data[i])
+            }
+        }
+        return arr
     }
 }
 
-const lookUpEsi = async (currentHighestid, wormholeData, num) => {
-    console.log(num)
+const lookUpEsi = async (wormholeData) => {
     if (wormholeData === undefined) {
         return;
     }
-    for (let i = 0; i < Object.keys(wormholeData).length; i++) {
-        const newzKillId = Number(Object.keys(wormholeData)[i])
+    for (let i = 0; i < wormholeData.length; i++) {
+        const newzKillId = Object.keys(wormholeData)[i]
         const currentHash = Object.values(wormholeData)[i]
-        // if(Number(currentHighestid) -5000 > newzKillId){
-        //     continue
-        // }
+        console.log('querying the esi')
         await axios.get(`https://esi.evetech.net/latest/killmails/${newzKillId}/${currentHash}/?datasource=tranquility`)
             .catch(err => {
                 console.log(err)
@@ -111,7 +114,7 @@ const sqlInject = async (response) => {
         client.end()
         if (err) {
             client.end()
-            // console.log('value already inserted, probably')
+            console.log('value already inserted, probably')
         } else {
             client.end()
             console.log('esi value inserted');
@@ -120,8 +123,8 @@ const sqlInject = async (response) => {
 }
 
 const insertIntoEsiDatabase = async (num, id) => {
-    await axiosZkillData(num).then((wormholeData) => {
-        lookUpEsi(id, wormholeData, num)
+    await axiosZkillData(num, id).then((wormholeData) => {
+        lookUpEsi(wormholeData)
     })
 }
 
