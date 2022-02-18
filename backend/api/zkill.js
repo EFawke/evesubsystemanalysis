@@ -64,7 +64,7 @@ const axiosZkillData = async (page, id) => {
         return
     } else {
         let arr = []
-        for(let i = 0; i < response.data.length; i++){
+        for(let i = 0; i < Object.keys(response.data).length; i++){
             const zkillId = Number(Object.keys(response.data[i]))
             if(Number(id) > zkillId){
                 console.log('one coming up')
