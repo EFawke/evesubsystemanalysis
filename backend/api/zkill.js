@@ -142,10 +142,8 @@ const fillDbs = () => {
     client.connect()
     client.query(`SELECT MAX (killmail_id) FROM esi`, (err, res) => {
         client.end()
-        if(err){
-            console.log(err)
-        }
-        let id = res.rows[0].max
+    })
+    .then((id) => {
         go(id)
     })
 }
