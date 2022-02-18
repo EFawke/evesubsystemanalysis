@@ -74,13 +74,18 @@ const lookUpEsi = async (wormholeData, id) => {
         if(Number(id) > Number(newzKillId)){
             continue
         }
-        await axios.get(`https://esi.evetech.net/latest/killmails/${newzKillId}/${currentHash}/?datasource=tranquility`)
-            .catch(err => {
+        await axios.get(`https://esi.evetech.net/latest/killmails/${newzKillId}/${currentHash}/?datasource=tranquility`, (err, res) => {
+            if(err){
                 console.log(err)
-            })
-            .then((response) => {
-                sqlInject(response)
-            })
+            }
+            sqlInject(res)
+        })
+            // .catch(err => {
+            //     console.log(err)
+            // })
+            // .then((response) => {
+            //     sqlInject(response)
+            // })
     }
 }
 
