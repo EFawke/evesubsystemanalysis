@@ -37,7 +37,7 @@ const dateToDay = (date) => {
     return day;
 }
 
-const axiosZkillData = async (page, id) => {
+const axiosZkillData = async (page) => {
     if (page > 20) {
         return;
     }
@@ -63,32 +63,26 @@ const axiosZkillData = async (page, id) => {
     if (response === undefined) {
         return
     } else {
-        let arr = []
-        for(let i = 0; i < Object.keys(response.data).length; i++){
-            const zkillId = Number(Object.keys(response.data[i]))
-            if(Number(id) > zkillId){
-                console.log('one coming up')
-                arr.push(response.data[i])
-            }
-        }
-        return arr
+        return response.data
     }
 }
 
-const lookUpEsi = async (wormholeData) => {
+const lookUpEsi = async (wormholeData, id) => {
     if (wormholeData === undefined) {
         return;
     }
-    for (let i = 0; i < wormholeData.length; i++) {
+    for (let i = 0; i < Object.keys(wormholeData).length; i++) {
         const newzKillId = Object.keys(wormholeData)[i]
         const currentHash = Object.values(wormholeData)[i]
-        console.log('querying the esi')
+        if(Number(id) < newzKillId){
+            console.log('querying the esi')
+        }
         await axios.get(`https://esi.evetech.net/latest/killmails/${newzKillId}/${currentHash}/?datasource=tranquility`)
             .catch(err => {
                 console.log(err)
             })
             .then((response) => {
-                sqlInject(response)
+                // sqlInject(response)
             })
     }
 }
@@ -123,8 +117,8 @@ const sqlInject = async (response) => {
 }
 
 const insertIntoEsiDatabase = async (num, id) => {
-    await axiosZkillData(num, id).then((wormholeData) => {
-        lookUpEsi(wormholeData)
+    await axiosZkillData(num).then((wormholeData) => {
+        lookUpEsi(wormholeData, id)
     })
 }
 
