@@ -62,8 +62,10 @@ const axiosZkillData = async (page) => {
             }
         })
     if (response === undefined) {
+        console.log('undefined response from zkills')
         return
     } else {
+        console.log('response not undefined from zkill')
         return response.data;
     }
 }
@@ -71,8 +73,6 @@ const axiosZkillData = async (page) => {
 const lookUpEsi = async (currentHighestid, wormholeData, num) => {
     if (wormholeData === undefined) {
         return;
-    } else {
-        console.log(num)
     }
     for (let i = 0; i < Object.keys(wormholeData).length; i++) {
         const newzKillId = Number(Object.keys(wormholeData)[i])
