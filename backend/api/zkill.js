@@ -38,6 +38,7 @@ const dateToDay = (date) => {
 }
 
 const axiosZkillData = async (page) => {
+    console.log(page)
     let pageNumber = page;
     if (pageNumber > 20) {
         return;
@@ -62,15 +63,14 @@ const axiosZkillData = async (page) => {
             }
         })
     if (response === undefined) {
-        console.log('undefined response from zkills')
         return
     } else {
-        console.log('response not undefined from zkill')
         return response.data;
     }
 }
 
 const lookUpEsi = async (currentHighestid, wormholeData, num) => {
+    console.log(num)
     if (wormholeData === undefined) {
         return;
     }
