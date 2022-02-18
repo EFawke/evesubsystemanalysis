@@ -145,12 +145,11 @@ const findMax = () => {
         if(err){
             console.log(err)
         }
-        console.log(res)
-        return res
+        return res.rows[0].max
     })
 }
 
-const fillDbs = async () => {
+const fillDbs = () => {
     findMax((res) => {
         go(res)
     })
