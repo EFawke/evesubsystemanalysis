@@ -68,14 +68,15 @@ const axiosZkillData = async (page) => {
     }
 }
 
-const lookUpEsi = async (currentHighestid, wormholeData) => {
+const lookUpEsi = async (currentHighestid, wormholeData, num) => {
     if (wormholeData === undefined) {
         return;
+    } else {
+        console.log(num)
     }
     for (let i = 0; i < Object.keys(wormholeData).length; i++) {
         const newzKillId = Number(Object.keys(wormholeData)[i])
         const currentHash = Object.values(wormholeData)[i]
-        console.log(currentHighestid)
         if(Number(currentHighestid) -5000 > newzKillId){
             continue
         }
@@ -112,7 +113,7 @@ const sqlInject = async (response) => {
         client.end()
         if (err) {
             client.end()
-            console.log('value already inserted, probably')
+            // console.log('value already inserted, probably')
         } else {
             client.end()
             console.log('esi value inserted');
@@ -122,7 +123,7 @@ const sqlInject = async (response) => {
 
 const insertIntoEsiDatabase = async (num, id) => {
     await axiosZkillData(num).then((wormholeData) => {
-        lookUpEsi(id, wormholeData)
+        lookUpEsi(id, wormholeData, num)
     })
 }
 
