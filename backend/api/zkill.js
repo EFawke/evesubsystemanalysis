@@ -71,9 +71,6 @@ const lookUpEsi = async (wormholeData, id) => {
     for (let i = 0; i < Object.keys(wormholeData).length; i++) {
         const newzKillId = Object.keys(wormholeData)[i]
         const currentHash = Object.values(wormholeData)[i]
-        if(i === 0){
-            console.log(Number(newzKillId) +  " = new zkill id and " + Number(id) + ' is the id')
-        }
         if(Number(id) < Number(newzKillId)){
             continue
         }
@@ -108,7 +105,7 @@ const sqlInject = async (response) => {
         client.end()
         if (err) {
             client.end()
-            console.log('value already inserted, probably')
+            console.log(err)
         } else {
             client.end()
             console.log('esi value inserted');
