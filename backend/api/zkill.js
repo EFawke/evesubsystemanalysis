@@ -83,6 +83,7 @@ const lookUpEsi = async (num, currentHighestid) => {
     if (wormholeData === undefined) {
         return;
     }
+    console.log(wormholeData)
     for (let i = 0; i < Object.keys(wormholeData).length; i++) {
         const newzKillId = Number(Object.keys(wormholeData)[i])
         const currentHash = Object.values(wormholeData)[i]
@@ -103,7 +104,7 @@ const lookUpEsi = async (num, currentHighestid) => {
 }
 
 const sqlInject = async (response) => {
-    console.log(response)
+    console.log('sqlInject' + response)
     if(response === undefined){
         return
     }
