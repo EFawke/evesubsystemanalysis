@@ -96,7 +96,10 @@ const lookUpEsi = async (num, currentHighestid) => {
                 }
             })
             .then((response) => {
-                sqlInject(response)
+                console.log(response)
+                if(response || response !== undefined){
+                    sqlInject(response)
+                }
             })
     }
     return killmails;
