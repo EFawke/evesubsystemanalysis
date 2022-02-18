@@ -96,16 +96,17 @@ const lookUpEsi = async (num, currentHighestid) => {
                 }
             })
             .then((response) => {
-                console.log(response)
-                if(response || response !== undefined){
-                    sqlInject(response)
-                }
+                sqlInject(response)
             })
     }
     return killmails;
 }
 
 const sqlInject = async (response) => {
+    console.log(response)
+    if(response === undefined){
+        return
+    }
     const id = response.data.killmail_id
     const date = response.data.killmail_time
     const ship = response.data.victim.ship_type_id
