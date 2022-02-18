@@ -151,6 +151,7 @@ const findMax = async () => {
 
 const fillDbs = async () => {
     await findMax().then((res) => {
+        console.log(res)
         go(res)
     })
 }
