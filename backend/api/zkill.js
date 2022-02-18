@@ -69,9 +69,6 @@ const axiosZkillData = async (page) => {
 }
 
 const lookUpEsi = async (currentHighestid, wormholeData) => {
-    // let pageNum = num
-    // let killmails = [];
-    // const wormholeData = await axiosZkillData(pageNum);
     if (wormholeData === undefined) {
         return;
     }
@@ -91,7 +88,6 @@ const lookUpEsi = async (currentHighestid, wormholeData) => {
                 sqlInject(response)
             })
     }
-    return killmails;
 }
 
 const sqlInject = async (response) => {
@@ -115,7 +111,7 @@ const sqlInject = async (response) => {
         client.end()
         if (err) {
             client.end()
-            console.log(err)
+            console.log('value already inserted, probably')
         } else {
             client.end()
             console.log('esi value inserted');
