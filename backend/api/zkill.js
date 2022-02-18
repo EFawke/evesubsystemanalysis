@@ -131,7 +131,7 @@ const go = async (id) => {
     }
 }
 
-const findMax = async () => {
+const fillDbs = async () => {
     const client = new Client({
         connectionString: process.env.DATABASE_URL,
         ssl: {
@@ -145,14 +145,7 @@ const findMax = async () => {
         if(err){
             console.log(err)
         }
-        return res.rows[0].max
-    })
-}
-
-const fillDbs = async () => {
-    await findMax().then((res) => {
-        console.log(res)
-        go(res)
+        go(res.rows[0].max)
     })
 }
 
