@@ -130,7 +130,7 @@ const insertIntoEsiDatabase = async (num, id) => {
 const go = async (id) => {
     for (let i = 20; i >= 0; i--) {
         console.log(i)
-        insertIntoEsiDatabase(i, id)
+        await insertIntoEsiDatabase(i, id)
     }
 }
 
