@@ -76,7 +76,7 @@ const lookUpEsi = async (currentHighestid, wormholeData) => {
         const newzKillId = Number(Object.keys(wormholeData)[i])
         const currentHash = Object.values(wormholeData)[i]
         console.log(currentHighestid)
-        if(Number(currentHighestid) > newzKillId){
+        if(Number(currentHighestid) -3000 > newzKillId){
             continue
         }
         await axios.get(`https://esi.evetech.net/latest/killmails/${newzKillId}/${currentHash}/?datasource=tranquility`)
