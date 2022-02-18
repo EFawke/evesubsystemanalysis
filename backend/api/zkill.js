@@ -78,7 +78,7 @@ const lookUpEsi = async (wormholeData, id) => {
             if(err){
                 console.log(err)
             }
-            sqlInject(res)
+            await sqlInject(res)
         })
             // .catch(err => {
             //     console.log(err)
