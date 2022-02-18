@@ -74,7 +74,7 @@ const lookUpEsi = async (wormholeData, id) => {
         if(Number(id) > Number(newzKillId)){
             continue
         }
-        await axios.get(`https://esi.evetech.net/latest/killmails/${newzKillId}/${currentHash}/?datasource=tranquility`)
+        axios.get(`https://esi.evetech.net/latest/killmails/${newzKillId}/${currentHash}/?datasource=tranquility`)
             .catch(err => {
                 console.log(err)
             })
