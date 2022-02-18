@@ -82,9 +82,7 @@ const lookUpEsi = async (currentHighestid, wormholeData, num) => {
         }
         await axios.get(`https://esi.evetech.net/latest/killmails/${newzKillId}/${currentHash}/?datasource=tranquility`)
             .catch(err => {
-                if (err) {
-                    return;
-                }
+                console.log(err)
             })
             .then((response) => {
                 sqlInject(response)
