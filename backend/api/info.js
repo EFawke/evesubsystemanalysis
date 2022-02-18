@@ -1,33 +1,33 @@
-// const express = require('express');
-// const infoRouter = express.Router();
-// const { Client } = require('pg');
-// const { Pool } = require('pg')
+const express = require('express');
+const infoRouter = express.Router();
+const { Client } = require('pg');
+const { Pool } = require('pg')
 
-// infoRouter.get(`/totalDestroyed/:shipName`, (req, response, next) => {
-//     const shipName = req.params.shipName;
-//     const shipTypeId = shipSelector(shipName);
-    // const client = new Client({
-    //     connectionString: process.env.DATABASE_URL,
-    //     ssl: {
-    //         rejectUnauthorized: false
-    //     }
-    // });
-    // client.connect()
-    // client.query(`SELECT COUNT(*) FROM esi WHERE ship_type_id = '${shipTypeId}';`, (err, res) => {
-    //     if (err) {
-    //         client.end()
-    //     } else {
-    //         client.end()
-    //         const data = res.rows;
-    //         const floop = {
-    //             number: data[0].count,
-    //             ship: shipName
-    //         }
-    //         response.status(200).send(floop)
-    //     }
-    //     client.end()
-    // })
-// })
+infoRouter.get(`/totalDestroyed/:shipName`, (req, response, next) => {
+    const shipName = req.params.shipName;
+    const shipTypeId = shipSelector(shipName);
+    const client = new Client({
+        connectionString: process.env.DATABASE_URL,
+        ssl: {
+            rejectUnauthorized: false
+        }
+    });
+    client.connect()
+    client.query(`SELECT COUNT(*) FROM esi WHERE ship_type_id = '${shipTypeId}';`, (err, res) => {
+        if (err) {
+            client.end()
+        } else {
+            client.end()
+            const data = res.rows;
+            const floop = {
+                number: data[0].count,
+                ship: shipName
+            }
+            response.status(200).send(floop)
+        }
+        client.end()
+    })
+})
 
 const shipSelector = (shipType) => {
     let shipTypeId = ''

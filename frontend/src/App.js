@@ -10,7 +10,7 @@ class App extends React.Component {
       <div className="background">
         <Header />
         <Heatmap shipSelected = {window.location.pathname.replace(/\//g,'')}/>
-        {/* <Info className ="info" shipSelected = {window.location.pathname.replace(/\//g,'')}/> */}
+        <Info className ="info" shipSelected = {window.location.pathname.replace(/\//g,'')}/>
       </div>
     )
   }
