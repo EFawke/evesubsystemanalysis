@@ -64,7 +64,7 @@ const axiosZkillData = async (page) => {
     }
 }
 
-const lookUpEsi = async (wormholeData, id) => {
+const lookUpEsi = (wormholeData, id) => {
     if (wormholeData === undefined) {
         return;
     }
@@ -73,14 +73,15 @@ const lookUpEsi = async (wormholeData, id) => {
         const currentHash = Object.values(wormholeData)[i]
         if(Number(id) > Number(newzKillId)){
             continue
-        }
-        axios.get(`https://esi.evetech.net/latest/killmails/${newzKillId}/${currentHash}/?datasource=tranquility`)
+        } else {
+            axios.get(`https://esi.evetech.net/latest/killmails/${newzKillId}/${currentHash}/?datasource=tranquility`)
             .catch(err => {
                 console.log(err)
             })
             .then((response) => {
                 sqlInject(response)
             })
+        }
     }
 }
 
