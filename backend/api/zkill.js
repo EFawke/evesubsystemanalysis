@@ -66,12 +66,6 @@ const axiosZkillData = (page) => {
                 return response.data
             }
         })
-    // if (response === undefined) {
-    //     return
-    // } else {
-    //     console.log(response.data)
-    //     return response.data
-    // }
 }
 
 const lookUpEsi = (wormholeData, id) => {
@@ -88,6 +82,7 @@ const lookUpEsi = (wormholeData, id) => {
                 if(err){
                     console.log(err)
                 }
+                console.log('esi data obtained')
                 sqlInject(res)
                 })
         }
