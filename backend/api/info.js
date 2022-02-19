@@ -21,7 +21,7 @@ infoRouter.get(`/totalDestroyed/:shipName`, (req, response, next) => {
             console.log(res)
             const data = res.rows;
             const floop = {
-                number: res.Result.rowCount,
+                number: res.rowCount,
                 ship: shipName
             }
             response.status(200).send(floop)
