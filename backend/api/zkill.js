@@ -7,7 +7,7 @@ var format = require('pg-format');
 const { Client } = require('pg');
 const { query, response } = require('express');
 
-// esiDbInit();
+esiDbInit();
 
 const dateToDay = (date) => {
     const killDate = new Date(date);
