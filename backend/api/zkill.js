@@ -82,7 +82,6 @@ const lookUpEsi = (wormholeData, id) => {
     for (let i = 0; i < Object.keys(wormholeData).length; i++) {
         const newzKillId = Object.keys(wormholeData)[i]
         const currentHash = Object.values(wormholeData)[i]
-        console.log(`${Number(id)} and ${Number(newzKillId)}`)
         if(Number(id) < Number(newzKillId) && Number(id) !== Number(newzKillId)){
         console.log('fetching esi data')
         axios.get(`https://esi.evetech.net/latest/killmails/${newzKillId}/${currentHash}/?datasource=tranquility`, (err, res) => {
@@ -95,7 +94,7 @@ const lookUpEsi = (wormholeData, id) => {
     }
 }
 
-const sqlInject = async (response) => {
+const sqlInject = (response) => {
     if(response === undefined){
         //responses come back undefined during downtime, causing the app to crash
         return
