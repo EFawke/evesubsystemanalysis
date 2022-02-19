@@ -20,6 +20,7 @@ infoRouter.get(`/totalDestroyed/:shipName`, (req, response, next) => {
             client.end()
             const arr = res.rows
             const oldest = arr.sort((a, b) => a.killmail_id - b.killmail_id)[0].killmail_time
+            console.log(arr.sort((a, b) => a.killmail_id - b.killmail_id))
             const o = new Date(oldest.slice(0,-1))
             const t = new Date()
             const timediff = t - o
