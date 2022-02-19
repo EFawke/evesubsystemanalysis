@@ -57,6 +57,7 @@ const axiosZkillData = async (page) => {
                 return;
             }
         })
+    console.log(response.data)
     if (response === undefined) {
         return
     } else {
