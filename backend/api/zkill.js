@@ -78,12 +78,12 @@ const lookUpEsi = (wormholeData, id) => {
         const currentHash = Object.values(wormholeData)[i]
         if(Number(id) < Number(newzKillId)){
             console.log('fetching esi data')
-            axios.get(`https://esi.evetech.net/latest/killmails/${newzKillId}/${currentHash}/?datasource=tranquility`, (err, res) => {
-                if(err){
+            axios.get(`https://esi.evetech.net/latest/killmails/${newzKillId}/${currentHash}/?datasource=tranquility`)
+                .catch(err => {
                     console.log(err)
-                }
-                console.log('esi data obtained')
-                sqlInject(res)
+                })
+                .then(res => {
+                    sqlInject(res)
                 })
         }
     }
