@@ -74,7 +74,7 @@ const axiosZkillData = async (page) => {
     // }
 }
 
-const lookUpEsi = (wormholeData, id) => {
+const lookUpEsi = async (wormholeData, id) => {
     if (wormholeData === undefined) {
         console.log('wormholedata came back undefined')
         return;
@@ -89,12 +89,11 @@ const lookUpEsi = (wormholeData, id) => {
             continue
         } else {
             console.log('fetching esi data')
-            return axios.get(`https://esi.evetech.net/latest/killmails/${newzKillId}/${currentHash}/?datasource=tranquility`)
-            .catch(err => {
-                console.log(err)
-            })
-            .then((response) => {
-                sqlInject(response)
+            axios.get(`https://esi.evetech.net/latest/killmails/${newzKillId}/${currentHash}/?datasource=tranquility`, (err, res) => {
+                if(err){
+                    console.log(err)
+                }
+                sqlInject(res)
             })
         }
     }
