@@ -25,6 +25,7 @@ class Info extends React.Component {
                 const totalDes = response.data.number;
                 this.setState({ totalDestroyed: totalDes })
                 this.setState({shipSelected: "Heron"})
+                this.setState({days: response.data.days})
             }).then(() => {
                 this.setState({ isLoaded: true })
             })
