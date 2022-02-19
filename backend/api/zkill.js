@@ -63,6 +63,7 @@ const axiosZkillData = (page) => {
             if(response === undefined){
                 console.log('response came back undefined')
             } else {
+                console.log(`page ${page} came back ok`)
                 return response.data
             }
         })
@@ -127,7 +128,6 @@ const insertIntoEsiDatabase = async (num, id) => {
 const go = async (id) => {
     console.log(id)
     for (let i = 5; i >= 0; i--) {
-        console.log(i)
         await insertIntoEsiDatabase(i, id)
     }
 }
