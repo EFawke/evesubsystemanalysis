@@ -16,6 +16,8 @@ if (port == null || port == "") {
 
 const path = require('path')
 
+console.log('node environment is ' + process.env.NODE_ENV)
+
 if (process.env.NODE_ENV === 'production') {
   app.use(express.static('../frontend/build'));
 

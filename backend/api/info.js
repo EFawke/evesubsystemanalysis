@@ -19,7 +19,8 @@ infoRouter.get(`/totalDestroyed/:shipName`, (req, response, next) => {
         } else {
             client.end()
             console.log(res)
-            console.log(res.sort((a, b) => a.killmail_id = b.killmail_id))
+            const arr = res.rows
+            console.log(arr.sort((a, b) => a.killmail_id = b.killmail_id))
             const floop = {
                 number: res.rowCount,
                 ship: shipName
