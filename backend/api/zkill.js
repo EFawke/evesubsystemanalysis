@@ -37,7 +37,7 @@ const dateToDay = (date) => {
     return day;
 }
 
-const axiosZkillData = async (page) => {
+const axiosZkillData = (page) => {
     let data;
     let query;
     if (page === 0) {
@@ -83,13 +83,13 @@ const lookUpEsi = (wormholeData, id) => {
         const newzKillId = Object.keys(wormholeData)[i]
         const currentHash = Object.values(wormholeData)[i]
         if(Number(id) < Number(newzKillId) && Number(id) !== Number(newzKillId)){
-        console.log('fetching esi data')
-        axios.get(`https://esi.evetech.net/latest/killmails/${newzKillId}/${currentHash}/?datasource=tranquility`, (err, res) => {
-            if(err){
-                console.log(err)
-            }
-            sqlInject(res)
-            })
+            console.log('fetching esi data')
+            axios.get(`https://esi.evetech.net/latest/killmails/${newzKillId}/${currentHash}/?datasource=tranquility`, (err, res) => {
+                if(err){
+                    console.log(err)
+                }
+                sqlInject(res)
+                })
         }
     }
 }
