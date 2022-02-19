@@ -90,7 +90,8 @@ const lookUpEsi = (wormholeData, id) => {
                 console.log(err)
             }
             sqlInject(res)
-        })
+            })
+        }
     }
 }
 
@@ -161,11 +162,3 @@ fillDbs()
 setInterval(fillDbs, 1000 * 60 * 10);
 
 module.exports = zkillRouter;
-
-// (err, res) => {
-//     client.end()
-//     if(err){
-//         console.log(err)
-//     }
-//     go(res.rows[0].max)
-// })
