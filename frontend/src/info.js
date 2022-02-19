@@ -32,6 +32,7 @@ class Info extends React.Component {
             axios.get(`/api/counter/totalDestroyed/${this.props.shipSelected}`).then(response => {
                 const totalDes = response.data.number;
                 this.setState({ totalDestroyed: totalDes })
+                this.setState({days: response.data.days})
             }).then(() => {
                 this.setState({ isLoaded: true })
             })
@@ -45,7 +46,7 @@ class Info extends React.Component {
             )
         }
         return (
-            <p className="info">Fetching {this.state.totalDestroyed} <span className="infoSpan">{this.state.shipSelected}</span> kills from the last <span>3 months</span> in wormhole space.</p>
+            <p className="info">Fetching {this.state.totalDestroyed} <span className="infoSpan">{this.state.shipSelected}</span> kills from the last <span>{this.state.days}</span> in wormhole space.</p>
         )
     }
 };
