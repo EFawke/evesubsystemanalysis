@@ -81,10 +81,11 @@ const lookUpEsi = async (wormholeData, id) => {
     }
     for (let i = 0; i < Object.keys(wormholeData).length; i++) {
         if(i % 25 === 0){
-            console.log('analysing some data')
+            console.log(wormholeData[i])
         }
         const newzKillId = Object.keys(wormholeData)[i]
         const currentHash = Object.values(wormholeData)[i]
+        console.log(`${Number(id)} and ${Number(newzKillId)}`)
         if(Number(id) > Number(newzKillId) || Number(id) === Number(newzKillId)){
             continue
         } else {
