@@ -74,29 +74,23 @@ const axiosZkillData = async (page) => {
     // }
 }
 
-const lookUpEsi = async (wormholeData, id) => {
+const lookUpEsi = (wormholeData, id) => {
     if (wormholeData === undefined) {
         console.log('wormholedata came back undefined')
         return;
     }
     for (let i = 0; i < Object.keys(wormholeData).length; i++) {
-        if(i % 25 === 0){
-            console.log(wormholeData[i])
-        }
         const newzKillId = Object.keys(wormholeData)[i]
         const currentHash = Object.values(wormholeData)[i]
         console.log(`${Number(id)} and ${Number(newzKillId)}`)
-        if(Number(id) > Number(newzKillId) || Number(id) === Number(newzKillId)){
-            continue
-        } else {
-            console.log('fetching esi data')
-            axios.get(`https://esi.evetech.net/latest/killmails/${newzKillId}/${currentHash}/?datasource=tranquility`, (err, res) => {
-                if(err){
-                    console.log(err)
-                }
-                sqlInject(res)
-            })
-        }
+        if(Number(id) < Number(newzKillId) && Number(id) !== Number(newzKillId)){
+        console.log('fetching esi data')
+        axios.get(`https://esi.evetech.net/latest/killmails/${newzKillId}/${currentHash}/?datasource=tranquility`, (err, res) => {
+            if(err){
+                console.log(err)
+            }
+            sqlInject(res)
+        })
     }
 }
 
@@ -152,11 +146,13 @@ const fillDbs = async () => {
         allowExitOnIdle: true
     });
     client.connect()
-    client.query(`SELECT MAX (killmail_id) FROM esi`, (err, res) => {
+    return client.query(`SELECT MAX (killmail_id) FROM esi`)
+    .catch(err => {
         client.end()
-        if(err){
-            console.log(err)
-        }
+        console.log(err)
+    })
+    .then(res => {
+        client.end()
         go(res.rows[0].max)
     })
 }
@@ -165,3 +161,11 @@ fillDbs()
 setInterval(fillDbs, 1000 * 60 * 10);
 
 module.exports = zkillRouter;
+
+// (err, res) => {
+//     client.end()
+//     if(err){
+//         console.log(err)
+//     }
+//     go(res.rows[0].max)
+// })
