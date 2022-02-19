@@ -44,7 +44,7 @@ const axiosZkillData = async (page) => {
     } else {
         query = `https://zkillboard.com/api/kills/w-space/page/${page}/`
     }
-    const response = await axios.get(query,
+    await axios.get(query,
         {
             headers: {
                 'accept-encoding': 'gzip',
@@ -54,19 +54,28 @@ const axiosZkillData = async (page) => {
         })
         .catch(err => {
             if (err) {
+                console.log(err)
                 return;
             }
         })
-    if (response === undefined) {
-        return
-    } else {
-        console.log(response.data)
-        return response.data
-    }
+        .then(response => {
+            if(response === undefined){
+                console.log('response came back undefined')
+            } else {
+                return response.data
+            }
+        })
+    // if (response === undefined) {
+    //     return
+    // } else {
+    //     console.log(response.data)
+    //     return response.data
+    // }
 }
 
 const lookUpEsi = (wormholeData, id) => {
     if (wormholeData === undefined) {
+        console.log('wormholedata came back undefined')
         return;
     }
     for (let i = 0; i < Object.keys(wormholeData).length; i++) {
