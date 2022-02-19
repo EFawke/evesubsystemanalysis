@@ -57,10 +57,10 @@ const axiosZkillData = async (page) => {
                 return;
             }
         })
-    console.log(response.data)
     if (response === undefined) {
         return
     } else {
+        console.log(response.data)
         return response.data
     }
 }
