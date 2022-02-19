@@ -38,13 +38,14 @@ const dateToDay = (date) => {
 }
 
 const axiosZkillData = async (page) => {
+    let data;
     let query;
     if (page === 0) {
         query = 'https://zkillboard.com/api/kills/w-space/'
     } else {
         query = `https://zkillboard.com/api/kills/w-space/page/${page}/`
     }
-    await axios.get(query,
+    return axios.get(query,
         {
             headers: {
                 'accept-encoding': 'gzip',
