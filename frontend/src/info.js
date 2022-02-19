@@ -46,9 +46,15 @@ class Info extends React.Component {
                 <div>Loading...</div>
             )
         }
-        return (
-            <p className="info">Fetching {this.state.totalDestroyed} <span className="infoSpan">{this.state.shipSelected}</span> kills from the last <span>{this.state.days}</span> days in wormhole space.</p>
-        )
+        if(this.state.totalDestroyed === 0){
+            return (
+                <p className = "info"><span className = "infoSpan">{this.state.shipSelected}</span>, I haven't heard that name in years.</p>
+            )
+        } else {
+            return (
+                <p className="info">Fetching {this.state.totalDestroyed} <span className="infoSpan">{this.state.shipSelected}</span> kills from the last <span>{this.state.days}</span> days in wormhole space.</p>
+            )
+        }
     }
 };
 
