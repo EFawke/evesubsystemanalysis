@@ -13,11 +13,12 @@ infoRouter.get(`/totalDestroyed/:shipName`, (req, response, next) => {
         }
     });
     client.connect()
-    client.query(`SELECT COUNT(*) FROM esi WHERE ship_type_id = '${shipTypeId}';`, (err, res) => {
+    client.query(`SELECT killmail_id, killmail_time FROM esi WHERE ship_type_id = '${shipTypeId}';`, (err, res) => {
         if (err) {
             client.end()
         } else {
             client.end()
+            console.log(res)
             const data = res.rows;
             const floop = {
                 number: data[0].count,
