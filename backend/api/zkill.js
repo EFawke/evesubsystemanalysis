@@ -80,12 +80,16 @@ const lookUpEsi = (wormholeData, id) => {
         return;
     }
     for (let i = 0; i < Object.keys(wormholeData).length; i++) {
+        if(i % 25 === 0){
+            console.log('analysing some data')
+        }
         const newzKillId = Object.keys(wormholeData)[i]
         const currentHash = Object.values(wormholeData)[i]
         if(Number(id) > Number(newzKillId) || Number(id) === Number(newzKillId)){
             continue
         } else {
-            axios.get(`https://esi.evetech.net/latest/killmails/${newzKillId}/${currentHash}/?datasource=tranquility`)
+            console.log('fetching esi data')
+            return axios.get(`https://esi.evetech.net/latest/killmails/${newzKillId}/${currentHash}/?datasource=tranquility`)
             .catch(err => {
                 console.log(err)
             })
