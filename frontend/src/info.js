@@ -46,7 +46,7 @@ class Info extends React.Component {
             )
         }
         return (
-            <p className="info">Fetching {this.state.totalDestroyed} <span className="infoSpan">{this.state.shipSelected}</span> kills from the last <span>{this.state.days}</span> in wormhole space.</p>
+            <p className="info">Fetching {this.state.totalDestroyed} <span className="infoSpan">{this.state.shipSelected}</span> kills from the last <span>{this.state.days}</span> days in wormhole space.</p>
         )
     }
 };
