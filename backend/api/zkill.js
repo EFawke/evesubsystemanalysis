@@ -119,15 +119,16 @@ const sqlInject = (response) => {
 
 const insertIntoEsiDatabase = async (num, id) => {
     await axiosZkillData(num).then((wormholeData) => {
-        lookUpEsi(wormholeData, id)
+        setTimeout(() => {
+            lookUpEsi(wormholeData, id), 2000;
+        })
     })
 }
 
 const go = async (id) => {
     console.log(id)
     for (let i = 5; i >= 0; i--) {
-        setTimeout(function () { insertIntoEsiDatabase(i, id); }, 2000);
-        
+        await insertIntoEsiDatabase(i, id)
     }
 }
 
