@@ -38,7 +38,6 @@ const dateToDay = (date) => {
 }
 
 const axiosZkillData = (page) => {
-    let data;
     let query;
     if (page === 0) {
         query = 'https://zkillboard.com/api/kills/w-space/'
@@ -55,7 +54,6 @@ const axiosZkillData = (page) => {
         })
         .catch(err => {
             if (err) {
-                console.log(err)
                 return;
             }
         })
@@ -78,7 +76,6 @@ const lookUpEsi = (wormholeData, id) => {
         const newzKillId = Object.keys(wormholeData)[i]
         const currentHash = Object.values(wormholeData)[i]
         if(Number(id) < Number(newzKillId)){
-            console.log(newzKillId)
             console.log('fetching esi data')
             axios.get(`https://esi.evetech.net/latest/killmails/${newzKillId}/${currentHash}/?datasource=tranquility`)
                 .catch(err => {
@@ -129,7 +126,8 @@ const insertIntoEsiDatabase = async (num, id) => {
 const go = async (id) => {
     console.log(id)
     for (let i = 5; i >= 0; i--) {
-        await insertIntoEsiDatabase(i, id)
+        setTimeout(function () { await insertIntoEsiDatabase(i, id); }, 2000);
+        
     }
 }
 
