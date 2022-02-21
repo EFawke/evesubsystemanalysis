@@ -126,7 +126,7 @@ const insertIntoEsiDatabase = async (num, id) => {
 const go = async (id) => {
     console.log(id)
     for (let i = 5; i >= 0; i--) {
-        setTimeout(function () { await insertIntoEsiDatabase(i, id); }, 2000);
+        setTimeout(function () { insertIntoEsiDatabase(i, id); }, 2000);
         
     }
 }
