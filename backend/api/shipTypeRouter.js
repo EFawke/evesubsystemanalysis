@@ -6,13 +6,26 @@ const { Pool } = require('pg');
 shipTypeRouter.get(`/:shipName`, (req, res, next) => {
   const shipName = req.params.shipName;
   const shipTypeId = shipSelector(shipName);
-  const client = new Client({
-    connectionString: process.env.DATABASE_URL,
-    ssl: {
-      rejectUnauthorized: false
-    },
-    allowExitOnIdle: true
-  });
+  let client;
+
+  if (!process.env.DATABASE_URL) {
+    client = new Client()
+  } else {
+    client = new Client({
+      connectionString: process.env.DATABASE_URL,
+      ssl: {
+        rejectUnauthorized: false
+      },
+      allowExitOnIdle: true
+    });
+  }
+  // const client = new Client({
+  //   connectionString: process.env.DATABASE_URL,
+  //   ssl: {
+  //     rejectUnauthorized: false
+  //   },
+  //   allowExitOnIdle: true
+  // });
   let heatmap = {
     Monday: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
     Tuesday: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],

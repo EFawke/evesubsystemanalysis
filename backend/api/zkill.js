@@ -97,13 +97,19 @@ const sqlInject = (response) => {
     const date = response.data.killmail_time
     const ship = response.data.victim.ship_type_id
     const day = dateToDay(response.data.killmail_time)
-    const client = new Client({
+    let client;
+
+    if (!process.env.DATABASE_URL) {
+      client = new Client()
+    } else {
+      client = new Client({
         connectionString: process.env.DATABASE_URL,
         ssl: {
-            rejectUnauthorized: false
+          rejectUnauthorized: false
         },
         allowExitOnIdle: true
-    });
+      });
+    }
     client.connect()
     client.query(`INSERT INTO esi (killmail_id, killmail_time, ship_type_id, weekday) VALUES ('${id}', '${date}', '${ship}', '${day}')`, (err, res) => {
         client.end()
@@ -119,9 +125,8 @@ const sqlInject = (response) => {
 
 const insertIntoEsiDatabase = async (num, id) => {
     await axiosZkillData(num).then((wormholeData) => {
-        setTimeout(() => {
-            lookUpEsi(wormholeData, id), 2000;
-        })
+        //we shall see if this is suitable. zkill doesn't want more than one request a second.
+        lookUpEsi(wormholeData, id);
     })
 }
 
@@ -133,13 +138,19 @@ const go = async (id) => {
 }
 
 const fillDbs = async () => {
-    const client = new Client({
+    let client;
+
+    if (!process.env.DATABASE_URL) {
+      client = new Client()
+    } else {
+      client = new Client({
         connectionString: process.env.DATABASE_URL,
         ssl: {
-            rejectUnauthorized: false
+          rejectUnauthorized: false
         },
         allowExitOnIdle: true
-    });
+      });
+    }
     client.connect()
     return client.query(`SELECT MAX (killmail_id) FROM esi`)
     .catch(err => {

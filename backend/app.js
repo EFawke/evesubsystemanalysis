@@ -16,11 +16,7 @@ if (port == null || port == "") {
 
 const path = require('path')
 
-if(!process.env.NODE_ENV){
-  app.use(express.static('../frontend/build'));
-}
-
-else if (process.env.NODE_ENV === 'production') {
+if (process.env.NODE_ENV === 'production') {
   app.use(express.static('../frontend/build'));
 
   const path = require('path');

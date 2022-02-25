@@ -6,12 +6,25 @@ const { Pool } = require('pg')
 infoRouter.get(`/totalDestroyed/:shipName`, (req, response, next) => {
     const shipName = req.params.shipName;
     const shipTypeId = shipSelector(shipName);
-    const client = new Client({
+    let client;
+
+    if (!process.env.DATABASE_URL) {
+      client = new Client()
+    } else {
+      client = new Client({
         connectionString: process.env.DATABASE_URL,
         ssl: {
-            rejectUnauthorized: false
-        }
-    });
+          rejectUnauthorized: false
+        },
+        allowExitOnIdle: true
+      });
+    }
+    // const client = new Client({
+    //     connectionString: process.env.DATABASE_URL,
+    //     ssl: {
+    //         rejectUnauthorized: false
+    //     }
+    // });
     client.connect()
     client.query(`SELECT killmail_id, killmail_time FROM esi WHERE ship_type_id = '${shipTypeId}';`, (err, res) => {
         if (err) {

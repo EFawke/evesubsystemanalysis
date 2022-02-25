@@ -1,23 +1,27 @@
 const { Client } = require('pg');
 
-console.log(process.env)
+let client;
 
-const client = new Client({
+if (!process.env.DATABASE_URL) {
+  client = new Client()
+} else {
+  client = new Client({
     connectionString: process.env.DATABASE_URL,
     ssl: {
-        rejectUnauthorized: false
+      rejectUnauthorized: false
     }
-});
+  });
+}
 
 const esiDbInit = () => {
-    client.connect();
-    client.query(`CREATE TABLE IF NOT EXISTS esi(
+  client.connect();
+  client.query(`CREATE TABLE IF NOT EXISTS esi(
     killmail_id integer PRIMARY KEY,
     killmail_time TEXT NOT NULL,
     ship_type_id INTEGER NOT NULL,
     weekday TEXT NOT NULL
 );`, (err, res) => {
-    if (err){
+    if (err) {
       console.log(err);
     } else {
       console.log('this part fine')
