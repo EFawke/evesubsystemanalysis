@@ -16,7 +16,7 @@
 
 .background {
     background-color: rgba(10, 9, 9, 0.918);
-    min-height: 120vh;
+    min-height: 100vh;
     width: 75%;
     margin: 0 auto;
 }
@@ -225,4 +225,19 @@
     display: flex;
     justify-content: center;
     align-items: center;
+}
+
+.Name {
+    color: white;
+}
+
+footer {
+    display: flex;
+    width: 75%;
+    position: absolute;
+    bottom: 10px;
+    color: white;
+    margin: 0 auto;
+    align-items: center;
+    justify-content: flex-end;
 }

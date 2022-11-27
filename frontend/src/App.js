@@ -1,6 +1,5 @@
 import './App.css';
 import React from 'react';
-import Header from './header'
 import Heatmap from './heat-map'
 import Info from './info'
 import SearchDiv from './searchdiv'
@@ -14,6 +13,7 @@ class App extends React.Component {
         <SearchDiv />
         <Heatmap shipSelected = {window.location.pathname.replace(/\//g,'')}/>
         <Info className ="info" shipSelected = {window.location.pathname.replace(/\//g,'')}/>
+        <footer><p>Send your ISK to Johnson Kanjus. ;)</p></footer>
       </div>
     )
   }

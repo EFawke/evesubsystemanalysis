@@ -1,13 +1,20 @@
 const express = require('express');
 const zkillRouter = express.Router();
 const axios = require('axios');
-const zkillDbInit = require('../utils/zkillTableInit');
 const esiDbInit = require('../utils/esiDbInit');
+const zkillDbInit = require('../utils/zkillTableInit');
+const shipTableInit = require('../utils/shipTableInit')
+const insertValuesIntoTable = require('../utils/shipInserter.js')
+// const logThisStuff = require('../utils/grabShipData')
 var format = require('pg-format');
 const { Client } = require('pg');
 const { query, response } = require('express');
 
-esiDbInit();
+// logThisStuff();
+// esiDbInit();
+// zkillDbInit();
+// shipTableInit();
+// insertValuesIntoTable();
 
 const dateToDay = (date) => {
     const killDate = new Date(date);
@@ -59,9 +66,9 @@ const axiosZkillData = (page) => {
         })
         .then(response => {
             if(response === undefined){
-                console.log('response came back undefined')
+                console.log('response came back undefined for page ' + page)
             } else {
-                console.log(`page ${page} came back ok`)
+                // console.log(`page ${page} came back ok`)
                 return response.data
             }
         })
@@ -76,7 +83,7 @@ const lookUpEsi = (wormholeData, id) => {
         const newzKillId = Object.keys(wormholeData)[i]
         const currentHash = Object.values(wormholeData)[i]
         if(Number(id) < Number(newzKillId)){
-            console.log('fetching esi data')
+            // console.log('fetching esi data')
             axios.get(`https://esi.evetech.net/latest/killmails/${newzKillId}/${currentHash}/?datasource=tranquility`)
                 .catch(err => {
                     console.log(err)
@@ -115,10 +122,10 @@ const sqlInject = (response) => {
         client.end()
         if (err) {
             client.end()
-            console.log('value already inserted, probably')
+            // console.log('value already inserted, probably')
         } else {
             client.end()
-            console.log('esi value inserted');
+            // console.log('esi value inserted');
         }
     })
 }
@@ -159,7 +166,8 @@ const fillDbs = async () => {
     })
     .then(res => {
         client.end()
-        go(res.rows[0].max)
+        console.log(res)
+        // go(res.rows[0].max)
     })
 }
 

@@ -1,6 +1,4 @@
 import React from 'react';
-import github from './github.png'
-import $ from 'jquery';
 import axios from 'axios';
 
 class Header extends React.Component {
@@ -9,7 +7,6 @@ class Header extends React.Component {
         this.findShips()
     }
     findShips(e){
-        const query = $('#shipDataList').val()
         axios.get()
         
     }
@@ -17,7 +14,6 @@ class Header extends React.Component {
         return (
             <div id = "transparent" className="sevenrem">
                 <nav className="navbar navbar-dark" id = "header">
-                <a className = 'weightless' href = '#'><img className = "image" src = {github} alt = "github"/></a>
                 </nav>
             </div>
         )
