@@ -1,14 +1,12 @@
 import React from 'react';
-import Header from './header';
 
 class FauxHeader extends React.Component {
     render() {
         return (
-            <div className="sevenrem bg-dark">
-                <nav className='navbar navbar-dark bg-dark' id = "fauxheader">
-                    <h1 className = "Name">Rage Roll</h1>
-                </nav>
-                <Header />
+            <div className="header">
+                <header className = "main-header">
+                    <h1>Tech 3 Subsystem Demand Indicator</h1>
+                </header>
             </div>
         )
     }

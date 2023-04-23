@@ -2,7 +2,7 @@ import axios from 'axios';
 import React from 'react';
 import Timeslot from './Timeslot';
 
-class Heatmap extends React.Component {
+class Graph extends React.Component {
    constructor(props) {
       super(props)
       this.state = {
@@ -119,49 +119,9 @@ class Heatmap extends React.Component {
     }
     return (
        <div>
-          <table className = "Heatmap">
-                <thead>
-                <tr>
-                <th></th>
-                    <th className="Top">00</th>
-                    <th className="Top">01</th>
-                    <th className="Top">02</th>
-                    <th className="Top">03</th>
-                    <th className="Top">04</th>
-                    <th className="Top">05</th>
-                    <th className="Top">06</th>
-                    <th className="Top">07</th>
-                    <th className="Top">08</th>
-                    <th className="Top">09</th>
-                    <th className="Top">10</th>
-                    <th className="Top">11</th>
-                    <th className="Top">12</th>
-                    <th className="Top">13</th>
-                    <th className="Top">14</th>
-                    <th className="Top">15</th>
-                    <th className="Top">16</th>
-                    <th className="Top">17</th>
-                    <th className="Top">18</th>
-                    <th className="Top">19</th>
-                    <th className="Top">20</th>
-                    <th className="Top">21</th>
-                    <th className="Top">22</th>
-                    <th className="Top">23</th>
-                </tr>
-                </thead>
-             <tbody>
-                {this.renderTableData(this.state.Monday)}
-                {this.renderTableData(this.state.Tuesday)}
-                {this.renderTableData(this.state.Wednesday)}
-                {this.renderTableData(this.state.Thursday)}
-                {this.renderTableData(this.state.Friday)}
-                {this.renderTableData(this.state.Saturday)}
-                {this.renderTableData(this.state.Sunday)}
-             </tbody>
-          </table>
        </div>
     )
  }
 }
 
-export default Heatmap
+export default Graph
