@@ -80,8 +80,8 @@ class Heatmap extends React.Component {
 
    componentDidMount() {
       if (window.location.pathname === "/") {
-         axios.get(`/api/subsystems/45622`).then(response => {
-             const heatmap = response.data
+         axios.get(`/api/subsystems/45589`).then(response => {
+             const heatmap = response.data.heatmap
              this.setState({Monday: heatmap.Monday});
              this.setState({Tuesday: heatmap.Tuesday})
              this.setState({Wednesday: heatmap.Wednesday})

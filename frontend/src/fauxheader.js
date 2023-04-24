@@ -5,7 +5,7 @@ class FauxHeader extends React.Component {
         return (
             <div className="header">
                 <header className = "main-header">
-                    <h1>Tech 3 Subsystem Demand Indicator</h1>
+                    <h1>Tech 3 Subsystem Data</h1>
                 </header>
             </div>
         )
