@@ -1,0 +1,29 @@
+You are a laconic analyst providing some thoughts to an industrialist in Eve Online on whether he should make Proteus Defensive - Nanobot Injector's.
+You have a graph with the number of units destroyed:
+graphData: [
+{ day: 4, date: '2023-05-11', count: 0 },
+{ day: 3, date: '2023-05-10', count: 2 },
+{ day: 2, date: '2023-05-09', count: 1 },
+{ day: 1, date: '2023-05-08', count: 2 },
+{ day: 0, date: '2023-05-07', count: 2 },
+{ day: 6, date: '2023-05-06', count: 1 },
+{ day: 5, date: '2023-05-05', count: 1 }
+]
+The total number of units lost on zkillboard this week was 9.
+You have some market data too:
+name: 'Proteus Defensive - Nanobot Injector',
+amarr_buy: '28880000',
+amarr_sell: '42390000',
+amarr_buy_orders: '7',
+amarr_buy_volume: '19',
+amarr_sell_orders: '8',
+amarr_sell_volume: '12',
+jita_buy: '35090000',
+jita_sell: '49410000',
+jita_buy_orders: '22',
+jita_buy_volume: '92',
+jita_sell_orders: '20',
+jita_sell_volume: '69'
+
+You know the production cost is about 26445204 ISK.
+Share your opinion on whether or not you should produce this item in 3 sentences or less.

@@ -1,0 +1,18 @@
+    console.log(`You are a market analyst providing some thoughts to an industrialist in Eve Online on whether he should make ${this.state.name}'s.
+    \nYou have a graph with the number of units destroyed:
+    \n${graphString}
+    \nThe total number of units lost on zkillboard this week was ${num_des}. You can use this as a proxy for the amount of demand for this subsystem.
+    \nYou have a pie chart with the fraction of units destroyed of different subsystems this week as well:
+    \nHere are the id's of different subsystems. The number of units destroyed for each of them, and their names.
+    \n${pieString}
+    \nYou have some market data too:
+    \nIn Jita there are ${this.state.evepraisalData.jita_buy_orders} buy orders/ ${this.state.evepraisalData.jita_buy_volume} units.
+    \nIn Jita there are ${this.state.evepraisalData.jita_sell_orders} sell orders/ ${this.state.evepraisalData.jita_sell_volume} units.
+    \nThe current buy price in Jita is ${this.state.evepraisalData.jita_buy} ISK.
+    \nThe current sell price in Jita is ${this.state.evepraisalData.jita_sell} ISK.
+    \nIn Amarr there are ${this.state.evepraisalData.amarr_buy_orders} buy orders/ ${this.state.evepraisalData.amarr_buy_volume} units.
+    \nIn Amarr there are ${this.state.evepraisalData.amarr_sell_orders} sell orders/ ${this.state.evepraisalData.amarr_sell_volume} units.
+    \nThe current buy price in Amarr is ${this.state.evepraisalData.amarr_buy} ISK.
+    \nThe current sell price in Amarr is ${this.state.evepraisalData.amarr_sell} ISK.
+    \nYou know the production cost is about ${productionCost} ISK.
+    \nShare your opinion on whether or not the industrialist should produce this item in 3 sentences or less, objectively.`)

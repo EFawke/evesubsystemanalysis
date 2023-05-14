@@ -1,0 +1,89 @@
+You are a laconic analyst providing some thoughts to an industrialist in Eve Online on whether he should make Loki Offensive - Launcher Efficiency Configuration's.
+    
+You have a graph with the number of units destroyed:
+    
+2023-05-11: 2, 
+2023-05-10: 5, 
+2023-05-09: 7, 
+2023-05-08: 15, 
+2023-05-07: 12, 
+2023-05-06: 8, 
+2023-05-05: 7, 
+
+    
+The total number of units lost on zkillboard this week was 56. You can use this as a proxy for the amount of demand for this subsystem.
+    
+You have a pie chart with the fraction of units destroyed of different subsystems this week as well:
+    
+Here are the id's of different subsystems. The number of units destroyed for each of them, and their names.
+    
+Tengu Propulsion - Fuel Catalyst: 48
+Tengu Defensive - Covert Reconfiguration: 83
+Tengu Core - Augmented Graviton Reactor: 118
+Tengu Offensive - Accelerated Ejection Bay: 121
+Loki Offensive - Launcher Efficiency Configuration: 56
+Loki Core - Dissolution Sequencer: 9
+Loki Defensive - Covert Reconfiguration: 59
+Loki Propulsion - Wake Limiter: 50
+Loki Propulsion - Intercalated Nanofibers: 26
+Loki Core - Immobility Drivers: 43
+Loki Offensive - Projectile Scoping Array: 17
+Loki Defensive - Adaptive Defense Node: 17
+Loki Core - Augmented Nuclear Reactor: 27
+Legion Offensive - Assault Optimization: 14
+Legion Core - Augmented Antimatter Reactor: 46
+Legion Propulsion - Wake Limiter: 18
+Legion Defensive - Covert Reconfiguration: 38
+Proteus Offensive - Drone Synthesis Projector: 14
+Proteus Propulsion - Hyperspatial Optimization: 29
+Proteus Defensive - Covert Reconfiguration: 27
+Proteus Defensive - Nanobot Injector: 9
+Proteus Propulsion - Interdiction Nullifier: 7
+Proteus Core - Electronic Efficiency Gate: 3
+Proteus Core - Friction Extension Processor: 11
+Tengu Defensive - Amplification Node: 64
+Loki Propulsion - Interdiction Nullifier: 8
+Legion Offensive - Liquid Crystal Magnifiers: 41
+Legion Propulsion - Interdiction Nullifier: 4
+Tengu Propulsion - Chassis Optimization: 76
+Tengu Core - Electronic Efficiency Gate: 8
+Tengu Propulsion - Interdiction Nullifier: 14
+Tengu Core - Obfuscation Manifold: 4
+Tengu Offensive - Magnetic Infusion Basin: 7
+Loki Defensive - Augmented Durability: 8
+Legion Defensive - Nanobot Injector: 18
+Proteus Offensive - Hybrid Encoding Platform: 18
+Proteus Core - Augmented Fusion Reactor: 21
+Legion Propulsion - Intercalated Nanofibers: 41
+Legion Core - Energy Parasitic Complex: 9
+Legion Core - Dissolution Sequencer: 3
+Legion Defensive - Augmented Plating: 16
+Legion Offensive - Support Processor: 4
+Proteus Defensive - Augmented Plating: 2
+Loki Offensive - Support Processor: 5
+Tengu Defensive - Supplemental Screening: 10
+Proteus Offensive - Support Processor: 2
+Proteus Propulsion - Localized Injectors: 3
+
+    
+You have some market data too:
+    
+In Jita there are 13 buy orders/ 75 units.
+    
+In Jita there are 10 sell orders/ 41 units.
+    
+The current buy price in Jita is 35350000 ISK.
+    
+The current sell price in Jita is 40000000 ISK.
+    
+In Amarr there are 15 buy orders/ 42 units.
+    
+In Amarr there are 4 sell orders/ 31 units.
+    
+The current buy price in Amarr is 22740000 ISK.
+    
+The current sell price in Amarr is 65390000 ISK.
+    
+You know the production cost is about 25317435 ISK.
+    
+Share your opinion on whether or not you should produce this item in 4 sentences or less.
