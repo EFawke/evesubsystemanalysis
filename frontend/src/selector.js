@@ -1,8 +1,8 @@
 //import statements
 import React from 'react';
-import SubsystemsTable from './subsystemsTable.js';
 import Cookies from 'js-cookie';
 import ModeSelector from './modeSelector.js';
+import SubsystemsTable from './subsystemsTable.js';
 import GraphTypeSelector from './GraphTypeSelector.js';
 import MarketSelector from './marketSelector.js';
 import ProfessionSelector from './userProfession.js';

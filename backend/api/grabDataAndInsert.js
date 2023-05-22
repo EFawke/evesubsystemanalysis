@@ -27,18 +27,16 @@ client.query('CREATE TABLE IF NOT EXISTS subsystems (assocKill BIGINT, killTime 
 
 //function to make the api call to zkillboard
 const axiosZkillData = () => {
-    // console.log("fetching data from zkillboard");
+    //console.log("fetching data from zkillboard");
     axios("https://redisq.zkillboard.com/listen.php?ttw=1", {
         headers: {
             'accept-encoding': 'gzip',
-            'user-agent': 'Johnson Kanjus - rage-roll.com - teduardof@gmail.com',
+            'user-agent': 'Johnson Kanjus - evesubsystemanalysis.com - teduardof@gmail.com',
             'connection': 'close'
         }
     })
         .catch(err => {
             if (err) {
-                // console.log("error pinging zkillboard");
-                // console.log(err);
                 return;
             }
         })
@@ -50,22 +48,17 @@ const axiosZkillData = () => {
                 return;
             }
             if (response.data.package === null) {
-                // console.log("no data");
                 return;
             }
             if (response && response.data.package !== null && response.data.package !== undefined) {
-                // console.log(response.data.package)
-                // console.log(response.data.package.killmail.victim.position)
                 const items = response.data.package.killmail.victim.items;
                 let loc = "";
                 if(response.data.package.zkb.labels[3]){
                     loc = response.data.package.zkb.labels[3];
                 };
                 loc = loc.substring(4);
-                // console.log("looping through items... looking for subsystems")
                 for(let i = 0; i < items.length; i++){
                     if(subsystemIDArr.includes(items[i].item_type_id)){
-                        // console.log("found a subsystem... processing")
                         const itemTypeId = items[i].item_type_id;
                         const assocKill = response.data.package.killmail.killmail_id;
                         const killTime = response.data.package.killmail.killmail_time;
@@ -73,32 +66,25 @@ const axiosZkillData = () => {
                         lookupSubsystemName(itemTypeId, assocKill, killTime, location);
                     }
                 }
-            } else {
-                // console.log(response)
             }
         });
 
 }
 
 const lookupSubsystemName = (itemTypeId, assocKill, killTime, location) => {
-    // console.log("looking up subsystem name");
+    //console.log(killTime);
     axios(`https://esi.evetech.net/latest/universe/types/${itemTypeId}/?datasource=tranquility`)
         .catch(err => {
             if (err) {
-                // console.log("error pinging esi");
-                // console.log(err);
                 return;
             }
         })
         .then(response => {
-            //insert the data into the database
             const itemTypeName = response.data.name;
-            // console.log(itemTypeName + "found");
             client.query(`INSERT INTO subsystems (assocKill, killTime, location, type_id, type_name) VALUES (${assocKill}, '${killTime}', '${location}', ${itemTypeId}, '${itemTypeName}')`)
         })
 }
 
 axiosZkillData();
 
-//run axiosZkillData every 10 seconds
 setInterval(axiosZkillData, 10000);

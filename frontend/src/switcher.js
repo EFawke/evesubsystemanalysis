@@ -1,6 +1,6 @@
 import React from 'react';
-import Selector from './selector';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import Selector from './selector';
 import { faGear } from '@fortawesome/free-solid-svg-icons'
 
 class Switcher extends React.Component {

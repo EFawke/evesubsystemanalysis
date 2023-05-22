@@ -1,7 +1,7 @@
 import axios from 'axios';
 import React from 'react';
 import ChatGPT from './chatGPT';
-import MarketInfo from './marketInfo';
+// import MarketInfo from './marketInfo';
 
 class TopContainer extends React.Component {
     constructor(props) {
@@ -11,23 +11,54 @@ class TopContainer extends React.Component {
             id: this.props.id,
             name: this.props.name,
             price: null,
-            order_count: null,
-            volume: null,
-            num_des: this.props.num_des,
             url: `https://images.evetech.net/types/${this.props.id}/icon?size=64`,
-            evepraisalData: this.props.evepraisalData,
+            marketData: this.props.marketData,
+            advice: null,
         };
     }
 
 
     componentDidMount() {
+        // const apiKey = "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";
+        // const apiUrl = 'https://api.openai.com/v1/engines/text-davinci-003/completions';
+
+        // const prompt = this.props.prompt;
+        // const maxTokens = 100;
+
+        // const headers = {
+        //     'Content-Type': 'application/json',
+        //     'Authorization': `Bearer ${apiKey}`
+        // };
+
+        // const data = {
+        //     prompt: prompt,
+        //     max_tokens: maxTokens
+        // };
+
+        // fetch(apiUrl, {
+        //     method: 'POST',
+        //     headers: headers,
+        //     body: JSON.stringify(data)
+        // })
+        //     .then(response => response.json())
+        //     .then(result => {
+        //         // Handle the API response here
+        //         console.log(result);
+        //         this.setState({ advice: result.choices[0].text})
+        //     })
+        //     .catch(error => {
+        //         // Handle any errors that occur during the request
+        //         console.error('Error:', error);
+        //     });
+
+        // axios.get()
         this.setState({ isLoaded: true });
         this.setState({ name: this.state.name });
-        let minJitaPrice = this.state.evepraisalData.jita_sell;
+        let array = this.state.marketData;
+        let lastValue = array[array.length - 1];
+        let minJitaPrice = lastValue.jita_sell;
         minJitaPrice = (minJitaPrice / 1000000).toFixed(1);
         this.setState({ price: minJitaPrice })
-        this.setState({ order_count: this.state.evepraisalData.jita_sell_orders });
-        this.setState({ volume: this.state.evepraisalData.jita_sell_volume })
     }
 
     componentDidUpdate(prevProps) {
@@ -46,15 +77,14 @@ class TopContainer extends React.Component {
         } else {
             return (
                 <div className='top_container'>
-                    <div id='top_container_name' className='ui_box'>
+                    <div id='top_container_name' className={this.props.mode + ' ui_box'}>
                         <img src={this.state.url}></img>
                         <div className='name_and_price'>
                             <h1 className='product_name'>{this.state.name}</h1>
                             <p className='product_price'>{this.state.price}<span className="quantity">M</span></p>
                         </div>
                     </div>
-                    <ChatGPT prompt={this.props.prompt}/>
-                    <MarketInfo evepraisalData={this.state.evepraisalData} />
+                    <ChatGPT advice={this.state.advice} prompt={this.props.prompt} mode={this.props.mode} />
                 </div>
             )
         }

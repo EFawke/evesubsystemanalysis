@@ -50,7 +50,7 @@ const pingZkill = () => {
     axios("https://redisq.zkillboard.com/listen.php?ttw=1", {
         headers: {
             'accept-encoding': 'gzip',
-            'user-agent': 'Johnson Kanjus - rage-roll.com - teduardof@gmail.com',
+            'user-agent': 'Johnson Kanjus - evesubsystemanalysis.com - teduardof@gmail.com',
             'connection': 'close'
         }
     })
@@ -169,7 +169,7 @@ const logSubsystemsDatabase = () => {
         })
 }
 
-logSubsystemsDatabase();
+// logSubsystemsDatabase();
 
 //log all of the unique subsystem names in the database and the number of times they have been used
 const logSubsystemsAndQuantities = () => {

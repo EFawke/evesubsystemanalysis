@@ -1,13 +1,15 @@
 import './App.css';
 import React from 'react';
 import Header from './header';
-import Switcher from './switcher';
 import axios from 'axios';
 import PageBody from './pageBody';
 import TopContainer from './topContainer';
 import Cookies from 'js-cookie';
+import SubsystemsTable from './subsystemsTable.js';
+import MarketData from './marketData.js';
 //import font awesome
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faGear } from '@fortawesome/free-solid-svg-icons';
 import {
   Chart as ChartJS,
   ArcElement,
@@ -18,8 +20,6 @@ import {
   Tooltip,
   Legend,
 } from 'chart.js';
-import { Bar } from 'react-chartjs-2';
-import { Pie } from 'react-chartjs-2';
 
 class App extends React.Component {
   constructor(props) {
@@ -32,16 +32,40 @@ class App extends React.Component {
       pieChart: null,
       id: null,
       is404: false,
-      evepraisalData: null,
-      mode: Cookies.get('mode') || 'dark',
-      profession: "industrialist",
+      marketData: null,
+      lastSevenDays: null,
+      averageBuyAndSellQuantitiesOverTheLastSevenDays: null,
+      priceAverages: null,
+      mode: Cookies.get("mode") ? Cookies.get("mode") : "dark",
+      profession: Cookies.get("profession") ? Cookies.get("profession") : "industrialist",
+      hasBeenClicked: false,
+      hub: Cookies.get("hub") ? Cookies.get("hub") : "jita",
+      view: Cookies.get("view") ? Cookies.get("view") : "demand",
     }
+    this.handleClick = this.handleClick.bind(this);
+    this.changeProfession = this.changeProfession.bind(this);
+    this.changeMode = this.changeMode.bind(this);
+  }
+
+  openNav() {
+    this.setState({ hasBeenClicked: true })
+  }
+
+  handleClick() {
+    if (this.state.hasBeenClicked) {
+      this.closeNav();
+    } else {
+      this.openNav();
+    }
+  }
+
+  closeNav() {
+    this.setState({ hasBeenClicked: false })
   }
 
   componentDidMount() {
     window.addEventListener('storage', (event) => {
       if (event.key === 'mode') {
-        console.log('mode changed')
         this.setState({ mode: event.newValue })
       }
     });
@@ -49,27 +73,35 @@ class App extends React.Component {
     //if this is the homepage
     if (window.location.pathname === "/") {
       axios.get(`/api/subsystems/45589`).then(response => {
-        this.setState({ evepraisalData: response.data.evepraisal })
-        this.setState({ name: response.data.evepraisal.name })
+        console.log(response.data);
+        this.setState({ name: response.data.name })
         this.setState({ heatMap: response.data.heatmap })
         this.setState({ graph: response.data.graphData })
         this.setState({ pieChart: response.data.pieChart })
         this.setState({ id: response.data.id })
+        this.setState({ marketData: response.data.marketData })
+        this.setState({ lastSevenDays: response.data.lastSevenDays })
+        this.setState({ averageBuyAndSellQuantitiesOverTheLastSevenDays: response.data.averageBuyAndSellQuantitiesOverTheLastSevenDays })
+        this.setState({ priceAverages: response.data.priceAverages })
       }).then(() => {
         this.setState({ isLoaded: true })
       })
-      .catch((err) => {
-        this.setState({ is404: true })
-      })
+        .catch((err) => {
+          this.setState({ is404: true })
+        })
     } else {
       axios.get(`/api/${window.location.pathname.slice(1)}`)
         .then(response => {
-          this.setState({ evepraisalData: response.data.evepraisal })
-          this.setState({ name: response.data.evepraisal.name })
+          console.log(response.data);
+          this.setState({ name: response.data.name })
           this.setState({ heatMap: response.data.heatmap })
           this.setState({ graph: response.data.graphData })
           this.setState({ pieChart: response.data.pieChart })
           this.setState({ id: response.data.id })
+          this.setState({ marketData: response.data.marketData })
+          this.setState({ lastSevenDays: response.data.lastSevenDays })
+          this.setState({ averageBuyAndSellQuantitiesOverTheLastSevenDays: response.data.averageBuyAndSellQuantitiesOverTheLastSevenDays })
+          this.setState({ priceAverages: response.data.priceAverages })
         }).then(() => {
           this.setState({ isLoaded: true })
         })
@@ -77,6 +109,31 @@ class App extends React.Component {
           this.setState({ is404: true })
         })
     }
+  }
+
+  changeProfession = (event) => {
+    const newProfession = event.target.value;
+    this.setState({ profession: newProfession });
+    Cookies.set('profession', newProfession, { expires: 7 });
+  }
+
+  changeMode = (event) => {
+    const newMode = event.target.value;
+    this.setState({ mode: newMode });
+    Cookies.set('mode', newMode, { expires: 7 });
+  }
+
+  //come back to this later...
+  changeHub = (event) => {
+    const newHub = event.target.value;
+    this.setState({ hub: newHub });
+    Cookies.set('hub', newHub, { expires: 7 });
+  }
+
+  changeView = (event) => {
+    const newView = event.target.value;
+    this.setState({ view: newView });
+    Cookies.set('view', newView, { expires: 7 });
   }
 
   render() {
@@ -164,6 +221,18 @@ class App extends React.Component {
         destroyed.push(graphData[i].count)
       }
     }
+    let barDataBackgroundColor;
+    if (this.state.mode === 'dark') {
+      barDataBackgroundColor = '#161e26a1'
+    } else {
+      barDataBackgroundColor = '#ffffff36'
+    }
+    let barDataBorderColor;
+    if (this.state.mode === 'dark') {
+      barDataBorderColor = '#ffffff36'
+    } else {
+      barDataBorderColor = '#161e26a1'
+    }
     const barData = {
       labels: dates,
       datasets: [
@@ -187,12 +256,22 @@ class App extends React.Component {
       for (const [key, value] of Object.entries(this.state.pieChart)) {
         pieChartLabels.push(key)
         pieChartNumbers.push(value.count)
-        if (key === this.state.name) {
+        if (key === this.state.name && this.state.mode === 'dark') {
           num_des = value.count
           borderColours.push('#ffffff36')
           pieChartColours.push('#ffffffa6')
-        } else {
+        }
+        if (key !== this.state.name && this.state.mode === 'dark') {
           pieChartColours.push('#161e26a1')
+          borderColours.push('#02617f52')
+        }
+        if (key === this.state.name && this.state.mode === 'light') {
+          num_des = value.count
+          borderColours.push('#161e26a1')
+          pieChartColours.push('#ffffffa6')
+        }
+        if (key !== this.state.name && this.state.mode === 'light') {
+          pieChartColours.push('#ffffff36')
           borderColours.push('#02617f52')
         }
       }
@@ -240,6 +319,10 @@ class App extends React.Component {
       pieString += Object.keys(this.state.pieChart)[i] + ": " + this.state.pieChart[Object.keys(this.state.pieChart)[i]].count + "\n";
     }
     let user_profession;
+    let mktlen = this.state.marketData.length
+    let lst = this.state.marketData[mktlen -1]
+    console.log(lst)
+    //let prompt = "test prompt";
     const prompt = `You are a market analyst providing some thoughts to an industrialist in Eve Online on whether he should make ${this.state.name}'s.
     \nYou have a graph with the number of units destroyed:
     \n${graphString}
@@ -248,15 +331,15 @@ class App extends React.Component {
     \nHere are the id's of different subsystems. The number of units destroyed for each of them, and their names.
     \n${pieString}
     \nYou have some market data too:
-    \nIn Jita there are ${this.state.evepraisalData.jita_buy_orders} buy orders/ ${this.state.evepraisalData.jita_buy_volume} units.
-    \nIn Jita there are ${this.state.evepraisalData.jita_sell_orders} sell orders/ ${this.state.evepraisalData.jita_sell_volume} units.
-    \nThe current buy price in Jita is ${this.state.evepraisalData.jita_buy} ISK.
-    \nThe current sell price in Jita is ${this.state.evepraisalData.jita_sell} ISK.
-    \nIn Amarr there are ${this.state.evepraisalData.amarr_buy_orders} buy orders/ ${this.state.evepraisalData.amarr_buy_volume} units.
-    \nIn Amarr there are ${this.state.evepraisalData.amarr_sell_orders} sell orders/ ${this.state.evepraisalData.amarr_sell_volume} units.
-    \nThe current buy price in Amarr is ${this.state.evepraisalData.amarr_buy} ISK.
-    \nThe current sell price in Amarr is ${this.state.evepraisalData.amarr_sell} ISK.
-    \nYou know the production cost is about ${productionCost} ISK.
+    \nIn Jita there are ${lst.jita_buy_orders} buy orders/ ${lst.jita_buy_volume} units.
+    \nIn Jita there are ${lst.jita_sell_orders} sell orders/ ${lst.jita_sell_volume} units.
+    \nThe current buy price in Jita is ${lst.jita_buy} ISK.
+    \nThe current sell price in Jita is ${lst.jita_sell} ISK.
+    \nIn Amarr there are ${lst.amarr_buy_orders} buy orders/ ${lst.amarr_buy_volume} units.
+    \nIn Amarr there are ${lst.amarr_sell_orders} sell orders/ ${lst.amarr_sell_volume} units.
+    \nThe current buy price in Amarr is ${lst.amarr_buy} ISK.
+    \nThe current sell price in Amarr is ${lst.amarr_sell} ISK.
+    \nYou know the production cost is about ${lst.manufacture_cost_jita} ISK.
     \nTell me whether or not I should produce this subsystem.
     \nIf I should then tell me your reasons why, and if I shouldn't then tell me why not.   
     \nI am only selling in Jita.
@@ -265,16 +348,119 @@ class App extends React.Component {
 
     // console.log(prompt)
 
-    const mode = Cookies.get('mode');
-    this.state.mode = mode;
-
     return (
       <div className={this.state.mode + " background"}>
         <div className={this.state.mode + " main-container"}>
-          <Header heatMap={this.state.heatMap} />
-          <Switcher id={this.state.id} />
-          <TopContainer name={this.state.name} id={this.state.id} num_des={num_des} evepraisalData={this.state.evepraisalData} prompt={prompt} />
-          <PageBody barOptions={barOptions} barData={barData} pieData={pieData} pieOptions={pieOptions} heatMap={this.state.heatMap} />
+          <Header heatMap={this.state.heatMap} mode={this.state.mode} />
+          <div className='user_interface'>
+            <button className="header_button" onClick={this.handleClick}><FontAwesomeIcon className={this.state.mode} icon={faGear} /></button>
+            <div className={this.state.hasBeenClicked + " selector_container " + this.state.mode}>
+              <h1 className='table_header'>Subsystems List</h1>
+              <SubsystemsTable />
+              <h1 className='table_header table_settings'>Settings</h1>
+              <div className="display_option">
+                <div className="setting_column">
+                  <h2 className="setting_header">Use Case:</h2>
+                  <h3 className="setting_description">(Used in tailoring your market analysis)</h3>
+                  <div className="radio_div">
+                    <label>
+                      <input
+                        type="radio"
+                        value="industrialist"
+                        checked={this.state.profession === 'industrialist'}
+                        onChange={this.changeProfession}
+                      />
+                      Industrialist
+                    </label>
+                    <label>
+                      <input
+                        type="radio"
+                        value="marketeer"
+                        checked={this.state.profession === 'marketeer'}
+                        onChange={this.changeProfession}
+                      />
+                      Marketeer
+                    </label>
+                  </div>
+                </div>
+                <div className="setting_column">
+                  <h2 className="setting_header">Color Scheme:</h2>
+                  <h3 className="setting_description">(Dark mode is recommended)</h3>
+                  <div className="radio_div">
+                    <label>
+                      <input
+                        type="radio"
+                        value="dark"
+                        checked={this.state.mode === 'dark'}
+                        onChange={this.changeMode}
+                      />
+                      Dark Mode
+                    </label>
+                    <label>
+                      <input
+                        type="radio"
+                        value="light"
+                        checked={this.state.mode === 'light'}
+                        onChange={this.changeMode}
+                      />
+                      Light Mode
+                    </label>
+                  </div>
+                </div>
+                <div className="setting_column">
+                  <h2 className="setting_header">Market Hub:</h2>
+                  <h3 className="setting_description">(Where you do most of your trading)</h3>
+                  <div className="radio_div">
+                    <label>
+                      <input
+                        type="radio"
+                        value="jita"
+                        checked={this.state.hub === 'jita'}
+                        onChange={this.changeHub}
+                      />
+                      Jita
+                    </label>
+                    <label>
+                      <input
+                        type="radio"
+                        value="amarr"
+                        checked={this.state.hub === 'amarr'}
+                        onChange={this.changeHub}
+                      />
+                      Amarr
+                    </label>
+                  </div>
+                </div>
+                <div className="setting_column">
+                  <h2 className="setting_header">Data View:</h2>
+                  <h3 className="setting_description">(Changes the graphs that are displayed)</h3>
+                  <div className="radio_div">
+                    <label>
+                      <input
+                        type="radio"
+                        value="demand"
+                        checked={this.state.view === 'demand'}
+                        onChange={this.changeView}
+                      />
+                      Number Destroyed
+                    </label>
+                    <label>
+                      <input
+                        type="radio"
+                        value="marketeer"
+                        checked={this.state.view === 'marketeer'}
+                        onChange={this.changeView}
+                      />
+                      Market Info
+                    </label>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <TopContainer marketData={this.state.marketData} mode={this.state.mode} name={this.state.name} id={this.state.id} num_des={num_des} prompt={prompt} />
+          <PageBody mode={this.state.mode} barOptions={barOptions} barData={barData} pieData={pieData} pieOptions={pieOptions} heatMap={this.state.heatMap} />
+          <MarketData lstSvnDays = {this.state.lastSevenDays} priceLstSvn = {this.state.priceAverages} qtyLstSvn = {this.state.averageBuyAndSellQuantitiesOverTheLastSevenDays} name={this.state.name} marketData={this.state.marketData} mode={this.state.mode} />
         </div>
       </div>
     )

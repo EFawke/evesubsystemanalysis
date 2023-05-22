@@ -11,14 +11,13 @@ class Header extends React.Component {
             <div className="header">
                 <header className="main-header navbar navbar-dark">
                     <div className='navAnchors'>
-                    <a className="header_anchor" href="/">EveSubsystemAnalytics</a>
-                    <a className="header_anchor" href="/about/">About</a>
+                    <a className={this.props.mode + " header_anchor"} href="/">EveSubsystemAnalytics</a>
+                    <a className={this.props.mode + " header_anchor"} href="/about/">About</a>
                     </div>
-                    <div className='input_addornments'>
-                        <input className="header_search" type="text" placeholder="Search... " />
+                    <div className={this.props.mode + " input_addornments"}>
+                        <input className={this.props.mode + " header_search"} type="text" placeholder="Search... " />
                         <FontAwesomeIcon icon={faSearch} />
                     </div>
-                    {/* <Heatmap heatMap={this.props.heatMap} /> */}
                 </header>
             </div>
         )

@@ -7,10 +7,10 @@ function ProfessionSelector() {
     });
 
     function handleModeChange(event) {
-        const newMode = event.target.value;
-        setMode(newMode);
-        const expiresDate = new Date(Date.now() + 365 * 24 * 60 * 60 * 1000).toUTCString();
-        document.cookie = `profession=${newMode}; expires=${expiresDate}; path=/`;
+        // const newMode = event.target.value;
+        // setMode(newMode);
+        // const expiresDate = new Date(Date.now() + 365 * 24 * 60 * 60 * 1000).toUTCString();
+        // document.cookie = `profession=${newMode}; expires=${expiresDate}; path=/`;
     }
 
     return (

@@ -1,12 +1,11 @@
-//holy fucking shit I need to think of a better way of doing this
+//this is a bit better. Go back and work on error handling.
 
 const axios = require('axios');
 const { Client } = require('pg');
 const subsystemIDArr = [45622, 45623, 45624, 45625, 45626, 45627, 45628, 45629, 45630, 45631, 45632, 45633, 45586, 45587, 45588, 45589, 45590, 45591, 45592, 45593, 45594, 45595, 45596, 45597, 45610, 45611, 45612, 45613, 45614, 45615, 45616, 45617, 45618, 45619, 45620, 45621, 45598, 45599, 45600, 45601, 45602, 45603, 45604, 45605, 45606, 45607, 45608, 45609]
-let output = {};
-const date = new Date();
+// const date = new Date();
 let client;
-let counter = 0;
+
 if (!process.env.DATABASE_URL) {
     client = new Client()
 } else {
@@ -18,6 +17,7 @@ if (!process.env.DATABASE_URL) {
         allowExitOnIdle: true
     });
 }
+
 client.connect()
     .catch(err => {
         // console.log(err);
@@ -26,37 +26,52 @@ client.connect()
         //console.log("client is connected")
     })
 
-client.query(`CREATE TABLE IF NOT EXISTS market_data (id BIGSERIAL, itemID BIGINT, name VARCHAR(255), amarr_buy VARCHAR(255), amarr_sell VARCHAR(255), amarr_buy_orders BIGINT, amarr_buy_volume BIGINT, amarr_sell_orders BIGINT, amarr_sell_volume BIGINT, jita_buy VARCHAR(255), jita_sell VARCHAR(255), jita_buy_orders BIGINT, jita_buy_volume BIGINT, jita_sell_orders BIGINT, jita_sell_volume BIGINT, date DATE NOT NULL, manufacture_cost_jita BIGINT, manufacture_cost_amarr BIGINT)`)
+const makeTable = () => {
+    client.query(`CREATE TABLE IF NOT EXISTS market_data (id BIGSERIAL, itemID BIGINT, name VARCHAR(255), amarr_buy VARCHAR(255), amarr_sell VARCHAR(255), amarr_buy_orders BIGINT, amarr_buy_volume BIGINT, amarr_sell_orders BIGINT, amarr_sell_volume BIGINT, jita_buy VARCHAR(255), jita_sell VARCHAR(255), jita_buy_orders BIGINT, jita_buy_volume BIGINT, jita_sell_orders BIGINT, jita_sell_volume BIGINT, date TIMESTAMP, manufacture_cost_jita VARCHAR(255), manufacture_cost_amarr VARCHAR(255))`)
     .catch(err => {
         console.log(err);
     })
     .then((res) => {
         //console.log("table is created");
     })
-
-const axiosEvepraisalData = (counter) => {
-    const promises = [];
-    for (let i = 0; i < subsystemIDArr.length; i++) {
-        //this loops through the whole array and causes the whole db to be fucked up
-        promises.push(axios.get(`http://evepraisal.com/item/${subsystemIDArr[counter]}.json`));
-    }
-    axios.all(promises)
-        .then((results) => {
-            results.forEach((result) => {
-                insertIntoPrices(result.data);
-            })
-        })
-        .catch(err => {
-            console.log(err);
-            return;
-        })
 }
 
-const insertIntoPrices = (data) => {
+//drop market_data table
+// const dropTable = () => {
+//     client.query(`DROP TABLE market_data`)
+//         .catch(err => {
+//             console.log(err);
+//         })
+//         .then((res) => {
+//             console.log("table is dropped");
+//         })
+// }
+
+makeTable();
+// dropTable();
+
+const grabMaterialData = () => {
+    const date = new Date();
+    // console.log("getting data");
+    for (let i = 0; i < subsystemIDArr.length; i++) {
+        axios.get(`http://evepraisal.com/item/${subsystemIDArr[i]}.json`)
+            .then((result) => {
+                insertIntoPrices(result.data, date);
+            })
+            .catch(err => {
+                console.log(err);
+                return;
+            })
+    }
+}
+
+const insertIntoPrices = (data, date) => {
+    let output = {};
     output.itemId = data.type.id;
     output.name = data.type.name;
     let summaries = data.summaries;
     output.base_components = data.type.base_components;
+    output.date = date;
     output.amarrBuy = 0;
     output.amarrSell = 0;
     output.amarrBuyOrdersCount = 0;
@@ -122,12 +137,18 @@ const getMaterialsPrice = (output) => {
 }
 
 const insertIntoTable = (output) => {
+    //format the date
+    //output.date = output.date.toISOString();
+    //remove the last 5 characters from output.date
+    // output.date = output.date.slice(0, -5) + "Z";
+    output.date = output.date.toISOString();
+    // console.log(output.date);
+    // console.log(output);
     const sql = "INSERT INTO market_data (itemid, name, amarr_buy, amarr_sell, amarr_buy_orders, amarr_buy_volume, amarr_sell_orders, amarr_sell_volume, jita_buy, jita_sell, jita_buy_orders, jita_buy_volume, jita_sell_orders, jita_sell_volume, date, manufacture_cost_jita, manufacture_cost_amarr) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10 ,$11, $12, $13, $14, $15, $16, $17)"
-    const values = [output.itemId, output.name, output.amarrBuy, output.amarrSell, output.amarrBuyOrdersCount, output.amarrBuyVolume, output.amarrSellOrdersCount, output.amarrSellVolume, output.jitaBuy, output.jitaSell, output.jitaBuyOrdersCount, output.jitaBuyVolume, output.jitaSellOrdersCount, output.jitaSellVolume, date, output.materialPriceJita, output.materialPriceAmarr]
+    const values = [output.itemId, output.name, output.amarrBuy, output.amarrSell, output.amarrBuyOrdersCount, output.amarrBuyVolume, output.amarrSellOrdersCount, output.amarrSellVolume, output.jitaBuy, output.jitaSell, output.jitaBuyOrdersCount, output.jitaBuyVolume, output.jitaSellOrdersCount, output.jitaSellVolume, output.date, output.materialPriceJita, output.materialPriceAmarr]
     client.query(sql, values)
         .then((res) => {
-            counter++;
-            console.log(res);
+            // console.log(output.itemId + " inserted");
         })
         .catch(err => {
             console.log(err);
@@ -139,11 +160,18 @@ const logMarketData = () => {
     const sql = "SELECT * FROM market_data";
     client.query(sql)
         .then((res) => {
-            console.log(res.rows);
+            // console.log(res.rows.length);
+            // console.log(res.rows)
         })
         .catch(err => {
             console.log(err);
         })
 }
 
-setInterval(axiosEvepraisalData, 3600000);
+// logMarketData();
+
+grabMaterialData()
+
+const fiveMinutes = 300000;
+
+setInterval(grabMaterialData, fiveMinutes);

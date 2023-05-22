@@ -12,7 +12,7 @@ const getLokis = async () => {
         return;
     }
     console.log("looping through zkill");
-    axios.get(`https://zkillboard.com/api/losses/shipTypeID/${lokiArray[0]}/page/${page}/`, headers = { 'User-agent': 'Johnson Kanjus - rage-roll.com' })
+    axios.get(`https://zkillboard.com/api/losses/shipTypeID/${lokiArray[0]}/page/${page}/`, headers = { 'User-agent': 'Johnson Kanjus - evesubsystemanalysis.com' })
         .catch(err => {
             if (err) {
                 console.log("error on line 18 page " + page);

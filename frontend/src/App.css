@@ -120,9 +120,13 @@ html {
     cursor: pointer;
 }
 
+.light > .graph_button:hover {
+    background:rgb(150, 150, 150);
+    color:rgb(25, 25, 25);
+}
+
 .table_header {
     font-size: 1.5rem;
-    color: var(--font-color);
     width: 100%;
     display: flex;
     justify-content: center;
@@ -151,8 +155,8 @@ html {
     min-height: 100vh;
     margin: 0 auto;
     background: var(--dark_background);
-    border-left: 1px solid var(--highlight);
-    border-right: 1px solid var(--highlight);
+    border-left: 1px solid var(--bs-gray-dark);
+    border-right: 1px solid var(--bs-gray-dark);
 }
 
 .page_body {
@@ -162,7 +166,7 @@ html {
     padding: 0.5rem 2rem;
     margin: 0;
     border-top: 1px solid var(--bs-gray-dark);
-    border-bottom: 1px solid var(--bs-gray-dark);
+    /* border-bottom: 1px solid var(--bs-gray-dark); */
     /* background: var(--dark_background); */
     flex-direction: column;
 }
@@ -223,7 +227,7 @@ html {
 .input_addornments>input {
     background: transparent;
     border: none;
-    padding-left: 1rem;
+    margin-left: 1rem;
 }
 
 .top_container {
@@ -233,7 +237,6 @@ html {
     padding: 0.5rem 2rem;
     margin: 0;
     border-top: 1px solid var(--bs-gray-dark);
-    /* background: var(--dark_background); */
 }
 
 .input_addornments:hover>svg {
@@ -347,65 +350,6 @@ input:focus {
     font-weight: 800;
 }
 
-@media all and (max-width: 768px) {
-
-    /* put your css styles in here */
-    .main-container {
-        width: 100%;
-    }
-
-    .page_body {
-        flex-direction: column;
-    }
-
-    .ui_box {
-        width: 100%;
-    }
-
-    .top_container {
-        padding: 0.5rem;
-    }
-
-    .the_data {
-        width: 100%;
-    }
-
-    .graph_selector {
-        flex-direction: row;
-        width: 100%;
-    }
-
-    .page_body {
-        padding: 0.5rem 0.5rem;
-    }
-
-    .Heatmap {
-        font-size: 0.5rem;
-    }
-
-    .input_addornments {
-        margin-top: 1.5rem;
-        margin-bottom: 1rem;
-        width: 80%;
-        padding: 0.3rem;
-    }
-
-    .navbar {
-        flex-direction: column;
-        padding: 0.5rem;
-    }
-
-    .navAnchors {
-        display: flex;
-        width: 90%;
-        justify-content: space-between;
-    }
-
-    .header_anchor {
-        margin: 0;
-    }
-}
-
 .market_info {
     display: none;
 }
@@ -466,4 +410,133 @@ input:focus {
 .light {
     background: var(--light_background);
     color: var(--light_text);
+}
+
+.light:hover {
+    /* background: var(--light_background); */
+    color: var(--light_text);
+}
+
+.false {
+    display: none;
+}
+
+.true {
+    display: block;
+}
+
+.light > * {
+    color: var(--light_text);
+}
+
+.light > div > table > tbody >tr>td>a {
+    color: var(--light_text);
+}
+
+.light > div > table > tbody >tr>td>a:hover {
+    color: var(--light_text);
+}
+
+.dark > div > table > tbody >tr>td>a {
+    color: var(--dark_text);
+}
+
+.light > svg {
+    color: black;
+}
+
+.light .ui_box {
+    border: 1px solid var(--bs-gray-dark);
+    background: #161e26a1;
+}
+
+.light > .graph_button {
+    border: 1px solid var(--bs-gray-dark);
+}
+
+.toggle_graphs_view {
+    display: flex;
+    flex-direction: row;
+    padding: 0.5rem 2rem;
+    border-top: 1px solid var(--bs-gray-dark);
+}
+
+.toggle_graphs_view > label {
+    margin-right: 1rem;
+}
+
+/* mobile styles */
+@media all and (max-width: 995px) {
+    .header_search {
+        width: 100%;
+    }
+
+    .main-container {
+        width: 100%;
+    }
+
+    .page_body {
+        flex-direction: column;
+    }
+
+    .ui_box {
+        width: 100%;
+    }
+
+    .top_container {
+        padding: 0.5rem;
+    }
+
+    .the_data {
+        width: 100%;
+    }
+
+    .graph_selector {
+        flex-direction: row;
+        width: 100%;
+    }
+
+    .page_body {
+        padding: 0.5rem 0.5rem;
+    }
+
+    .graph_button {
+        padding: 1rem;
+        width: calc((100% / 3) - 1rem);
+        line-height: 20px;
+    }
+
+    .user_interface {
+        padding: 0.5rem;
+    }
+
+    /* .Heatmap {
+        font-size: 0.5rem;
+    } */
+
+    .input_addornments {
+        margin-top: 1.5rem;
+        margin-bottom: 1rem;
+        width: 80%;
+        padding: 0.3rem;
+    }
+
+    .navbar {
+        flex-direction: column;
+        padding: 0.5rem;
+    }
+
+    .navAnchors {
+        display: flex;
+        width: 90%;
+        justify-content: space-between;
+    }
+
+    .header_anchor {
+        margin: 0;
+    }
+
+    .bottom_half_container {
+        flex-direction: column;
+    }
 }
