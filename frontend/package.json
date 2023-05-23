@@ -1,5 +1,5 @@
 {
-  "main": "src/index.js",
+  "main": "index.js",
   "name": "evesubsystemanalysis",
   "version": "0.1.0",
   "private": true,
