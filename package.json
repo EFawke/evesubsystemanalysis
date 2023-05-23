@@ -1,7 +1,7 @@
 {
   "name": "evesubsystemanalysis",
   "version": "1.0.0",
-  "description": "",
+  "description": "Rage-roll is a heat map for Eve Online sorted by ship class. Currently it only covers wormholes, but we can look into expanding to k-space also.",
   "main": "backend/app.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
@@ -14,8 +14,11 @@
     "type": "git",
     "url": "git+https://github.com/EFawke/evesubsystemanalysis.git"
   },
-  "author": "",
+  "author": "ted",
   "license": "ISC",
+  "engines": {
+    "node": "v19.7.0"
+  },
   "bugs": {
     "url": "https://github.com/EFawke/evesubsystemanalysis/issues"
   },
@@ -29,5 +32,10 @@
     "openai": "^3.2.1",
     "pg": "^8.7.3",
     "postgresql": "^0.0.1"
-  }
+  },
+  "keywords": [
+    "eve",
+    "subsystem",
+    "analysis"
+  ]
 }
