@@ -33,6 +33,7 @@
     "openai": "^3.2.1",
     "pg": "^8.7.3",
     "postgresql": "^0.0.1",
+    "react-scripts": "^5.0.1",
     "webpack": "^5.83.1"
   },
   "keywords": [
