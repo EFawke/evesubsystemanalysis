@@ -6,8 +6,9 @@
     --dark_background: #070708;
     --root_background: black;
     --svg_color: #ffffffa6;
-    --light_background: white;
+    --light_background: #212529;
     --light_text: black;
+    --light_mode_ui_background: #ffffff;
 }
 
 .background {
@@ -409,13 +410,12 @@ input:focus {
 
 .light {
     background: var(--light_background);
-    color: var(--light_text);
 }
 
-.light:hover {
-    /* background: var(--light_background); */
+/* .light:hover {
+    background: var(--light_background);
     color: var(--light_text);
-}
+} */
 
 .false {
     display: none;
@@ -423,14 +423,6 @@ input:focus {
 
 .true {
     display: block;
-}
-
-.light > * {
-    color: var(--light_text);
-}
-
-.light > div > table > tbody >tr>td>a {
-    color: var(--light_text);
 }
 
 .light > div > table > tbody >tr>td>a:hover {
@@ -441,13 +433,10 @@ input:focus {
     color: var(--dark_text);
 }
 
-.light > svg {
-    color: black;
-}
-
 .light .ui_box {
     border: 1px solid var(--bs-gray-dark);
-    background: #161e26a1;
+    background: var(--light_mode_ui_background);
+    color: black;
 }
 
 .light > .graph_button {
@@ -464,6 +453,14 @@ input:focus {
 .toggle_graphs_view > label {
     margin-right: 1rem;
 }
+
+.light .header_anchor {
+    color: var(--font-color);
+}
+
+/* .light > * {
+    color: var(--font-color);
+} */
 
 /* mobile styles */
 @media all and (max-width: 995px) {

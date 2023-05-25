@@ -14,38 +14,6 @@ lastWeek = lastWeek.slice(0, -14) + "T00:00:00.000Z";
 const subsystemIDArr = ["all", "45622", "45623", "45624", "45625", "45626", "45627", "45628", "45629", "45630", "45631", "45632", "45633", "45586", "45587", "45588", "45589", "45590", "45591", "45592", "45593", "45594", "45595", "45596", "45597", "45610", "45611", "45612", "45613", "45614", "45615", "45616", "45617", "45618", "45619", "45620", "45621", "45598", "45599", "45600", "45601", "45602", "45603", "45604", "45605", "45606", "45607", "45608", "45609"]
 let output = {};
 
-// const { Configuration, OpenAIApi } = require("openai");
-
-// const configuration = new Configuration({
-//     apiKey: "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",
-// });
-// const openai = new OpenAIApi(configuration);
-
-// const response = await openai.createCompletion({
-//     model: "text-davinci-003",
-//     prompt: "Summarize this for a second-grade student:\n\nJupiter is the fifth planet from the Sun and the largest in the Solar System. It is a gas giant with a mass one-thousandth that of the Sun, but two-and-a-half times that of all the other planets in the Solar System combined. Jupiter is one of the brightest objects visible to the naked eye in the night sky, and has been known to ancient civilizations since before recorded history. It is named after the Roman god Jupiter.[19] When viewed from Earth, Jupiter can be bright enough for its reflected light to cast visible shadows,[20] and is on average the third-brightest natural object in the night sky after the Moon and Venus.",
-//     temperature: 0.7,
-//     max_tokens: 256,
-//     top_p: 1,
-//     frequency_penalty: 0,
-//     presence_penalty: 0,
-// });
-
-// const apiresponse = async () => {
-//     const response = await openai.createCompletion({
-//         model: "text-davinci-003",
-//         prompt: "Summarize this for a second-grade student:\n\nJupiter is the fifth planet from the Sun and the largest in the Solar System. It is a gas giant with a mass one-thousandth that of the Sun, but two-and-a-half times that of all the other planets in the Solar System combined. Jupiter is one of the brightest objects visible to the naked eye in the night sky, and has been known to ancient civilizations since before recorded history. It is named after the Roman god Jupiter.[19] When viewed from Earth, Jupiter can be bright enough for its reflected light to cast visible shadows,[20] and is on average the third-brightest natural object in the night sky after the Moon and Venus.",
-//         temperature: 0.7,
-//         max_tokens: 256,
-//         top_p: 1,
-//         frequency_penalty: 0,
-//         presence_penalty: 0,
-//     })
-//         console.log(response);
-// }
-
-// apiresponse();
-
 shipTypeRouter.get(`/:subsystemID`, (req, res, next) => {
     if (!req.params.subsystemID || !subsystemIDArr.includes(req.params.subsystemID)) {
         res.status(400).send("Invalid subsystem ID");

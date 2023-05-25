@@ -34,11 +34,19 @@ class PageBody extends React.Component {
             pie: this.props.pieChart,
             selected: "pie",
             hub: "jita",
+            mode: this.props.mode ? this.props.mode : "dark",
         }
     }
 
     componentDidMount() {
         this.setState({ selected: "pie" })
+    }
+
+    componentDidUpdate(prevProps) {
+        //update the mode prop
+        if (this.props.mode !== prevProps.mode) {
+            this.setState({ mode: this.props.mode });
+        }
     }
 
     render() {
@@ -79,6 +87,32 @@ class PageBody extends React.Component {
                 </div>
             )
         }
+        // if (this.state.selected === "pie") {
+        //     return (
+        //         <div className="page_body">
+        //             <h1 className={this.state.mode + " product_name"}>Subsystem Loss Tracker</h1>
+        //             <div className="bottom_half_container">
+        //                 <div className={this.props.mode + " the_data ui_box"}>
+        //                     <Pie data={this.props.pieData} options={this.props.pieOptions} />
+        //                 </div>
+        //                 <div className={this.props.mode + " graph_selector"}>
+        //                     <button className="graph_button" onClick={() => this.setState({ selected: "pie" })}>
+        //                         <FontAwesomeIcon className="icon_svg" icon={faPieChart} size="lg" />
+        //                         <p className="hide_before_hover">Pie Chart</p>
+        //                     </button>
+        //                     <button className="graph_button" onClick={() => this.setState({ selected: "bar" })}>
+        //                         <FontAwesomeIcon className="icon_svg" icon={faBarChart} size="lg" />
+        //                         <p className="hide_before_hover">Bar Chart</p>
+        //                     </button>
+        //                     <button className="graph_button" onClick={() => this.setState({ selected: "heat" })}>
+        //                         <FontAwesomeIcon className="icon_svg" icon={faCalendarDays} size="lg" />
+        //                         <p className="hide_before_hover">Heat Map</p>
+        //                     </button>
+        //                 </div>
+        //             </div>
+        //         </div>
+        //     )
+        // }
         if (this.state.selected === "pie") {
             return (
                 <div className="page_body">
