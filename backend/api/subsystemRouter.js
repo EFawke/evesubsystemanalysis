@@ -1,15 +1,6 @@
 const express = require('express');
 const shipTypeRouter = express.Router();
 const { Client } = require('pg');
-const { Pool } = require('pg');
-const axios = require('axios');
-
-let today = new Date();
-let lastWeek = new Date();
-lastWeek.setDate(today.getDate() - 6);
-today = today.toISOString();
-lastWeek = lastWeek.toISOString();
-lastWeek = lastWeek.slice(0, -14) + "T00:00:00.000Z";
 
 const subsystemIDArr = ["all", "45622", "45623", "45624", "45625", "45626", "45627", "45628", "45629", "45630", "45631", "45632", "45633", "45586", "45587", "45588", "45589", "45590", "45591", "45592", "45593", "45594", "45595", "45596", "45597", "45610", "45611", "45612", "45613", "45614", "45615", "45616", "45617", "45618", "45619", "45620", "45621", "45598", "45599", "45600", "45601", "45602", "45603", "45604", "45605", "45606", "45607", "45608", "45609"]
 let output = {};
@@ -19,6 +10,12 @@ shipTypeRouter.get(`/:subsystemID`, (req, res, next) => {
         res.status(400).send("Invalid subsystem ID");
         return;
     } else {
+        let today = new Date();
+        let lastWeek = new Date();
+        lastWeek.setDate(today.getDate() - 6);
+        today = today.toISOString();
+        lastWeek = lastWeek.toISOString();
+        lastWeek = lastWeek.slice(0, -14) + "T00:00:00.000Z";
         let client;
         if (!process.env.DATABASE_URL) {
             client = new Client()
@@ -62,7 +59,7 @@ shipTypeRouter.get(`/:subsystemID`, (req, res, next) => {
             Saturday: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
             Sunday: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
         };
-        let counter = 0;
+        //let counter = 0;
         let pieChartData = {};
         client.connect()
         const sql = `SELECT * FROM subsystems WHERE killtime BETWEEN '${lastWeek}' AND '${today}';`;
@@ -118,16 +115,11 @@ shipTypeRouter.get(`/:subsystemID`, (req, res, next) => {
                     }
                 })
                 counter++;
-                // if (counter === 1) {
-                    // output.id = row.type_id;
-                    // output.name = row.type_name;
-                // }
             })
 
             output.heatmap = heatmap;
             output.graphData = graphData;
             output.pieChart = pieChartData;
-            // res.status(200).send(output);
             next();
         })
         //uncomment when ready to move on...
@@ -171,6 +163,12 @@ shipTypeRouter.get(`/:subsystemID`, (req, res, next) => {
         res.status(400).send("Invalid subsystem ID");
         return;
     }
+    let today = new Date();
+    let lastWeek = new Date();
+    lastWeek.setDate(today.getDate() - 6);
+    today = today.toISOString();
+    lastWeek = lastWeek.toISOString();
+    lastWeek = lastWeek.slice(0, -14) + "T00:00:00.000Z";
     const id = req.params.subsystemID;
     let client;
     if (!process.env.DATABASE_URL) {
