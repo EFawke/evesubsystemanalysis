@@ -209,6 +209,7 @@ shipTypeRouter.get(`/:subsystemID`, (req, res, next) => {
         // const data = removeEntryIfTooOld(response.rows, today, lastWeek);
         output.marketData = response.rows;
         const currentHighestSellPrice = response.rows[0].jita_sell;
+        output.name = response.rows[0].name;
         output.currentHighestSellPrice = currentHighestSellPrice;
         //here we want to get the average number of the buy/sell order volume on each day of the past 7 days
         let arrayOfTheLastSevenDays = []
