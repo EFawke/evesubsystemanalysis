@@ -59,7 +59,6 @@ shipTypeRouter.get(`/:subsystemID`, (req, res, next) => {
             Saturday: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
             Sunday: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
         };
-        //let counter = 0;
         let pieChartData = {};
         client.connect()
         const sql = `SELECT * FROM subsystems WHERE killtime BETWEEN '${lastWeek}' AND '${today}';`;
@@ -114,7 +113,6 @@ shipTypeRouter.get(`/:subsystemID`, (req, res, next) => {
                         day.count += 1;
                     }
                 })
-                counter++;
             })
 
             output.heatmap = heatmap;
@@ -163,12 +161,6 @@ shipTypeRouter.get(`/:subsystemID`, (req, res, next) => {
         res.status(400).send("Invalid subsystem ID");
         return;
     }
-    // let today = new Date();
-    // let lastWeek = new Date();
-    // lastWeek.setDate(today.getDate() - 6);
-    // today = today.toISOString();
-    // lastWeek = lastWeek.toISOString();
-    // lastWeek = lastWeek.slice(0, -14) + "T00:00:00.000Z";
     const id = req.params.subsystemID;
     let client;
     if (!process.env.DATABASE_URL) {
