@@ -118,10 +118,10 @@ shipTypeRouter.get(`/:subsystemID`, (req, res, next) => {
                     }
                 })
                 counter++;
-                if (counter === 1) {
-                    output.id = row.type_id;
-                    output.name = row.type_name;
-                }
+                // if (counter === 1) {
+                    // output.id = row.type_id;
+                    // output.name = row.type_name;
+                // }
             })
 
             output.heatmap = heatmap;

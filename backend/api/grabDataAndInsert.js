@@ -19,21 +19,21 @@ if (!process.env.DATABASE_URL) {
 }
 client.connect()
     .catch(err => {
-        // console.log("client is down");
-        // console.log(err);
+        console.log("client is down");
+        console.log(err);
     })
     .then((res) => {
-        // console.log("client is connected");
-        // console.log(res)
+        console.log("client is connected");
+        console.log(res)
     })
 
 //make a database table to store the data
 client.query('CREATE TABLE IF NOT EXISTS subsystems (assocKill BIGINT, killTime TIMESTAMP, location VARCHAR(255), type_id BIGINT, type_name VARCHAR(255))')
     .catch(err => {
-        // console.log(err);
+        console.log(err);
     })
     .then((res) => {
-        // console.log("subsystems table created");
+        console.log("subsystems table created");
     })
 
 //function to make the api call to zkillboard
