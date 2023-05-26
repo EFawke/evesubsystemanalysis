@@ -38,7 +38,7 @@ client.query('CREATE TABLE IF NOT EXISTS subsystems (assocKill BIGINT, killTime 
 
 //function to make the api call to zkillboard
 const axiosZkillData = () => {
-    //console.log("fetching data from zkillboard");
+    console.log("fetching data from zkillboard");
     axios("https://redisq.zkillboard.com/listen.php?ttw=1", {
         headers: {
             'accept-encoding': 'gzip',
@@ -92,6 +92,7 @@ const lookupSubsystemName = (itemTypeId, assocKill, killTime, location) => {
         })
         .then(response => {
             const itemTypeName = response.data.name;
+            console.log(itemTypeName)
             client.query(`INSERT INTO subsystems (assocKill, killTime, location, type_id, type_name) VALUES (${assocKill}, '${killTime}', '${location}', ${itemTypeId}, '${itemTypeName}')`)
         })
 }
