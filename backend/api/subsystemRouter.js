@@ -163,12 +163,12 @@ shipTypeRouter.get(`/:subsystemID`, (req, res, next) => {
         res.status(400).send("Invalid subsystem ID");
         return;
     }
-    let today = new Date();
-    let lastWeek = new Date();
-    lastWeek.setDate(today.getDate() - 6);
-    today = today.toISOString();
-    lastWeek = lastWeek.toISOString();
-    lastWeek = lastWeek.slice(0, -14) + "T00:00:00.000Z";
+    // let today = new Date();
+    // let lastWeek = new Date();
+    // lastWeek.setDate(today.getDate() - 6);
+    // today = today.toISOString();
+    // lastWeek = lastWeek.toISOString();
+    // lastWeek = lastWeek.slice(0, -14) + "T00:00:00.000Z";
     const id = req.params.subsystemID;
     let client;
     if (!process.env.DATABASE_URL) {
