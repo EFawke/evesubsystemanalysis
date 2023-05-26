@@ -134,43 +134,36 @@ shipTypeRouter.get(`/:subsystemID`, (req, res, next) => {
     }
 })
 
-shipTypeRouter.get(`/:subsystemID`, (req, res, next) => {
-    if (!req.params.subsystemID || !subsystemIDArr.includes(req.params.subsystemID)) {
-        res.status(400).send("Invalid subsystem ID");
-        return;
-    } else {
-        const id = req.params.subsystemID;
-        let client;
-        if (!process.env.DATABASE_URL) {
-            client = new Client()
-        } else {
-            client = new Client({
-                connectionString: process.env.DATABASE_URL,
-                ssl: {
-                    rejectUnauthorized: false
-                },
-                allowExitOnIdle: true
-            });
-        }
-        client.connect()
-        const sql = `SELECT * FROM evepraisal_prices WHERE itemID = ${id}`;
-
-        client.query(sql, (err, response) => {
-            if (err) {
-                client.end();
-                console.log(err);
-            }
-            client.end();
-            output.evepraisal = response.rows[0];
-            next();
-            // console.log(output);
-            // res.status(200).send(output);
-        })
-    }
-})
-
 // shipTypeRouter.get(`/:subsystemID`, (req, res, next) => {
-
+//     if (!req.params.subsystemID || !subsystemIDArr.includes(req.params.subsystemID)) {
+//         res.status(400).send("Invalid subsystem ID");
+//         return;
+//     } else {
+//         const id = req.params.subsystemID;
+//         let client;
+//         if (!process.env.DATABASE_URL) {
+//             client = new Client()
+//         } else {
+//             client = new Client({
+//                 connectionString: process.env.DATABASE_URL,
+//                 ssl: {
+//                     rejectUnauthorized: false
+//                 },
+//                 allowExitOnIdle: true
+//             });
+//         }
+//         client.connect()
+//         const sql = `SELECT * FROM evepraisal_prices WHERE itemID = ${id}`;
+//         client.query(sql, (err, response) => {
+//             if (err) {
+//                 client.end();
+//                 console.log(err);
+//             }
+//             client.end();
+//             output.evepraisal = response.rows[0];
+//             next();
+//         })
+//     }
 // })
 
 shipTypeRouter.get(`/:subsystemID`, (req, res, next) => {
