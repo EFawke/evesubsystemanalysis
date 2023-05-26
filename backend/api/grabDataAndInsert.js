@@ -5,7 +5,18 @@ const subsystemIDArr = [45622, 45623, 45624, 45625, 45626, 45627, 45628, 45629, 
 //this file is just to collect the hashes and IDs from zkillboard api and store them in a database.
 
 //making the table if not exists
-const client = new Client()
+let client;
+if (!process.env.DATABASE_URL) {
+    client = new Client()
+} else {
+    client = new Client({
+        connectionString: process.env.DATABASE_URL,
+        ssl: {
+            rejectUnauthorized: false
+        },
+        allowExitOnIdle: true
+    });
+}
 client.connect()
     .catch(err => {
         // console.log("client is down");
