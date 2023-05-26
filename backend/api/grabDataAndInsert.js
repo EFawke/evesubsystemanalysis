@@ -2,9 +2,6 @@ const axios = require('axios');
 const { Client } = require('pg');
 const subsystemIDArr = [45622, 45623, 45624, 45625, 45626, 45627, 45628, 45629, 45630, 45631, 45632, 45633, 45586, 45587, 45588, 45589, 45590, 45591, 45592, 45593, 45594, 45595, 45596, 45597, 45610, 45611, 45612, 45613, 45614, 45615, 45616, 45617, 45618, 45619, 45620, 45621, 45598, 45599, 45600, 45601, 45602, 45603, 45604, 45605, 45606, 45607, 45608, 45609]
 
-//this file is just to collect the hashes and IDs from zkillboard api and store them in a database.
-
-//making the table if not exists
 let client;
 if (!process.env.DATABASE_URL) {
     client = new Client()
@@ -38,7 +35,7 @@ client.query('CREATE TABLE IF NOT EXISTS subsystems (assocKill BIGINT, killTime 
 
 //function to make the api call to zkillboard
 const axiosZkillData = () => {
-    console.log("fetching data from zkillboard");
+    //console.log("fetching data from zkillboard");
     axios("https://redisq.zkillboard.com/listen.php?ttw=1", {
         headers: {
             'accept-encoding': 'gzip',

@@ -173,5 +173,6 @@ const logMarketData = () => {
 grabMaterialData()
 
 const fiveMinutes = 300000;
+const thirtyMinutes = 1800000;
 
-setInterval(grabMaterialData, fiveMinutes);
+setInterval(grabMaterialData, thirtyMinutes);
