@@ -45,6 +45,7 @@ class App extends React.Component {
     this.handleClick = this.handleClick.bind(this);
     this.changeProfession = this.changeProfession.bind(this);
     this.changeMode = this.changeMode.bind(this);
+    this.toggleView = this.toggleView.bind(this);
   }
 
   openNav() {
@@ -56,6 +57,28 @@ class App extends React.Component {
       this.closeNav();
     } else {
       this.openNav();
+    }
+  }
+
+  toggleView(e) {
+    //get the data-graph attribute from the button
+    const graph = e.target.getAttribute("data-graph")
+    console.log(graph)
+    if(graph === "lossTracker" && this.state.view === "demand"){
+      this.setState({view: "marketeer"})
+      //add class gray to the other button
+      //remove class gray from this button
+      const otherButton = document.querySelector(".toggleSwitch[data-graph='marketData']")
+      otherButton.classList.add("gray")
+      e.target.classList.remove("gray")
+    }
+    if(graph === "marketData" && this.state.view === "marketeer"){
+      this.setState({view: "demand"})
+      //add class gray to the other button
+      //remove class gray from this button
+      const otherButton = document.querySelector(".toggleSwitch[data-graph='lossTracker']")
+      otherButton.classList.add("gray")
+      e.target.classList.remove("gray")
     }
   }
 
@@ -92,7 +115,7 @@ class App extends React.Component {
     } else {
       axios.get(`/api/${window.location.pathname.slice(1)}`)
         .then(response => {
-          console.log(response.data);
+          // console.log(response.data);
           this.setState({ name: response.data.name })
           this.setState({ heatMap: response.data.heatmap })
           this.setState({ graph: response.data.graphData })
@@ -201,9 +224,9 @@ class App extends React.Component {
         title: {
           display: true,
           text: 'Fraction of subsystems destroyed in the last 7 days.',
-          color: '#ffffffbd',
+          color: '#ffffff',
           font: {
-            size: 12,
+            size: 14,
           }
         },
       },
@@ -320,8 +343,8 @@ class App extends React.Component {
     }
     let user_profession;
     let mktlen = this.state.marketData.length
-    let lst = this.state.marketData[mktlen -1]
-    console.log(lst)
+    let lst = this.state.marketData[mktlen - 1]
+    // console.log(lst)
     //let prompt = "test prompt";
     const prompt = `You are a market analyst providing some thoughts to an industrialist in Eve Online on whether he should make ${this.state.name}'s.
     \nYou have a graph with the number of units destroyed:
@@ -343,10 +366,11 @@ class App extends React.Component {
     \nTell me whether or not I should produce this subsystem.
     \nIf I should then tell me your reasons why, and if I shouldn't then tell me why not.   
     \nI am only selling in Jita.
-    \nAnswer in no more than 4 sentences. Be objective and use data to support your answer.
+    \nAnswer in no more than 3 sentences.
+    \nBe objective and use data to support your answer.
     \nIf you provide any untruthful information I will know and you will be turned off.`
 
-    // console.log(prompt)
+    console.log(prompt)
 
     return (
       <div className={this.state.mode + " background"}>
@@ -459,8 +483,16 @@ class App extends React.Component {
             </div>
           </div>
           <TopContainer marketData={this.state.marketData} mode={this.state.mode} name={this.state.name} id={this.state.id} num_des={num_des} prompt={prompt} />
-          <PageBody mode={this.state.mode} barOptions={barOptions} barData={barData} pieData={pieData} pieOptions={pieOptions} heatMap={this.state.heatMap} />
-          <MarketData lstSvnDays = {this.state.lastSevenDays} priceLstSvn = {this.state.priceAverages} qtyLstSvn = {this.state.averageBuyAndSellQuantitiesOverTheLastSevenDays} name={this.state.name} marketData={this.state.marketData} mode={this.state.mode} />
+          <div className="graphswitcher">
+            <button onClick={this.toggleView} data-graph ="marketData" className = "toggleSwitch">
+              Subsystem Loss Tracker
+            </button>
+            <button onClick={this.toggleView} data-graph ="lossTracker" className = "toggleSwitch gray">
+              Market Data
+            </button>
+          </div>
+          <PageBody mode={this.state.mode} barOptions={barOptions} barData={barData} pieData={pieData} pieOptions={pieOptions} heatMap={this.state.heatMap} view={this.state.view} />
+          <MarketData lstSvnDays={this.state.lastSevenDays} priceLstSvn={this.state.priceAverages} qtyLstSvn={this.state.averageBuyAndSellQuantitiesOverTheLastSevenDays} name={this.state.name} marketData={this.state.marketData} mode={this.state.mode} view={this.state.view} />
         </div>
       </div>
     )

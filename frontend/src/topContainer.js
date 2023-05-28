@@ -19,7 +19,7 @@ class TopContainer extends React.Component {
 
 
     componentDidMount() {
-        // const apiKey = "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";
+        // const apiKey = "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";
         // const apiUrl = 'https://api.openai.com/v1/engines/text-davinci-003/completions';
 
         // const prompt = this.props.prompt;
@@ -51,7 +51,7 @@ class TopContainer extends React.Component {
         //         console.error('Error:', error);
         //     });
 
-        // axios.get()
+        // // axios.get()
         this.setState({ isLoaded: true });
         this.setState({ name: this.state.name });
         let array = this.state.marketData;

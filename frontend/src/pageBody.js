@@ -61,10 +61,17 @@ class PageBody extends React.Component {
             PointElement,
             LineElement,
         );
+        
+        if(this.props.view === "marketeer"){
+            return(
+                <div></div>
+            )
+        }
+
         if (this.state.selected === "bar") {
             return (
                 <div className="page_body">
-                    <h1 className={this.state.mode + " product_name"}>Subsystem Loss Tracker</h1>
+                    {/* <h1 className={this.state.mode + " product_name"}>Subsystem Loss Tracker</h1> */}
                     <div className="bottom_half_container">
                         <div className={this.props.mode + " the_data ui_box"}>
                             <Bar data={this.props.barData} options={this.props.barOptions} />
@@ -116,7 +123,7 @@ class PageBody extends React.Component {
         if (this.state.selected === "pie") {
             return (
                 <div className="page_body">
-                    <h1 className={this.state.mode + " product_name"}>Subsystem Loss Tracker</h1>
+                    {/* <h1 className={this.state.mode + " product_name"}>Subsystem Loss Tracker</h1> */}
                     <div className="bottom_half_container">
                         <div className={this.props.mode + " the_data ui_box"}>
                             <Pie data={this.props.pieData} options={this.props.pieOptions} />
@@ -142,7 +149,7 @@ class PageBody extends React.Component {
         if (this.state.selected === "heat") {
             return (
                 <div className="page_body">
-                    <h1 className={this.state.mode + " product_name"}>Subsystem Loss Tracker</h1>
+                    {/* <h1 className={this.state.mode + " product_name"}>Subsystem Loss Tracker</h1> */}
                     <div className="bottom_half_container">
                         <div className={this.props.mode + " the_data ui_box"}>
                             <Heatmap heatMap={this.props.heatMap} />

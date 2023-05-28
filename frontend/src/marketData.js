@@ -34,6 +34,14 @@ class PageBody extends React.Component {
     }
 
     render() {
+        if(this.props.view === "demand"){
+            return (
+                <div></div>
+            )
+        }
+
+
+
         const lastSevenDaysPrices = this.props.priceLstSvn
         const jitaSellPrices = [];
         const jitaBuyPrices = [];
@@ -58,9 +66,9 @@ class PageBody extends React.Component {
 
         for(let i = 0; i < lastSevenDays.length; i++) {
             if(!lastSevenDaysPrices[lastSevenDays[i]]) {
-                console.log("no data for " + lastSevenDays[i]);
+                // console.log("no data for " + lastSevenDays[i]);
             }  else {
-                console.log("data for " + lastSevenDays[i]);
+                // console.log("data for " + lastSevenDays[i]);
             }
         }
 
@@ -198,7 +206,6 @@ class PageBody extends React.Component {
         if (this.state.selectedMarketGraph === "prices") {
             return (
                 <div className="page_body">
-                    <h1 className={this.props.mode + " product_name"}>Market Data</h1>
                     <div className="bottom_half_container">
                         <div className={this.props.mode + " the_data ui_box"}>
                             <Line data={priceData} options={priceOptions} />
@@ -231,7 +238,6 @@ class PageBody extends React.Component {
         if (this.state.selectedMarketGraph === "quantities") {
             return (
                 <div className="page_body">
-                    <h1 className={this.props.mode + " product_name"}>Market Data</h1>
                     <div className="bottom_half_container">
                         <div className={this.props.mode + " the_data ui_box"}>
                             <Bar data={quantityData} options={quantityOptions} />

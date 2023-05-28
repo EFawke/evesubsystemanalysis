@@ -11,7 +11,7 @@ class Header extends React.Component {
             <div className="header">
                 <header className="main-header navbar navbar-dark">
                     <div className='navAnchors'>
-                    <a className={this.props.mode + " header_anchor"} href="/">EveSubsystemAnalytics</a>
+                    <a className={this.props.mode + " header_anchor"} href="/">EveSubsystemAnalytics <span className='version_span gray'>(V. 1.0.0)</span></a>
                     <a className={this.props.mode + " header_anchor"} href="/about/">About</a>
                     </div>
                     <div className={this.props.mode + " input_addornments"}>

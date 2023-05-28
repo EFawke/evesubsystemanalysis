@@ -29,7 +29,7 @@ client.connect()
 const makeTable = () => {
     client.query(`CREATE TABLE IF NOT EXISTS market_data (id BIGSERIAL, itemID BIGINT, name VARCHAR(255), amarr_buy VARCHAR(255), amarr_sell VARCHAR(255), amarr_buy_orders BIGINT, amarr_buy_volume BIGINT, amarr_sell_orders BIGINT, amarr_sell_volume BIGINT, jita_buy VARCHAR(255), jita_sell VARCHAR(255), jita_buy_orders BIGINT, jita_buy_volume BIGINT, jita_sell_orders BIGINT, jita_sell_volume BIGINT, date TIMESTAMP, manufacture_cost_jita VARCHAR(255), manufacture_cost_amarr VARCHAR(255))`)
     .catch(err => {
-        console.log(err);
+        // console.log(err);
     })
     .then((res) => {
         //console.log("table is created");
@@ -56,10 +56,13 @@ const grabMaterialData = () => {
     for (let i = 0; i < subsystemIDArr.length; i++) {
         axios.get(`http://evepraisal.com/item/${subsystemIDArr[i]}.json`)
             .then((result) => {
+                console.log('response is:')
+                console.log(result.response)
+                return;
                 insertIntoPrices(result.data, date);
             })
             .catch(err => {
-                console.log(err);
+                // console.log(err);
                 return;
             })
     }

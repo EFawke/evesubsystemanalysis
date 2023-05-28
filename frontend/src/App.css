@@ -2,6 +2,7 @@
     --highlight: #02617f52;
     --highlight_two: #ffffff36;
     --font-color: #ffffffbd;
+    --font-color: white;
     --content_background: #070112;
     --dark_background: #070708;
     --root_background: black;
@@ -199,9 +200,14 @@ html {
 .header_anchor {
     color: var(--font-color);
     text-decoration: none;
-    font-size: 1rem;
+    font-size: 1.2rem;
     margin-right: 2rem;
 }
+
+/* uncomment later */
+/* .graphswitcher :nth-child(2){
+    color: #636d78;
+} */
 
 .input_addornments:hover {
     background: #e9ecefd3;
@@ -458,9 +464,31 @@ input:focus {
     color: var(--font-color);
 }
 
-/* .light > * {
-    color: var(--font-color);
-} */
+.toggleSwitch {
+    display: flex;
+    border: none;
+    background: transparent;
+    color: white;
+    margin-right: 2rem;
+    margin-top: 5px;
+    font-size: 1.2rem;
+    font-weight: 800;
+} 
+
+.graphswitcher {
+    display: flex;
+    justify-content: flex-start;
+    margin: 0rem 2rem;
+}
+
+.gray {
+    color:rgb(100, 100, 100)
+}
+
+.version_span {
+    font-size: 0.8rem;
+    /* color: var(--font-color); */
+}
 
 /* mobile styles */
 @media all and (max-width: 995px) {
@@ -535,5 +563,8 @@ input:focus {
 
     .bottom_half_container {
         flex-direction: column;
+    }
+    .graphswitcher {
+        margin: 0rem 0.5rem;
     }
 }
