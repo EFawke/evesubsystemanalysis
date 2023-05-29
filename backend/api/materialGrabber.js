@@ -56,9 +56,6 @@ const grabMaterialData = () => {
     for (let i = 0; i < subsystemIDArr.length; i++) {
         axios.get(`http://evepraisal.com/item/${subsystemIDArr[i]}.json`)
             .then((result) => {
-                console.log('response is:')
-                console.log(result.response)
-                return;
                 insertIntoPrices(result.data, date);
             })
             .catch(err => {
