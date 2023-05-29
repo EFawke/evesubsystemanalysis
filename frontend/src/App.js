@@ -7,6 +7,7 @@ import TopContainer from './topContainer';
 import Cookies from 'js-cookie';
 import SubsystemsTable from './subsystemsTable.js';
 import MarketData from './marketData.js';
+import TopContainerAbout from './topContainerAbout.js';
 //import font awesome
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faGear } from '@fortawesome/free-solid-svg-icons';
@@ -25,6 +26,7 @@ class App extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
+      about: null,
       isLoaded: false,
       name: null,
       heatMap: null,
@@ -64,16 +66,16 @@ class App extends React.Component {
     //get the data-graph attribute from the button
     const graph = e.target.getAttribute("data-graph")
     console.log(graph)
-    if(graph === "lossTracker" && this.state.view === "demand"){
-      this.setState({view: "marketeer"})
+    if (graph === "lossTracker" && this.state.view === "demand") {
+      this.setState({ view: "marketeer" })
       //add class gray to the other button
       //remove class gray from this button
       const otherButton = document.querySelector(".toggleSwitch[data-graph='marketData']")
       otherButton.classList.add("gray")
       e.target.classList.remove("gray")
     }
-    if(graph === "marketData" && this.state.view === "marketeer"){
-      this.setState({view: "demand"})
+    if (graph === "marketData" && this.state.view === "marketeer") {
+      this.setState({ view: "demand" })
       //add class gray to the other button
       //remove class gray from this button
       const otherButton = document.querySelector(".toggleSwitch[data-graph='lossTracker']")
@@ -93,6 +95,16 @@ class App extends React.Component {
       }
     });
 
+    //get the about page
+    if (window.location.pathname === "/about/") {
+      console.log("floop")
+      axios.get(`/api/about`)
+        .then(response => {
+          console.log(response.data);
+          this.setState({ about: response.data })
+          this.setState({ isLoaded: true })
+        })
+    }
     //if this is the homepage
     if (window.location.pathname === "/") {
       axios.get(`/api/subsystems/45589`).then(response => {
@@ -170,6 +182,128 @@ class App extends React.Component {
       return (
         <div className="preparing_page">
           <p>404: Page not found. Try going <a href="/">home</a>.</p>
+        </div>
+      )
+    }
+    console.log(window.location.pathname)
+    if (window.location.pathname === "/about/") {
+      return (
+        <div className={this.state.mode + " background"}>
+          <div className={this.state.mode + " main-container"}>
+            <Header />
+            <div className='user_interface'>
+              <button className="header_button" onClick={this.handleClick}><FontAwesomeIcon className={this.state.mode} icon={faGear} /></button>
+              <div className={this.state.hasBeenClicked + " selector_container " + this.state.mode}>
+                <h1 className='table_header'>Subsystems List</h1>
+                <SubsystemsTable />
+                <h1 className='table_header table_settings'>Settings</h1>
+                <div className="display_option">
+                  <div className="setting_column">
+                    <h2 className="setting_header">Use Case:</h2>
+                    <h3 className="setting_description">(Used in tailoring your market analysis)</h3>
+                    <div className="radio_div">
+                      <label>
+                        <input
+                          type="radio"
+                          value="industrialist"
+                          checked={this.state.profession === 'industrialist'}
+                          onChange={this.changeProfession}
+                        />
+                        Industrialist
+                      </label>
+                      <label>
+                        <input
+                          type="radio"
+                          value="marketeer"
+                          checked={this.state.profession === 'marketeer'}
+                          onChange={this.changeProfession}
+                        />
+                        Marketeer
+                      </label>
+                    </div>
+                  </div>
+                  <div className="setting_column">
+                    <h2 className="setting_header">Color Scheme:</h2>
+                    <h3 className="setting_description">(Dark mode is recommended)</h3>
+                    <div className="radio_div">
+                      <label>
+                        <input
+                          type="radio"
+                          value="dark"
+                          checked={this.state.mode === 'dark'}
+                          onChange={this.changeMode}
+                        />
+                        Dark Mode
+                      </label>
+                      <label>
+                        <input
+                          type="radio"
+                          value="light"
+                          checked={this.state.mode === 'light'}
+                          onChange={this.changeMode}
+                        />
+                        Light Mode
+                      </label>
+                    </div>
+                  </div>
+                  <div className="setting_column">
+                    <h2 className="setting_header">Market Hub:</h2>
+                    <h3 className="setting_description">(Where you do most of your trading)</h3>
+                    <div className="radio_div">
+                      <label>
+                        <input
+                          type="radio"
+                          value="jita"
+                          checked={this.state.hub === 'jita'}
+                          onChange={this.changeHub}
+                        />
+                        Jita
+                      </label>
+                      <label>
+                        <input
+                          type="radio"
+                          value="amarr"
+                          checked={this.state.hub === 'amarr'}
+                          onChange={this.changeHub}
+                        />
+                        Amarr
+                      </label>
+                    </div>
+                  </div>
+                  <div className="setting_column">
+                    <h2 className="setting_header">Data View:</h2>
+                    <h3 className="setting_description">(Changes the graphs that are displayed)</h3>
+                    <div className="radio_div">
+                      <label>
+                        <input
+                          type="radio"
+                          value="demand"
+                          checked={this.state.view === 'demand'}
+                          onChange={this.changeView}
+                        />
+                        Number Destroyed
+                      </label>
+                      <label>
+                        <input
+                          type="radio"
+                          value="marketeer"
+                          checked={this.state.view === 'marketeer'}
+                          onChange={this.changeView}
+                        />
+                        Market Info
+                      </label>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <TopContainerAbout/>
+            <div className="page_body">
+              <div className = "ui_box">
+                <p>{this.state.about}</p>
+              </div>
+            </div>
+          </div>
         </div>
       )
     }
@@ -344,8 +478,6 @@ class App extends React.Component {
     let user_profession;
     let mktlen = this.state.marketData.length
     let lst = this.state.marketData[mktlen - 1]
-    // console.log(lst)
-    //let prompt = "test prompt";
     const prompt = `You are a market analyst providing some thoughts to an industrialist in Eve Online on whether he should make ${this.state.name}'s.
     \nYou have a graph with the number of units destroyed:
     \n${graphString}
@@ -368,9 +500,7 @@ class App extends React.Component {
     \nI am only selling in Jita.
     \nAnswer in no more than 3 sentences.
     \nBe objective and use data to support your answer.
-    \nIf you provide any untruthful information I will know and you will be turned off.`
-
-    console.log(prompt)
+    \nIf you provide any untruthful information I will know and you will be turned off.`;
 
     return (
       <div className={this.state.mode + " background"}>
@@ -484,10 +614,10 @@ class App extends React.Component {
           </div>
           <TopContainer marketData={this.state.marketData} mode={this.state.mode} name={this.state.name} id={this.state.id} num_des={num_des} prompt={prompt} />
           <div className="graphswitcher">
-            <button onClick={this.toggleView} data-graph ="marketData" className = "toggleSwitch">
+            <button onClick={this.toggleView} data-graph="marketData" className="toggleSwitch">
               Subsystem Loss Tracker
             </button>
-            <button onClick={this.toggleView} data-graph ="lossTracker" className = "toggleSwitch gray">
+            <button onClick={this.toggleView} data-graph="lossTracker" className="toggleSwitch gray">
               Market Data
             </button>
           </div>
