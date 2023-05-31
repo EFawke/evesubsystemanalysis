@@ -81,7 +81,7 @@ class PageBody extends React.Component {
                                 <FontAwesomeIcon className="icon_svg" icon={faPieChart} size="lg" />
                                 <p className="hide_before_hover">Pie Chart</p>
                             </button>
-                            <button className="graph_button" onClick={() => this.setState({ selected: "bar" })}>
+                            <button className="highlighted graph_button" onClick={() => this.setState({ selected: "bar" })}>
                                 <FontAwesomeIcon className="icon_svg" icon={faBarChart} size="lg" />
                                 <p className="hide_before_hover">Bar Chart</p>
                             </button>
@@ -129,7 +129,7 @@ class PageBody extends React.Component {
                             <Pie data={this.props.pieData} options={this.props.pieOptions} />
                         </div>
                         <div className={this.props.mode + " graph_selector"}>
-                            <button className="graph_button" onClick={() => this.setState({ selected: "pie" })}>
+                            <button className="highlighted graph_button" onClick={() => this.setState({ selected: "pie" })}>
                                 <FontAwesomeIcon className="icon_svg" icon={faPieChart} size="lg" />
                                 <p className="hide_before_hover">Pie Chart</p>
                             </button>
@@ -163,7 +163,7 @@ class PageBody extends React.Component {
                                 <FontAwesomeIcon className="icon_svg" icon={faBarChart} size="lg" />
                                 <p className="hide_before_hover">Bar Chart</p>
                             </button>
-                            <button className="graph_button" onClick={() => this.setState({ selected: "heat" })}>
+                            <button className="highlighted graph_button" onClick={() => this.setState({ selected: "heat" })}>
                                 <FontAwesomeIcon className="icon_svg" icon={faCalendarDays} size="lg" />
                                 <p className="hide_before_hover">Heat Map</p>
                             </button>

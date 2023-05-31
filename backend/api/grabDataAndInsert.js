@@ -20,8 +20,7 @@ client.connect()
         console.log(err);
     })
     .then((res) => {
-        console.log("client is connected");
-        console.log(res)
+        //console.log("client is connected");
     })
 
 //make a database table to store the data
@@ -30,7 +29,7 @@ client.query('CREATE TABLE IF NOT EXISTS subsystems (assocKill BIGINT, killTime 
         console.log(err);
     })
     .then((res) => {
-        console.log("subsystems table created");
+        //console.log("subsystems table created");
     })
 
 //function to make the api call to zkillboard
@@ -89,7 +88,7 @@ const lookupSubsystemName = (itemTypeId, assocKill, killTime, location) => {
         })
         .then(response => {
             const itemTypeName = response.data.name;
-            console.log(itemTypeName)
+            //console.log(itemTypeName)
             client.query(`INSERT INTO subsystems (assocKill, killTime, location, type_id, type_name) VALUES (${assocKill}, '${killTime}', '${location}', ${itemTypeId}, '${itemTypeName}')`)
         })
 }

@@ -24,6 +24,7 @@
   },
   "homepage": "https://github.com/EFawke/evesubsystemanalysis#readme",
   "dependencies": {
+    "bootstrap": "^5.2.3",
     "chalk": "^5.2.0",
     "concurrently": "^7.0.0",
     "express": "^4.17.2",
@@ -33,6 +34,7 @@
     "openai": "^3.2.1",
     "pg": "^8.7.3",
     "postgresql": "^0.0.1",
+    "react-bootstrap": "^2.7.4",
     "react-scripts": "^5.0.1",
     "webpack": "^5.83.1"
   },

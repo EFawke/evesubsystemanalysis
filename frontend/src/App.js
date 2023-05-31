@@ -8,6 +8,10 @@ import Cookies from 'js-cookie';
 import SubsystemsTable from './subsystemsTable.js';
 import MarketData from './marketData.js';
 import TopContainerAbout from './topContainerAbout.js';
+//bootstrap
+import { Button, Modal } from 'react-bootstrap';
+import 'bootstrap/dist/css/bootstrap.min.css';
+
 //import font awesome
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faGear } from '@fortawesome/free-solid-svg-icons';
@@ -34,15 +38,18 @@ class App extends React.Component {
       pieChart: null,
       id: null,
       is404: false,
-      marketData: null,
+      amarrPrice: null,
+      price: null,
+      //marketData: null,
       lastSevenDays: null,
-      averageBuyAndSellQuantitiesOverTheLastSevenDays: null,
+      averageQuants: null,
       priceAverages: null,
       mode: Cookies.get("mode") ? Cookies.get("mode") : "dark",
       profession: Cookies.get("profession") ? Cookies.get("profession") : "industrialist",
       hasBeenClicked: false,
       hub: Cookies.get("hub") ? Cookies.get("hub") : "jita",
       view: Cookies.get("view") ? Cookies.get("view") : "demand",
+      // show: false,
     }
     this.handleClick = this.handleClick.bind(this);
     this.changeProfession = this.changeProfession.bind(this);
@@ -63,13 +70,9 @@ class App extends React.Component {
   }
 
   toggleView(e) {
-    //get the data-graph attribute from the button
     const graph = e.target.getAttribute("data-graph")
-    console.log(graph)
     if (graph === "lossTracker" && this.state.view === "demand") {
       this.setState({ view: "marketeer" })
-      //add class gray to the other button
-      //remove class gray from this button
       const otherButton = document.querySelector(".toggleSwitch[data-graph='marketData']")
       otherButton.classList.add("gray")
       e.target.classList.remove("gray")
@@ -97,7 +100,6 @@ class App extends React.Component {
 
     //get the about page
     if (window.location.pathname === "/about/") {
-      console.log("floop")
       axios.get(`/api/about`)
         .then(response => {
           console.log(response.data);
@@ -114,9 +116,10 @@ class App extends React.Component {
         this.setState({ graph: response.data.graphData })
         this.setState({ pieChart: response.data.pieChart })
         this.setState({ id: response.data.id })
-        this.setState({ marketData: response.data.marketData })
+        this.setState({ price: response.data.currentHighestSellPrice })
+        this.setState({ amarrPrice: response.data.currentHighestSellPriceAmarr })
         this.setState({ lastSevenDays: response.data.lastSevenDays })
-        this.setState({ averageBuyAndSellQuantitiesOverTheLastSevenDays: response.data.averageBuyAndSellQuantitiesOverTheLastSevenDays })
+        this.setState({ averageQuants: response.data.averageQuants })
         this.setState({ priceAverages: response.data.priceAverages })
       }).then(() => {
         this.setState({ isLoaded: true })
@@ -127,15 +130,16 @@ class App extends React.Component {
     } else {
       axios.get(`/api/${window.location.pathname.slice(1)}`)
         .then(response => {
-          // console.log(response.data);
+          console.log(response.data);
           this.setState({ name: response.data.name })
           this.setState({ heatMap: response.data.heatmap })
           this.setState({ graph: response.data.graphData })
           this.setState({ pieChart: response.data.pieChart })
           this.setState({ id: response.data.id })
-          this.setState({ marketData: response.data.marketData })
+          this.setState({ price: response.data.currentHighestSellPrice })
+          this.setState({ amarrPrice: response.data.currentHighestSellPriceAmarr })
           this.setState({ lastSevenDays: response.data.lastSevenDays })
-          this.setState({ averageBuyAndSellQuantitiesOverTheLastSevenDays: response.data.averageBuyAndSellQuantitiesOverTheLastSevenDays })
+          this.setState({ averageQuants: response.data.averageQuants })
           this.setState({ priceAverages: response.data.priceAverages })
         }).then(() => {
           this.setState({ isLoaded: true })
@@ -185,7 +189,6 @@ class App extends React.Component {
         </div>
       )
     }
-    console.log(window.location.pathname)
     if (window.location.pathname === "/about/") {
       return (
         <div className={this.state.mode + " background"}>
@@ -194,7 +197,7 @@ class App extends React.Component {
             <div className='user_interface'>
               <button className="header_button" onClick={this.handleClick}><FontAwesomeIcon className={this.state.mode} icon={faGear} /></button>
               <div className={this.state.hasBeenClicked + " selector_container " + this.state.mode}>
-                <h1 className='table_header'>Subsystems List</h1>
+                <h1 className='sub_list_header table_header'>Subsystems List</h1>
                 <SubsystemsTable />
                 <h1 className='table_header table_settings'>Settings</h1>
                 <div className="display_option">
@@ -297,10 +300,31 @@ class App extends React.Component {
                 </div>
               </div>
             </div>
-            <TopContainerAbout/>
+            {/* <TopContainerAbout /> */}
             <div className="page_body">
-              <div className = "ui_box">
-                <p>{this.state.about}</p>
+              <div className="about_section">
+                <h1>What is this?</h1>
+                <p>This is a tool for players in Eve Online who are interested in manufacturing Tech 3 Subsystems.</p>
+                <p>I primarily built it to assist me in deciding which subsystems to manufacture.</p>
+                <p>When making a decision on what to produce, it is important to factor in the demand for that item, as well as the current market conditions.</p>
+                <p>As such, I have included two main sections for the data: <strong>Subsystem Loss Tracker</strong> and <strong>Market Data</strong>.</p>
+                <p>Once the data is loaded on the page, it is also fed into a query to an external AI, which assists in evaluating the current market for the subsystem you are viewing.</p>
+
+                <h2>Subsystem Loss Tracker</h2>
+                <p>These graphs give you a break-down of all of the subsystems of the type you are looking at that have been lost in the last 7 days.</p>
+                <p>It also shows you have often the subsystem you are viewing has been lost relative to other subsystems.</p>
+                <p>I included this as it would provide a good indication for the demand of any given subsystem, and allow me to keep track of the current meta in the game.</p>
+
+                <h2>Market Data</h2>
+                <p>This section shows you the current market conditions for the subsystem you are viewing.</p>
+                <p>It shows you the weekly average buy and sell prices for the subsystem in Jita and Amarr (sorry Dodixie), as well as the weekly average number of buy and sell orders.</p>
+                <p>It also shows you the current market price for the materials required to manufacture the subsystem.</p>
+
+                <h1>How do I use this?</h1>
+                <p>To find different subsystems, you can use the search box at the top of the page.</p>
+                <p>Alternatively, a table of all of the subsystems is available by clicking the gear icon in the top left corner of the page.</p>
+                <p>Once you have found the subsystem you are interested in, you can click on it to view the data.</p>
+                <p>Note: You may also toggle between subsystems by clicking on the segment of the pie chart you are interested in when using the Subsystem Loss Tracker.</p>
               </div>
             </div>
           </div>
@@ -328,9 +352,9 @@ class App extends React.Component {
         title: {
           display: true,
           text: `${this.state.name} destroyed in the last 7 days.`,
-          color: '#ffffffbd',
+          color: '#ffffff',
           font: {
-            size: 12,
+            size: 14,
           }
         },
       },
@@ -380,13 +404,13 @@ class App extends React.Component {
     }
     let barDataBackgroundColor;
     if (this.state.mode === 'dark') {
-      barDataBackgroundColor = '#161e26a1'
+      barDataBackgroundColor = '#ffffff'
     } else {
       barDataBackgroundColor = '#ffffff36'
     }
     let barDataBorderColor;
     if (this.state.mode === 'dark') {
-      barDataBorderColor = '#ffffff36'
+      barDataBorderColor = "#ffffff"
     } else {
       barDataBorderColor = '#161e26a1'
     }
@@ -396,8 +420,8 @@ class App extends React.Component {
         {
           label: '# Destroyed',
           data: destroyed,
-          backgroundColor: '#161e26a1',
-          borderColor: '#ffffff36',
+          backgroundColor: '#ffffff50',
+          borderColor: '#ffffff',
           borderWidth: 1,
         },
       ],
@@ -420,7 +444,7 @@ class App extends React.Component {
         }
         if (key !== this.state.name && this.state.mode === 'dark') {
           pieChartColours.push('#161e26a1')
-          borderColours.push('#02617f52')
+          borderColours.push('#ffffff36')
         }
         if (key === this.state.name && this.state.mode === 'light') {
           num_des = value.count
@@ -451,19 +475,6 @@ class App extends React.Component {
         },
       ],
     };
-    let productionCost = null;
-    if (this.state.name.includes("Defensive")) {
-      productionCost = 26445204
-    }
-    if (this.state.name.includes("Core")) {
-      productionCost = 23971412
-    }
-    if (this.state.name.includes("Offensive")) {
-      productionCost = 25317435
-    }
-    if (this.state.name.includes("Propulsion")) {
-      productionCost = 23429067
-    }
     let graphString = "";
     for (let i = 0; i < this.state.graph.length; i++) {
       graphString += this.state.graph[i].date + ": " + this.state.graph[i].count + ", \n";
@@ -475,32 +486,34 @@ class App extends React.Component {
     for (let i = 0; i < Object.keys(this.state.pieChart).length; i++) {
       pieString += Object.keys(this.state.pieChart)[i] + ": " + this.state.pieChart[Object.keys(this.state.pieChart)[i]].count + "\n";
     }
-    let user_profession;
-    let mktlen = this.state.marketData.length
-    let lst = this.state.marketData[mktlen - 1]
-    const prompt = `You are a market analyst providing some thoughts to an industrialist in Eve Online on whether he should make ${this.state.name}'s.
-    \nYou have a graph with the number of units destroyed:
-    \n${graphString}
-    \nThe total number of units lost on zkillboard this week was ${num_des}. You can use this as a proxy for the amount of demand for this subsystem.
-    \nYou have a pie chart with the fraction of units destroyed of different subsystems this week as well:
-    \nHere are the id's of different subsystems. The number of units destroyed for each of them, and their names.
-    \n${pieString}
-    \nYou have some market data too:
-    \nIn Jita there are ${lst.jita_buy_orders} buy orders/ ${lst.jita_buy_volume} units.
-    \nIn Jita there are ${lst.jita_sell_orders} sell orders/ ${lst.jita_sell_volume} units.
-    \nThe current buy price in Jita is ${lst.jita_buy} ISK.
-    \nThe current sell price in Jita is ${lst.jita_sell} ISK.
-    \nIn Amarr there are ${lst.amarr_buy_orders} buy orders/ ${lst.amarr_buy_volume} units.
-    \nIn Amarr there are ${lst.amarr_sell_orders} sell orders/ ${lst.amarr_sell_volume} units.
-    \nThe current buy price in Amarr is ${lst.amarr_buy} ISK.
-    \nThe current sell price in Amarr is ${lst.amarr_sell} ISK.
-    \nYou know the production cost is about ${lst.manufacture_cost_jita} ISK.
-    \nTell me whether or not I should produce this subsystem.
-    \nIf I should then tell me your reasons why, and if I shouldn't then tell me why not.   
-    \nI am only selling in Jita.
-    \nAnswer in no more than 3 sentences.
-    \nBe objective and use data to support your answer.
-    \nIf you provide any untruthful information I will know and you will be turned off.`;
+
+    let priceString = "Average prices in the last 7 days: \n";
+    for (let i = 0; i < Object.keys(this.state.priceAverages).length; i++) {
+      priceString += Object.keys(this.state.priceAverages)[i] + ": " + this.state.priceAverages[Object.keys(this.state.priceAverages)[i]].sell + "\n";
+    }
+
+
+
+    // const prompt = "prompt";
+
+    const prompt =
+      "You are an AI that has been trained on the market data of Eve Online. \n\n"
+      + "In the last 7 days, "
+      + num_des + " "
+      + this.state.name
+      + " subsystems have been destroyed. \n\n"
+      + pieString + "\n\n"
+      + graphString
+      //num sell / num buy
+      + "\n\n Number of buy orders: " + this.state.averageQuants['2023-05-31'].buy
+      + "\n\n" + "Number of sell orders: " + this.state.averageQuants['2023-05-31'].sell
+      + "\n\n" + "They are selling in Jita for: " + this.state.price
+      + "\n\n" + "The material cost of this subsystem is: " + this.state.priceAverages['2023-05-31'].manufacture_cost_jita
+      + "\n\nI am an industrialist in Eve Online."
+      + "\n\nYou are giving me advice on whether I should produce this subsystem in the game Eve Online.\n\n"
+      + "Answer in 1-2 sentences. Use data to support your answer."
+
+    console.log(prompt)
 
     return (
       <div className={this.state.mode + " background"}>
@@ -509,9 +522,9 @@ class App extends React.Component {
           <div className='user_interface'>
             <button className="header_button" onClick={this.handleClick}><FontAwesomeIcon className={this.state.mode} icon={faGear} /></button>
             <div className={this.state.hasBeenClicked + " selector_container " + this.state.mode}>
-              <h1 className='table_header'>Subsystems List</h1>
+              <h1 className='table_header sub_list_header'>Subsystems List</h1>
               <SubsystemsTable />
-              <h1 className='table_header table_settings'>Settings</h1>
+              {/* <h1 className='table_header table_settings'>Settings</h1>
               <div className="display_option">
                 <div className="setting_column">
                   <h2 className="setting_header">Use Case:</h2>
@@ -609,10 +622,10 @@ class App extends React.Component {
                     </label>
                   </div>
                 </div>
-              </div>
+              </div> */}
             </div>
           </div>
-          <TopContainer marketData={this.state.marketData} mode={this.state.mode} name={this.state.name} id={this.state.id} num_des={num_des} prompt={prompt} />
+          <TopContainer jitaPrice={this.state.price} amarrPrice={this.state.amarrPrice} mode={this.state.mode} name={this.state.name} id={this.state.id} num_des={num_des} prompt={prompt} />
           <div className="graphswitcher">
             <button onClick={this.toggleView} data-graph="marketData" className="toggleSwitch">
               Subsystem Loss Tracker
@@ -622,7 +635,7 @@ class App extends React.Component {
             </button>
           </div>
           <PageBody mode={this.state.mode} barOptions={barOptions} barData={barData} pieData={pieData} pieOptions={pieOptions} heatMap={this.state.heatMap} view={this.state.view} />
-          <MarketData lstSvnDays={this.state.lastSevenDays} priceLstSvn={this.state.priceAverages} qtyLstSvn={this.state.averageBuyAndSellQuantitiesOverTheLastSevenDays} name={this.state.name} marketData={this.state.marketData} mode={this.state.mode} view={this.state.view} />
+          <MarketData lstSvnDays={this.state.lastSevenDays} priceLstSvn={this.state.priceAverages} qtyLstSvn={this.state.averageQuants} name={this.state.name} mode={this.state.mode} view={this.state.view} />
         </div>
       </div>
     )

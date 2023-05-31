@@ -120,41 +120,83 @@ shipTypeRouter.get(`/:subsystemID`, (req, res, next) => {
             output.pieChart = pieChartData;
             next();
         })
-        //uncomment when ready to move on...
     }
 })
 
-// shipTypeRouter.get(`/:subsystemID`, (req, res, next) => {
-//     if (!req.params.subsystemID || !subsystemIDArr.includes(req.params.subsystemID)) {
-//         res.status(400).send("Invalid subsystem ID");
-//         return;
-//     } else {
-//         const id = req.params.subsystemID;
-//         let client;
-//         if (!process.env.DATABASE_URL) {
-//             client = new Client()
-//         } else {
-//             client = new Client({
-//                 connectionString: process.env.DATABASE_URL,
-//                 ssl: {
-//                     rejectUnauthorized: false
-//                 },
-//                 allowExitOnIdle: true
-//             });
-//         }
-//         client.connect()
-//         const sql = `SELECT * FROM evepraisal_prices WHERE itemID = ${id}`;
-//         client.query(sql, (err, response) => {
-//             if (err) {
-//                 client.end();
-//                 console.log(err);
-//             }
-//             client.end();
-//             output.evepraisal = response.rows[0];
-//             next();
-//         })
-//     }
-// })
+shipTypeRouter.get(`/:subsystemID`, (req, res, next) => {
+    if (!req.params.subsystemID || !subsystemIDArr.includes(req.params.subsystemID)) {
+        res.status(400).send("Invalid subsystem ID");
+        return;
+    } else {
+        const today = new Date(); // Get the current date
+
+const lastWeek = new Date(today.getTime() - 6 * 24 * 60 * 60 * 1000); // Subtract 6 days from the current date to include today
+
+const todayDateString = today.toISOString().split('T')[0]; // Get the current date string without the time
+
+const query = `
+  SELECT
+    ROUND(AVG(CAST(amarr_buy_volume AS FLOAT))) AS avg_amarr_buy_volume,
+    ROUND(AVG(CAST(amarr_sell_volume AS FLOAT))) AS avg_amarr_sell_volume,
+    ROUND(AVG(CAST(jita_buy_volume AS FLOAT))) AS avg_jita_buy_volume,
+    ROUND(AVG(CAST(jita_sell_volume AS FLOAT))) AS avg_jita_sell_volume,
+    ROUND(AVG(CAST(manufacture_cost_jita AS FLOAT))) AS avg_manufacture_cost_jita,
+    ROUND(AVG(CAST(manufacture_cost_amarr AS FLOAT))) AS avg_manufacture_cost_amarr,
+    DATE_TRUNC('day', date) AS day
+  FROM
+    market_data
+  WHERE
+    date >= '${lastWeek.toISOString()}'::date AND
+    date <= CURRENT_DATE
+  GROUP BY
+    DATE_TRUNC('day', date)
+  ORDER BY
+    DATE_TRUNC('day', date) ASC;
+`;
+
+
+        
+        
+        
+        
+        
+        //DATE_TRUNC('day', date::timestamptz AT TIME ZONE 'GMT') AS day
+        
+
+
+        //lastWeek = lastWeek.slice(0, -14) + "T00:00:00.000Z";
+        let client;
+        if (!process.env.DATABASE_URL) {
+            client = new Client()
+        } else {
+            client = new Client({
+                connectionString: process.env.DATABASE_URL,
+                ssl: {
+                    rejectUnauthorized: false
+                },
+                allowExitOnIdle: true
+            });
+        }
+        client.connect()
+        client.query(query, (err, response) => {
+            client.end();
+            if (err) {
+                console.log(err);
+                res.status(404).send(output);
+                return;
+            }
+            if(response.rows){
+                //console.log(response.rows);
+                //for each row console.log row
+                response.rows.forEach((row) => {
+                    //console.log(row);
+                })
+                output.marketData = response.rows;
+            }
+            next();
+        })
+    }
+})
 
 shipTypeRouter.get(`/:subsystemID`, (req, res, next) => {
     if (!req.params.subsystemID || !subsystemIDArr.includes(req.params.subsystemID)) {
@@ -176,16 +218,18 @@ shipTypeRouter.get(`/:subsystemID`, (req, res, next) => {
     }
     client.connect()
 
-    const startDate = new Date();
-    startDate.setDate(startDate.getDate() - 7);
-
-    const endDate = new Date();
+    let today = new Date();
+    let lastWeek = new Date();
+    lastWeek.setDate(today.getDate() - 6);
+    today = today.toISOString();
+    lastWeek = lastWeek.toISOString();
+    lastWeek = lastWeek.slice(0, -14) + "T00:00:00.000Z";
 
     const sql = `
         SELECT *
         FROM market_data
         WHERE itemid = ${id}
-            AND date BETWEEN '${startDate.toISOString()}' AND '${endDate.toISOString()}'
+            AND date BETWEEN '${lastWeek}' AND '${today}'
         ORDER BY date ASC;`;
 
     client.query(sql, (err, response) => {
@@ -196,35 +240,34 @@ shipTypeRouter.get(`/:subsystemID`, (req, res, next) => {
         }
 
         client.end();
-        // const data = removeEntryIfTooOld(response.rows, today, lastWeek);
-        output.marketData = response.rows;
+        //output.marketData = response.rows;
         const currentHighestSellPrice = response.rows[0].jita_sell;
+        const currentHighestSellPriceAmarr = response.rows[0].amarr_sell;
         output.name = response.rows[0].name;
         output.currentHighestSellPrice = currentHighestSellPrice;
-        //here we want to get the average number of the buy/sell order volume on each day of the past 7 days
-        let arrayOfTheLastSevenDays = []
+        output.currentHighestSellPriceAmarr = currentHighestSellPriceAmarr;
+        let lastSevenDays = []
         for (let i = 0; i < 7; i++) {
             let date = new Date();
             date.setDate(date.getDate() - i);
             date = date.toISOString().slice(0, 10);
-            arrayOfTheLastSevenDays.push(date);
+            lastSevenDays.push(date);
         }
 
+
         //sort the array of the last seven days
-        arrayOfTheLastSevenDays.sort((a, b) => {
+        lastSevenDays.sort((a, b) => {
             return new Date(a) - new Date(b);
         })
 
-        // console.log(arrayOfTheLastSevenDays)
 
-        //loop through res.rows and assign each row to a day
         const averages = {};
         const priceAverages = {};
         response.rows.forEach((row) => {
             let date = row.date
             date = date.toISOString().slice(0, 10);
-            for (let i = 0; i < arrayOfTheLastSevenDays.length; i++) {
-                if (date === arrayOfTheLastSevenDays[i]) {
+            for (let i = 0; i < lastSevenDays.length; i++) {
+                if (date === lastSevenDays[i]) {
                     if (averages[date]) {
                         averages[date].buy += Number(row.jita_buy_volume);
                         averages[date].sell += Number(row.jita_sell_volume);
@@ -272,7 +315,6 @@ shipTypeRouter.get(`/:subsystemID`, (req, res, next) => {
             }
         })
 
-        // console.log(priceAverages)
         //for each date in averages, divide the buy/sell volume by the count
         for (let date in averages) {
             averages[date].buy = averages[date].buy / averages[date].count;
@@ -308,8 +350,12 @@ shipTypeRouter.get(`/:subsystemID`, (req, res, next) => {
         //assign the averages to the output
         output.priceAverages = priceAverages;
 
-        output.lastSevenDays = arrayOfTheLastSevenDays;
-        output.averageBuyAndSellQuantitiesOverTheLastSevenDays = averages;
+        output.lastSevenDays = lastSevenDays;
+        output.averageQuants = averages;
+        
+        //console.log(output)
+        //perform all of the calculations for the graphs here instead of in the browser, and only output what is necessary.
+
         res.status(200).send(output);
     })
 })

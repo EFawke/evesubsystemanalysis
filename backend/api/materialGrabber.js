@@ -137,18 +137,12 @@ const getMaterialsPrice = (output) => {
 }
 
 const insertIntoTable = (output) => {
-    //format the date
-    //output.date = output.date.toISOString();
-    //remove the last 5 characters from output.date
-    // output.date = output.date.slice(0, -5) + "Z";
     output.date = output.date.toISOString();
-    // console.log(output.date);
-    // console.log(output);
     const sql = "INSERT INTO market_data (itemid, name, amarr_buy, amarr_sell, amarr_buy_orders, amarr_buy_volume, amarr_sell_orders, amarr_sell_volume, jita_buy, jita_sell, jita_buy_orders, jita_buy_volume, jita_sell_orders, jita_sell_volume, date, manufacture_cost_jita, manufacture_cost_amarr) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10 ,$11, $12, $13, $14, $15, $16, $17)"
     const values = [output.itemId, output.name, output.amarrBuy, output.amarrSell, output.amarrBuyOrdersCount, output.amarrBuyVolume, output.amarrSellOrdersCount, output.amarrSellVolume, output.jitaBuy, output.jitaSell, output.jitaBuyOrdersCount, output.jitaBuyVolume, output.jitaSellOrdersCount, output.jitaSellVolume, output.date, output.materialPriceJita, output.materialPriceAmarr]
     client.query(sql, values)
         .then((res) => {
-            // console.log(output.itemId + " inserted");
+            //console.log(output.itemId + " inserted");
         })
         .catch(err => {
             console.log(err);

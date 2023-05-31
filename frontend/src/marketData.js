@@ -23,7 +23,6 @@ class PageBody extends React.Component {
     constructor(props) {
         super(props)
         this.state = {
-            marketData: this.props.marketData,
             selectedMarketGraph: "prices",
             hub: "jita",
         }
@@ -62,16 +61,6 @@ class PageBody extends React.Component {
         let barSell;
 
         //loop through the last 7 days
-        const lastSevenDays = this.props.lstSvnDays
-
-        for(let i = 0; i < lastSevenDays.length; i++) {
-            if(!lastSevenDaysPrices[lastSevenDays[i]]) {
-                // console.log("no data for " + lastSevenDays[i]);
-            }  else {
-                // console.log("data for " + lastSevenDays[i]);
-            }
-        }
-
         for(let i = 0; i < Object.keys(lastSevenDaysPrices).length; i++) {
             const vals = Object.values(lastSevenDaysPrices)[i]
             jitaSellPrices.push(vals.sell)
@@ -106,8 +95,19 @@ class PageBody extends React.Component {
             barBuy = amarrBuyQuantities;
             barSell = amarrSellQuantities;
         }
+
+        const abbreviateLstSvnDays = this.props.lstSvnDays.map((day) => {
+            const date = new Date(day)
+            const month = date.getMonth() + 1;
+            const dayOfMonth = date.getDate();
+            return `${dayOfMonth}/${month}`
+        })
+
+        let priceLabels = window.innerWidth < 1000 ? abbreviateLstSvnDays : this.props.lstSvnDays
+        let barLabels = window.innerWidth < 1000 ? abbreviateLstSvnDays : this.props.lstSvnDays
+
         const priceData = {
-            labels: this.props.lstSvnDays,
+            labels: priceLabels,
             datasets: [
                 {
                     label: `${lineLabel} Sell`,
@@ -130,20 +130,20 @@ class PageBody extends React.Component {
             ],
         };
         const quantityData = {
-            labels: this.props.lstSvnDays,
+            labels: barLabels,
             datasets: [
                 {
                     label: `${lineLabel} Sell Orders`,
                     data: barSell,
-                    backgroundColor: 'RGB(179, 86, 78, 0.2)',
-                    borderColor: '#ffffff36',
+                    borderColor: 'rgb(255, 99, 132)',
+                    backgroundColor: 'rgba(255, 99, 132, 0.5)',
                     borderWidth: 1,
                 },
                 {
                     label: `${lineLabel} Buy Orders`,
                     data: barBuy,
-                    backgroundColor: 'RGB(0, 128, 0, 0.2)',
-                    borderColor: '#ffffff36',
+                    borderColor: 'rgb(53, 162, 235)',
+                    backgroundColor: 'rgba(53, 162, 235, 0.5)',
                     borderWidth: 1,
                 },
             ],
@@ -159,10 +159,10 @@ class PageBody extends React.Component {
                 },
                 title: {
                     display: true,
-                    text: `Buy and sell order volumes for ${this.props.name}`,
-                    color: '#ffffffbd',
+                    text: `Average daily buy and sell order volumes for ${this.props.name} in ${lineLabel}`,
+                    color: '#ffffff',
                     font: {
-                        size: 12,
+                        size: 14,
                     }
                 },
             },
@@ -179,10 +179,10 @@ class PageBody extends React.Component {
                 },
                 title: {
                     display: true,
-                    text: 'Price Data',
-                    color: '#ffffffbd',
+                    text: 'Average daily prices for ' + this.props.name + ' in ' + lineLabel,
+                    color: '#ffffff',
                     font: {
-                        size: 12,
+                        size: 14,
                     }
                 },
             },
@@ -211,7 +211,7 @@ class PageBody extends React.Component {
                             <Line data={priceData} options={priceOptions} />
                         </div>
                         <div className={this.props.mode + " graph_selector"}>
-                            <button className="graph_button" onClick={() => this.setState({ selectedMarketGraph: "prices" })}>
+                            <button className="highlighted graph_button" onClick={() => this.setState({ selectedMarketGraph: "prices" })}>
                                 <FontAwesomeIcon className="icon_svg" icon={faLineChart} size="lg" />
                                 <p className="hide_before_hover">Price Data</p>
                             </button>
@@ -247,7 +247,7 @@ class PageBody extends React.Component {
                                 <FontAwesomeIcon className="icon_svg" icon={faLineChart} size="lg" />
                                 <p className="hide_before_hover">Price Data</p>
                             </button>
-                            <button className="graph_button" onClick={() => this.setState({ selectedMarketGraph: "quantities" })}>
+                            <button className="highlighted graph_button" onClick={() => this.setState({ selectedMarketGraph: "quantities" })}>
                                 <FontAwesomeIcon className="icon_svg" icon={faBarChart} size="lg" />
                                 <p className="hide_before_hover">Market Volume</p>
                             </button>
