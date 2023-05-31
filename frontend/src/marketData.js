@@ -159,7 +159,7 @@ class PageBody extends React.Component {
                 },
                 title: {
                     display: true,
-                    text: `Average daily buy and sell order volumes for ${this.props.name} in ${lineLabel}`,
+                    text: `Average daily buy and sell orders in ${lineLabel}`,
                     color: '#ffffff',
                     font: {
                         size: 14,
@@ -179,7 +179,7 @@ class PageBody extends React.Component {
                 },
                 title: {
                     display: true,
-                    text: 'Average daily prices for ' + this.props.name + ' in ' + lineLabel,
+                    text: 'Average daily prices in ' + lineLabel,
                     color: '#ffffff',
                     font: {
                         size: 14,
