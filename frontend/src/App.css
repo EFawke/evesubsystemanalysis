@@ -586,6 +586,7 @@ input:focus {
 
     .user_interface {
         padding: 0.5rem;
+        display: none;
     }
 
     /* .Heatmap {
