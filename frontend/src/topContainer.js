@@ -19,7 +19,7 @@ class TopContainer extends React.Component {
 
 
     componentDidMount() {
-        const apiKey = "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";
+        const apiKey = "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";
         const apiUrl = 'https://api.openai.com/v1/engines/text-davinci-003/completions';
 
         const prompt = this.props.prompt;
