@@ -40,7 +40,6 @@ class App extends React.Component {
       is404: false,
       amarrPrice: null,
       price: null,
-      //marketData: null,
       lastSevenDays: null,
       averageQuants: null,
       priceAverages: null,
@@ -49,7 +48,6 @@ class App extends React.Component {
       hasBeenClicked: false,
       hub: Cookies.get("hub") ? Cookies.get("hub") : "jita",
       view: Cookies.get("view") ? Cookies.get("view") : "demand",
-      // show: false,
     }
     this.handleClick = this.handleClick.bind(this);
     this.changeProfession = this.changeProfession.bind(this);
@@ -492,28 +490,84 @@ class App extends React.Component {
       priceString += Object.keys(this.state.priceAverages)[i] + ": " + this.state.priceAverages[Object.keys(this.state.priceAverages)[i]].sell + "\n";
     }
 
+    const getPercentageOfTotal = (num, piechart) => {
+      let total = 0;
+      for (let i = 0; i < Object.keys(piechart).length; i++) {
+        total += piechart[Object.keys(piechart)[i]].count
+      }
+      return (num / total * 100).toFixed(2) + "%"
+    }
+
+    const getSubsystemRank = (piechart) => {
+      let rank = 1;
+      for (let i = 0; i < Object.keys(piechart).length; i++) {
+        if (piechart[Object.keys(piechart)[i]].count > num_des) {
+          rank += 1
+        }
+      }
+      return rank
+    }
+
+    const today = this.state.lastSevenDays[6];
+    const jitaSell = this.state.price;
+    const amarrSell = this.state.amarrPrice;
+    const amarrBuy = this.state.priceAverages[today].amarr_buy;
+    const jitaBuy = this.state.priceAverages[today].buy;
+    const jitaBuild = this.state.priceAverages[today].manufacture_cost_jita;
+    const amarrBuild = this.state.priceAverages[today].manufacture_cost_amarr;
+    const jitaProfit = jitaSell - jitaBuild;
+    const amarrProfit = amarrSell - amarrBuild;
+    const jitaProfitMargin = (jitaProfit / jitaSell * 100).toFixed(2) + "%";
+    const amarrProfitMargin = (amarrProfit / amarrSell * 100).toFixed(2) + "%";
+    const jitaBuyOrders = this.state.averageQuants[today].buy;
+    const jitaSellOrders = this.state.averageQuants[today].sell;
+    const amarrBuyOrders = this.state.averageQuants[today].amarr_buy;
+    const amarrSellOrders = this.state.averageQuants[today].amarr_sell;
+    const percentageOfTotal = getPercentageOfTotal(num_des, this.state.pieChart)
+    const subsystemRank = getSubsystemRank(this.state.pieChart)
 
 
-    // const prompt = "prompt";
 
-    const prompt =
-      "You are an AI that has been trained on the market data of Eve Online. \n\n"
-      + "In the last 7 days, "
-      + num_des + " "
-      + this.state.name
-      + " subsystems have been destroyed. \n\n"
-      + pieString + "\n\n"
-      + graphString
-      //num sell / num buy
-      + "\n\n Number of buy orders: " + this.state.averageQuants['2023-05-31'].buy
-      + "\n\n" + "Number of sell orders: " + this.state.averageQuants['2023-05-31'].sell
-      + "\n\n" + "They are selling in Jita for: " + this.state.price
-      + "\n\n" + "The material cost of this subsystem is: " + this.state.priceAverages['2023-05-31'].manufacture_cost_jita
-      + "\n\nI am an industrialist in Eve Online."
-      + "\n\nYou are giving me advice on whether I should produce this subsystem in the game Eve Online.\n\n"
-      + "Answer in 1-2 sentences. Use data to support your answer."
+    //     const prompt = `You are a player in the game Eve Online, and your goal is to maximise profit by selling Tech 3 Subsystems.
+    // You are considering producing the ${this.state.name} subsystem, but you're not sure if it would be more profitable to produce something else.
+    // In the last 7 days, ${num_des} ${this.state.name} subsystems have been lost by players, which is ${percentageOfTotal} of all subsystems destroyed in the last 7 days.
+    // This makes it the number ${subsystemRank} most used subsystem in the last 7 days, out of 48 total subsystems.
+    // \n
+    // The sell price in Jita, the most popular market hub in Eve Online, is ${jitaSell}.
+    // The buy price in Jita is ${jitaBuy}.
+    // The material cost of this subsystem is ${jitaBuild} in Jita but there are additional costs in manufacturing and taxes.
+    // \n
+    // Given that you can only produce a limited number of subsystems per day, and that you have a limited amount of capital, should you produce this subsystem?
+    // Answer in no more than 4 sentences. Use data to support your answer.`
 
-    console.log(prompt)
+    const prompt = `
+    Subsystem name: ${this.state.name}.
+In the last 7 days, ${num_des} ${this.state.name} subsystems have been lost by players, which is ${percentageOfTotal}. If we assume this is an indication of the demand, that makes it rank ${subsystemRank}/48.
+They are selling in Jita for: ${this.state.price}.
+But they would cost: ${jitaBuild} to produce not including manufacturing and taxes.
+Given that you can only produce a finite number of subsystems per day, and that you have a finite amount of capital, should you produce this subsystem?
+Answer in 1-2 sentences. Use data to support your answer.`
+
+    console.log(prompt);
+
+    // const prompt =
+    //   "You are an AI that has been trained on the market data of Eve Online. \n\n"
+    //   + "In the last 7 days, "
+    //   + num_des + " "
+    //   + this.state.name
+    //   + " subsystems have been destroyed. \n\n"
+    //   + pieString + "\n\n"
+    //   + graphString
+    //   //num sell / num buy
+    //   + "\n\n Number of buy orders: " + this.state.averageQuants['2023-05-31'].buy
+    //   + "\n\n" + "Number of sell orders: " + this.state.averageQuants['2023-05-31'].sell
+    //   + "\n\n" + "They are selling in Jita for: " + this.state.price
+    //   + "\n\n" + "The material cost of this subsystem is: " + this.state.priceAverages['2023-05-31'].manufacture_cost_jita
+    //   + "\n\nI am an industrialist in Eve Online."
+    //   + "\n\nYou are giving me advice on whether I should produce this subsystem in the game Eve Online.\n\n"
+    //   + "Answer in 1-2 sentences. Use data to support your answer."
+
+    //console.log(prompt)
 
     return (
       <div className={this.state.mode + " background"}>

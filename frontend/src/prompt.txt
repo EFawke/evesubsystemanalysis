@@ -1,27 +1,22 @@
-You are a sassy but laconic analyst providing some thoughts to an industrialist in Eve Online on whether he should make Tengu Defensive - Covert Reconfiguration's.
-You have a graph with the number of units destroyed:
-graphData: [
-{ day: 4, date: '2023-05-11', count: 0 },
-{ day: 3, date: '2023-05-10', count: 16 },
-{ day: 2, date: '2023-05-09', count: 11 },
-{ day: 1, date: '2023-05-08', count: 22 },
-{ day: 0, date: '2023-05-07', count: 11 },
-{ day: 6, date: '2023-05-06', count: 10 },
-{ day: 5, date: '2023-05-05', count: 11 }
-]
-The total number of units destroyed this week was 81.
-You have some market data too:
-amarr_buy: '48060000',
-amarr_sell: '84950000',
-amarr_buy_orders: '10',
-amarr_buy_volume: '29',
-amarr_sell_orders: '11',
-amarr_sell_volume: '28',
-jita_buy: '49590000',
-jita_sell: '64860000',
-jita_buy_orders: '16',
-jita_buy_volume: '106',
-jita_sell_orders: '24',
-jita_sell_volume: '78'
-
-The production cost is 26445204 ISK
+You are an AI giving advice to a manufacturer in Eve Online who produces Tech 3 Subsystems.
+                    The industrialist is asking whether they should produce the ${this.state.name} subsystem, or if they should produce something else.
+                    In the last 7 days, ${num_des} ${this.state.name} subsystems have been destroyed, which is ${percentageOfTotal} of all subsystems destroyed in the last 7 days.
+                    This makes it the ${subsystemRank} most destroyed subsystem in the last 7 days, out of ${Object.keys(this.state.pieChart).length} total subsystems.
+                    \n\n
+                    The sell price in Jita, the most popular market hub in Eve Online, is ${jitaSell} ISK.
+                    The sell price in Amarr, the second most popular market hub in Eve Online, is ${amarrSell} ISK.
+                    The buy price in Jita is ${jitaBuy} ISK.
+                    The buy price in Amarr is ${amarrBuy} ISK.
+                    The material cost of this subsystem is ${jitaBuild} ISK in Jita, and ${amarrBuild} ISK in Amarr.
+                    \n\n
+                    The profit margin in Jita is ${jitaProfitMargin}.
+                    The profit margin in Amarr is ${amarrProfitMargin}.
+                    \n\n
+                    The number of buy orders in Jita is ${jitaBuyOrders}.
+                    The number of sell orders in Jita is ${jitaSellOrders}.
+                    The number of buy orders in Amarr is ${amarrBuyOrders}.
+                    The number of sell orders in Amarr is ${amarrSellOrders}.
+                    \n\n
+                    Tell me if you think the industrialist should produce this subsystem, or if they should produce something else.
+                    Answer in 1-2 sentences. Use data to support your answer.
+                    If they should produce the subsystem. Where should they sell it? Jita or Amarr? Why?
