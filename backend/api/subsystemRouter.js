@@ -378,7 +378,7 @@ shipTypeRouter.get(`/:subsystemID`, (req, res, next) => {
             return rank
         }
 
-        const apiKey = "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";
+        const apiKey = "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";
         const apiUrl = 'https://api.openai.com/v1/engines/text-davinci-003/completions';
 
         const jitaBuild = output.priceAverages[output.lastSevenDays[6]].manufacture_cost_jita;
