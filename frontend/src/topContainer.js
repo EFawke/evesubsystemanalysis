@@ -12,45 +12,13 @@ class TopContainer extends React.Component {
             name: this.props.name,
             price: this.props.jitaPrice,
             url: `https://images.evetech.net/types/${this.props.id}/icon?size=64`,
-            advice: null,
+            advice: this.props.advice,
             amarrPrice: this.props.amarrPrice,
         };
     }
 
 
     componentDidMount() {
-        const apiKey = "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";
-        const apiUrl = 'https://api.openai.com/v1/engines/text-davinci-003/completions';
-
-        const prompt = this.props.prompt;
-        const maxTokens = 100;
-
-        const headers = {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${apiKey}`
-        };
-
-        const data = {
-            prompt: prompt,
-            max_tokens: maxTokens
-        };
-
-        fetch(apiUrl, {
-            method: 'POST',
-            headers: headers,
-            body: JSON.stringify(data)
-        })
-            .then(response => response.json())
-            .then(result => {
-                // Handle the API response here
-                console.log(result);
-                this.setState({ advice: result.choices[0].text})
-            })
-            .catch(error => {
-                // Handle any errors that occur during the request
-                console.error('Error:', error);
-            });
-
         this.setState({ name: this.state.name });
         let jitaPrice = this.props.jitaPrice;
         jitaPrice = (jitaPrice / 1000000).toFixed(1);

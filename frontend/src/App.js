@@ -48,6 +48,7 @@ class App extends React.Component {
       hasBeenClicked: false,
       hub: Cookies.get("hub") ? Cookies.get("hub") : "jita",
       view: Cookies.get("view") ? Cookies.get("view") : "demand",
+      advice: null,
     }
     this.handleClick = this.handleClick.bind(this);
     this.changeProfession = this.changeProfession.bind(this);
@@ -100,7 +101,7 @@ class App extends React.Component {
     if (window.location.pathname === "/about/") {
       axios.get(`/api/about`)
         .then(response => {
-          console.log(response.data);
+          //console.log(response.data);
           this.setState({ about: response.data })
           this.setState({ isLoaded: true })
         })
@@ -108,7 +109,7 @@ class App extends React.Component {
     //if this is the homepage
     if (window.location.pathname === "/") {
       axios.get(`/api/subsystems/45589`).then(response => {
-        console.log(response.data);
+        //console.log(response.data);
         this.setState({ name: response.data.name })
         this.setState({ heatMap: response.data.heatmap })
         this.setState({ graph: response.data.graphData })
@@ -119,6 +120,7 @@ class App extends React.Component {
         this.setState({ lastSevenDays: response.data.lastSevenDays })
         this.setState({ averageQuants: response.data.averageQuants })
         this.setState({ priceAverages: response.data.priceAverages })
+        this.setState({ advice: response.data.advice})
       }).then(() => {
         this.setState({ isLoaded: true })
       })
@@ -128,7 +130,7 @@ class App extends React.Component {
     } else {
       axios.get(`/api/${window.location.pathname.slice(1)}`)
         .then(response => {
-          console.log(response.data);
+          //console.log(response.data);
           this.setState({ name: response.data.name })
           this.setState({ heatMap: response.data.heatmap })
           this.setState({ graph: response.data.graphData })
@@ -139,6 +141,7 @@ class App extends React.Component {
           this.setState({ lastSevenDays: response.data.lastSevenDays })
           this.setState({ averageQuants: response.data.averageQuants })
           this.setState({ priceAverages: response.data.priceAverages })
+          this.setState({ advice: response.data.advice})
         }).then(() => {
           this.setState({ isLoaded: true })
         })
@@ -526,20 +529,6 @@ class App extends React.Component {
     const percentageOfTotal = getPercentageOfTotal(num_des, this.state.pieChart)
     const subsystemRank = getSubsystemRank(this.state.pieChart)
 
-
-
-    //     const prompt = `You are a player in the game Eve Online, and your goal is to maximise profit by selling Tech 3 Subsystems.
-    // You are considering producing the ${this.state.name} subsystem, but you're not sure if it would be more profitable to produce something else.
-    // In the last 7 days, ${num_des} ${this.state.name} subsystems have been lost by players, which is ${percentageOfTotal} of all subsystems destroyed in the last 7 days.
-    // This makes it the number ${subsystemRank} most used subsystem in the last 7 days, out of 48 total subsystems.
-    // \n
-    // The sell price in Jita, the most popular market hub in Eve Online, is ${jitaSell}.
-    // The buy price in Jita is ${jitaBuy}.
-    // The material cost of this subsystem is ${jitaBuild} in Jita but there are additional costs in manufacturing and taxes.
-    // \n
-    // Given that you can only produce a limited number of subsystems per day, and that you have a limited amount of capital, should you produce this subsystem?
-    // Answer in no more than 4 sentences. Use data to support your answer.`
-
     const prompt = `
     Subsystem name: ${this.state.name}.
 In the last 7 days, ${num_des} ${this.state.name} subsystems have been lost by players, accounting for ${percentageOfTotal} of subsystem losses this week. If we assume this is an indication of the demand, that makes it rank ${subsystemRank} out of 48.
@@ -547,26 +536,7 @@ Based on the market data, you can build this subsystem for about ${jitaBuild} an
 Given that you can only produce a finite number of subsystems per day, and that you have a finite amount of capital, should you produce this subsystem?
 Answer in 1-2 sentences. Use data to support your answer.`
 
-    console.log(prompt);
-
-    // const prompt =
-    //   "You are an AI that has been trained on the market data of Eve Online. \n\n"
-    //   + "In the last 7 days, "
-    //   + num_des + " "
-    //   + this.state.name
-    //   + " subsystems have been destroyed. \n\n"
-    //   + pieString + "\n\n"
-    //   + graphString
-    //   //num sell / num buy
-    //   + "\n\n Number of buy orders: " + this.state.averageQuants['2023-05-31'].buy
-    //   + "\n\n" + "Number of sell orders: " + this.state.averageQuants['2023-05-31'].sell
-    //   + "\n\n" + "They are selling in Jita for: " + this.state.price
-    //   + "\n\n" + "The material cost of this subsystem is: " + this.state.priceAverages['2023-05-31'].manufacture_cost_jita
-    //   + "\n\nI am an industrialist in Eve Online."
-    //   + "\n\nYou are giving me advice on whether I should produce this subsystem in the game Eve Online.\n\n"
-    //   + "Answer in 1-2 sentences. Use data to support your answer."
-
-    //console.log(prompt)
+    //console.log(prompt);
 
     return (
       <div className={this.state.mode + " background"}>
@@ -678,7 +648,7 @@ Answer in 1-2 sentences. Use data to support your answer.`
               </div> */}
             </div>
           </div>
-          <TopContainer jitaPrice={this.state.price} amarrPrice={this.state.amarrPrice} mode={this.state.mode} name={this.state.name} id={this.state.id} num_des={num_des} prompt={prompt} />
+          <TopContainer jitaPrice={this.state.price} amarrPrice={this.state.amarrPrice} mode={this.state.mode} name={this.state.name} id={this.state.id} num_des={num_des} advice={this.state.advice} />
           <div className="graphswitcher">
             <button onClick={this.toggleView} data-graph="marketData" className="toggleSwitch">
               Subsystem Loss Tracker

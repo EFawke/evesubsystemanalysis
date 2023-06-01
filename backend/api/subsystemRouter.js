@@ -130,11 +130,11 @@ shipTypeRouter.get(`/:subsystemID`, (req, res, next) => {
     } else {
         const today = new Date(); // Get the current date
 
-const lastWeek = new Date(today.getTime() - 6 * 24 * 60 * 60 * 1000); // Subtract 6 days from the current date to include today
+        const lastWeek = new Date(today.getTime() - 6 * 24 * 60 * 60 * 1000); // Subtract 6 days from the current date to include today
 
-const todayDateString = today.toISOString().split('T')[0]; // Get the current date string without the time
+        const todayDateString = today.toISOString().split('T')[0]; // Get the current date string without the time
 
-const query = `
+        const query = `
   SELECT
     ROUND(AVG(CAST(amarr_buy_volume AS FLOAT))) AS avg_amarr_buy_volume,
     ROUND(AVG(CAST(amarr_sell_volume AS FLOAT))) AS avg_amarr_sell_volume,
@@ -155,13 +155,13 @@ const query = `
 `;
 
 
-        
-        
-        
-        
-        
+
+
+
+
+
         //DATE_TRUNC('day', date::timestamptz AT TIME ZONE 'GMT') AS day
-        
+
 
 
         //lastWeek = lastWeek.slice(0, -14) + "T00:00:00.000Z";
@@ -185,7 +185,7 @@ const query = `
                 res.status(404).send(output);
                 return;
             }
-            if(response.rows){
+            if (response.rows) {
                 //console.log(response.rows);
                 //for each row console.log row
                 response.rows.forEach((row) => {
@@ -352,12 +352,74 @@ shipTypeRouter.get(`/:subsystemID`, (req, res, next) => {
 
         output.lastSevenDays = lastSevenDays;
         output.averageQuants = averages;
-        
-        //console.log(output)
+
+
+
         //perform all of the calculations for the graphs here instead of in the browser, and only output what is necessary.
 
-        res.status(200).send(output);
+        //res.status(200).send(output);
+        next();
     })
+})
+
+shipTypeRouter.get(`/:subsystemID`, (req, res, next) => {
+    if (!req.params.subsystemID || !subsystemIDArr.includes(req.params.subsystemID)) {
+        res.status(400).send("Invalid subsystem ID");
+        return;
+    } else {
+        const getSubsystemRank = (piechart) => {
+            const num_des = output.pieChart[output.name].count;
+            let rank = 1;
+            for (let i = 0; i < Object.keys(piechart).length; i++) {
+                if (piechart[Object.keys(piechart)[i]].count > num_des) {
+                    rank += 1
+                }
+            }
+            return rank
+        }
+
+        const apiKey = "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";
+        const apiUrl = 'https://api.openai.com/v1/engines/text-davinci-003/completions';
+
+        const jitaBuild = output.priceAverages[output.lastSevenDays[6]].manufacture_cost_jita;
+        const jitaProfit = output.currentHighestSellPrice - jitaBuild;
+        const num_des = output.pieChart[output.name].count;
+        const subsystemRank = getSubsystemRank(output.pieChart);
+        let percentageOfTotal = ((num_des / 48) * 100).toFixed(2);
+
+        const prompt = `
+    Subsystem name: ${output.name}.
+In the last 7 days, ${num_des} ${output.name} subsystems have been lost by players, accounting for ${percentageOfTotal} of subsystem losses this week. If we assume this is an indication of the demand, that makes it rank ${subsystemRank} out of 48.
+Based on the market data, you can build this subsystem for about ${jitaBuild} and sell it for ${output.currentHighestSellPrice}, a difference of ${jitaProfit}.
+Given that you can only produce a finite number of subsystems per day, and that you have a finite amount of capital, should you produce this subsystem?
+Answer in 1-2 sentences. Use data to support your answer.`
+        const maxTokens = 200;
+
+        const headers = {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${apiKey}`
+        };
+
+        const data = {
+            prompt: prompt,
+            max_tokens: maxTokens
+        };
+
+        fetch(apiUrl, {
+            method: 'POST',
+            headers: headers,
+            body: JSON.stringify(data)
+        })
+            .then(response => response.json())
+            .then(result => {
+                output.advice = result.choices[0].text;
+                res.status(200).send(output);
+            })
+            .catch(error => {
+                res.status(200).send(output);
+                console.error('Error:', error);
+            });
+    }
 })
 
 const removeEntryIfTooOld = (arrayOfResponses, today, lastWeek) => {
