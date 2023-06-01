@@ -542,8 +542,8 @@ class App extends React.Component {
 
     const prompt = `
     Subsystem name: ${this.state.name}.
-In the last 7 days, ${num_des} ${this.state.name} subsystems have been lost by players, which is ${percentageOfTotal}. If we assume this is an indication of the demand, that makes it rank ${subsystemRank} out of 48.
-Based on the market data, you can build this subsystem for about ${jitaBuild} and sell it for ${jitaSell}.
+In the last 7 days, ${num_des} ${this.state.name} subsystems have been lost by players, accounting for ${percentageOfTotal} of subsystem losses this week. If we assume this is an indication of the demand, that makes it rank ${subsystemRank} out of 48.
+Based on the market data, you can build this subsystem for about ${jitaBuild} and sell it for ${jitaSell}, a difference of ${jitaProfit}.
 Given that you can only produce a finite number of subsystems per day, and that you have a finite amount of capital, should you produce this subsystem?
 Answer in 1-2 sentences. Use data to support your answer.`
 
