@@ -216,7 +216,7 @@ html {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    background: #e9ecefd3;
+    background: white;
     color: black;
     height: fit-content;
     border: 1px solid var(--bs-gray-dark);
@@ -237,7 +237,7 @@ html {
 } */
 
 .input_addornments:hover {
-    background: #e9ecefd3;
+    background: white;
     -webkit-box-shadow: 0px 0px 22px 0px rgba(255, 255, 255, 0.31);
     -moz-box-shadow: 0px 0px 22px 0px rgba(255, 255, 255, 0.31);
     box-shadow: 0px 0px 22px 0px rgba(255, 255, 255, 0.31);
@@ -594,20 +594,21 @@ input:focus {
     } */
 
     .input_addornments {
-        margin-top: 1.5rem;
+        margin-top: 0.5rem;
         margin-bottom: 1rem;
-        width: 80%;
         padding: 0.3rem;
+        width: calc(100% - 2rem);
     }
 
     .nav {
         flex-direction: column;
-        padding: 0.5rem;
+        padding: 0 !important;
+        padding-top: 1rem !important;
     }
 
     .navAnchors {
         display: flex;
-        width: 90%;
+        width: calc(100% - 2rem);
         justify-content: space-between;
         flex-direction: column;
     }

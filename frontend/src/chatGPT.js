@@ -24,36 +24,30 @@ class ChatGPT extends React.Component {
         axios.get('/api/key')
             .then(res => {
                 const apiKey = res.data;
-                const maxTokens = 200;
-                const apiUrl = 'https://api.openai.com/v1/engines/text-davinci-003/completions';
+                const url = 'https://api.openai.com/v1/engines/text-davinci-003/completions';
                 const headers = {
                     'Content-Type': 'application/json',
                     'Authorization': `Bearer ${apiKey}`
                 };
-
                 const data = {
                     prompt: this.props.prompt,
-                    max_tokens: maxTokens
+                    max_tokens: 100,
                 };
 
-                fetch(apiUrl, {
-                    method: 'POST',
-                    headers: headers,
-                    body: JSON.stringify(data)
-                })
-                    .then(response => response.json())
-                    .then(result => {
-                        this.setState({ advice: result.choices[0].text });
+                axios.post(url, data, { headers })
+                    .then(response => {
+                        this.setState({ advice: response.data.choices[0].text });
                         this.setState({ isLoaded: true });
                     })
                     .catch(error => {
-                        //try the fetch again
-                        console.error('Error:', error);
+                        // if(!response.data.choices[0].text){
+                        //     console.log("missing key agian")
+                        // }
+                        console.error(error);
                         this.setState({ error: error });
                     });
             })
         this.setState({ prompt: this.props.prompt });
-        //this.setState({ isLoaded: true });
     }
 
     render() {

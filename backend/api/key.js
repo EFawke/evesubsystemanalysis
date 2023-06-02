@@ -5,7 +5,7 @@ const keyRouter = express.Router();
 
 keyRouter.get('/', (req, res, next) => {
     // Hash the API key or not, fuck it
-    const apiKey = "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";
+    const apiKey = "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";
     res.status(200).send(apiKey);
 });
 
