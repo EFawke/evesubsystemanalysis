@@ -378,8 +378,8 @@ shipTypeRouter.get(`/:subsystemID`, (req, res, next) => {
             return rank
         }
 
-        const apiKey = "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";
-        const apiUrl = 'https://api.openai.com/v1/engines/text-davinci-003/completions';
+        // const apiKey = "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";
+        // const apiUrl = 'https://api.openai.com/v1/engines/text-davinci-003/completions';
 
         const jitaBuild = output.priceAverages[output.lastSevenDays[6]].manufacture_cost_jita;
         const jitaProfit = output.currentHighestSellPrice - jitaBuild;
@@ -393,32 +393,10 @@ In the last 7 days, ${num_des} ${output.name} subsystems have been lost by playe
 Based on the market data, you can build this subsystem for about ${jitaBuild} and sell it for ${output.currentHighestSellPrice}, a difference of ${jitaProfit}.
 Given that you can only produce a finite number of subsystems per day, and that you have a finite amount of capital, should you produce this subsystem?
 Answer in 1-2 sentences. Use data to support your answer.`
-        const maxTokens = 200;
+        
+        output.prompt = prompt;
 
-        const headers = {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${apiKey}`
-        };
-
-        const data = {
-            prompt: prompt,
-            max_tokens: maxTokens
-        };
-
-        fetch(apiUrl, {
-            method: 'POST',
-            headers: headers,
-            body: JSON.stringify(data)
-        })
-            .then(response => response.json())
-            .then(result => {
-                output.advice = result.choices[0].text;
-                res.status(200).send(output);
-            })
-            .catch(error => {
-                res.status(200).send(output);
-                console.error('Error:', error);
-            });
+        res.status(200).send(output)
     }
 })
 

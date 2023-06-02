@@ -101,7 +101,7 @@ class App extends React.Component {
     if (window.location.pathname === "/about/") {
       axios.get(`/api/about`)
         .then(response => {
-          //console.log(response.data);
+          console.log(response.data);
           this.setState({ about: response.data })
           this.setState({ isLoaded: true })
         })
@@ -113,39 +113,49 @@ class App extends React.Component {
         this.setState({ name: response.data.name })
         this.setState({ heatMap: response.data.heatmap })
         this.setState({ graph: response.data.graphData })
-        this.setState({ pieChart: response.data.pieChart })
+        const sortedPieChart = {};
+        Object.keys(response.data.pieChart).sort().forEach(function (key) {
+          sortedPieChart[key] = response.data.pieChart[key];
+        }.bind(this));
+        this.setState({ pieChart: sortedPieChart })
         this.setState({ id: response.data.id })
         this.setState({ price: response.data.currentHighestSellPrice })
         this.setState({ amarrPrice: response.data.currentHighestSellPriceAmarr })
         this.setState({ lastSevenDays: response.data.lastSevenDays })
         this.setState({ averageQuants: response.data.averageQuants })
         this.setState({ priceAverages: response.data.priceAverages })
-        this.setState({ advice: response.data.advice})
+        this.setState({ advice: response.data.advice })
       }).then(() => {
         this.setState({ isLoaded: true })
       })
         .catch((err) => {
+          console.log(err);
           this.setState({ is404: true })
         })
-    } else {
+    } if (window.location.pathname !== "/about/" && window.location.pathname !== "/") {
       axios.get(`/api/${window.location.pathname.slice(1)}`)
         .then(response => {
           //console.log(response.data);
           this.setState({ name: response.data.name })
           this.setState({ heatMap: response.data.heatmap })
           this.setState({ graph: response.data.graphData })
-          this.setState({ pieChart: response.data.pieChart })
+          const sortedPieChart = {};
+          Object.keys(response.data.pieChart).sort().forEach(function (key) {
+            sortedPieChart[key] = response.data.pieChart[key];
+          }.bind(this));
+          this.setState({ pieChart: sortedPieChart })
           this.setState({ id: response.data.id })
           this.setState({ price: response.data.currentHighestSellPrice })
           this.setState({ amarrPrice: response.data.currentHighestSellPriceAmarr })
           this.setState({ lastSevenDays: response.data.lastSevenDays })
           this.setState({ averageQuants: response.data.averageQuants })
           this.setState({ priceAverages: response.data.priceAverages })
-          this.setState({ advice: response.data.advice})
+          this.setState({ advice: response.data.advice })
         }).then(() => {
           this.setState({ isLoaded: true })
         })
         .catch((err) => {
+          console.log(err);
           this.setState({ is404: true })
         })
     }
@@ -442,10 +452,19 @@ class App extends React.Component {
           num_des = value.count
           borderColours.push('#ffffff36')
           pieChartColours.push('#ffffffa6')
-        }
-        if (key !== this.state.name && this.state.mode === 'dark') {
-          pieChartColours.push('#161e26a1')
-          borderColours.push('#ffffff36')
+        } else {
+          if (key.includes("Tengu") && this.state.mode === 'dark') {
+            pieChartColours.push("#0000CC20")
+          }
+          if (key.includes("Loki") && this.state.mode === 'dark') {
+            pieChartColours.push("#A52A2A20")
+          }
+          if (key.includes("Proteus") && this.state.mode === 'dark') {
+            pieChartColours.push("#00CC0020")
+          }
+          if (key.includes("Legion") && this.state.mode === 'dark') {
+            pieChartColours.push("#FFFF3320")
+          }
         }
         if (key === this.state.name && this.state.mode === 'light') {
           num_des = value.count
@@ -547,108 +566,9 @@ Answer in 1-2 sentences. Use data to support your answer.`
             <div className={this.state.hasBeenClicked + " selector_container " + this.state.mode}>
               <h1 className='table_header sub_list_header'>Subsystems List</h1>
               <SubsystemsTable />
-              {/* <h1 className='table_header table_settings'>Settings</h1>
-              <div className="display_option">
-                <div className="setting_column">
-                  <h2 className="setting_header">Use Case:</h2>
-                  <h3 className="setting_description">(Used in tailoring your market analysis)</h3>
-                  <div className="radio_div">
-                    <label>
-                      <input
-                        type="radio"
-                        value="industrialist"
-                        checked={this.state.profession === 'industrialist'}
-                        onChange={this.changeProfession}
-                      />
-                      Industrialist
-                    </label>
-                    <label>
-                      <input
-                        type="radio"
-                        value="marketeer"
-                        checked={this.state.profession === 'marketeer'}
-                        onChange={this.changeProfession}
-                      />
-                      Marketeer
-                    </label>
-                  </div>
-                </div>
-                <div className="setting_column">
-                  <h2 className="setting_header">Color Scheme:</h2>
-                  <h3 className="setting_description">(Dark mode is recommended)</h3>
-                  <div className="radio_div">
-                    <label>
-                      <input
-                        type="radio"
-                        value="dark"
-                        checked={this.state.mode === 'dark'}
-                        onChange={this.changeMode}
-                      />
-                      Dark Mode
-                    </label>
-                    <label>
-                      <input
-                        type="radio"
-                        value="light"
-                        checked={this.state.mode === 'light'}
-                        onChange={this.changeMode}
-                      />
-                      Light Mode
-                    </label>
-                  </div>
-                </div>
-                <div className="setting_column">
-                  <h2 className="setting_header">Market Hub:</h2>
-                  <h3 className="setting_description">(Where you do most of your trading)</h3>
-                  <div className="radio_div">
-                    <label>
-                      <input
-                        type="radio"
-                        value="jita"
-                        checked={this.state.hub === 'jita'}
-                        onChange={this.changeHub}
-                      />
-                      Jita
-                    </label>
-                    <label>
-                      <input
-                        type="radio"
-                        value="amarr"
-                        checked={this.state.hub === 'amarr'}
-                        onChange={this.changeHub}
-                      />
-                      Amarr
-                    </label>
-                  </div>
-                </div>
-                <div className="setting_column">
-                  <h2 className="setting_header">Data View:</h2>
-                  <h3 className="setting_description">(Changes the graphs that are displayed)</h3>
-                  <div className="radio_div">
-                    <label>
-                      <input
-                        type="radio"
-                        value="demand"
-                        checked={this.state.view === 'demand'}
-                        onChange={this.changeView}
-                      />
-                      Number Destroyed
-                    </label>
-                    <label>
-                      <input
-                        type="radio"
-                        value="marketeer"
-                        checked={this.state.view === 'marketeer'}
-                        onChange={this.changeView}
-                      />
-                      Market Info
-                    </label>
-                  </div>
-                </div>
-              </div> */}
             </div>
           </div>
-          <TopContainer jitaPrice={this.state.price} amarrPrice={this.state.amarrPrice} mode={this.state.mode} name={this.state.name} id={this.state.id} num_des={num_des} advice={this.state.advice} />
+          <TopContainer prompt = {prompt} jitaPrice={this.state.price} amarrPrice={this.state.amarrPrice} mode={this.state.mode} name={this.state.name} id={this.state.id} num_des={num_des} advice={this.state.advice} />
           <div className="graphswitcher">
             <button onClick={this.toggleView} data-graph="marketData" className="toggleSwitch">
               Subsystem Loss Tracker
