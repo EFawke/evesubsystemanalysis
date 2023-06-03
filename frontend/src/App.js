@@ -217,7 +217,7 @@ class App extends React.Component {
               <div className={this.state.hasBeenClicked + " selector_container " + this.state.mode}>
                 <h1 className='sub_list_header table_header'>Subsystems List</h1>
                 <SubsystemsTable />
-                <h1 className='table_header table_settings'>Settings</h1>
+                {/* <h1 className='table_header table_settings'>Settings</h1>
                 <div className="display_option">
                   <div className="setting_column">
                     <h2 className="setting_header">Use Case:</h2>
@@ -315,7 +315,7 @@ class App extends React.Component {
                       </label>
                     </div>
                   </div>
-                </div>
+                </div> */}
               </div>
             </div>
             {/* <TopContainerAbout /> */}

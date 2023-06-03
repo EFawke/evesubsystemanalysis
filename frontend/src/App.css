@@ -331,12 +331,15 @@ html {
 
 .the_data {
     width: 70%;
-    /* height: 376px; */
+    height: 376px;
     /* make the height the rest of the height of the page */
-    height: calc(100vh - (24px + 28px + 16px + 42px + 129px));
-    max-height: 376px;
+    /* height: calc(100vh - (24px + 28px + 16px + 42px + 129px)); */
+    /* max-height: 376px; */
     align-items: center;
 }
+
+/* if the window is greater than 1300 px */
+
 
 .data-table>thead>tr>th {
     font-size: 1rem;
@@ -638,5 +641,17 @@ input:focus {
 @media all and (max-width: 480px) {
     .Heatmap {
         font-size: 0.5rem;
+    }
+}
+
+@media all and (min-width: 1300px) {
+    .the_data {
+        height: 400px;
+    }
+}
+
+@media all and (min-width: 1500px) {
+    .the_data {
+        height: 500px;
     }
 }
