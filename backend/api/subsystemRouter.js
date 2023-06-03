@@ -241,8 +241,9 @@ shipTypeRouter.get(`/:subsystemID`, (req, res, next) => {
 
         client.end();
         //output.marketData = response.rows;
-        const currentHighestSellPrice = response.rows[0].jita_sell;
-        const currentHighestSellPriceAmarr = response.rows[0].amarr_sell;
+        let length = response.rows.length;
+        const currentHighestSellPrice = response.rows[length - 1].jita_sell;
+        const currentHighestSellPriceAmarr = response.rows[length - 1].amarr_sell;
         output.name = response.rows[0].name;
         output.currentHighestSellPrice = currentHighestSellPrice;
         output.currentHighestSellPriceAmarr = currentHighestSellPriceAmarr;
@@ -396,7 +397,7 @@ shipTypeRouter.get(`/:subsystemID`, (req, res, next) => {
         output.jitaBuild = jitaBuild;
 
         const prompt = `
-    Subsystem name: ${output.name}.
+Subsystem name: ${output.name}.
 In the last 7 days, ${num_des} ${output.name} subsystems have been lost by players, accounting for ${percentageOfTotal} of subsystem losses this week. If we assume this is an indication of the demand, that makes it rank ${subsystemRank} out of 48.
 Based on the market data, you can build this subsystem for about ${jitaBuild} and sell it for ${output.currentHighestSellPrice}, a difference of ${jitaProfit}.
 Given that you can only produce a finite number of subsystems per day, and that you have a finite amount of capital, should you produce this subsystem?
