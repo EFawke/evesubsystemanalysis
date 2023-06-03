@@ -27,8 +27,8 @@ class ChatGPT extends React.Component {
                 this.setState({ apiKey: response.data.apiKey });
             }).then(() => {
                 //log prompt and api key
-                console.log(this.state.prompt);
-                console.log(this.state.apiKey);
+                // console.log(this.state.prompt);
+                // console.log(this.state.apiKey);
                 const apiKey = this.state.apiKey;
                 const url = 'https://api.openai.com/v1/engines/text-davinci-003/completions';
                 const headers = {
@@ -42,7 +42,7 @@ class ChatGPT extends React.Component {
 
                 axios.post(url, data, { headers })
                     .then(response => {
-                        console.log(response);
+                        //console.log(response);
                         this.setState({ advice: response.data.choices[0].text });
                         this.setState({ isLoaded: true });
                     })

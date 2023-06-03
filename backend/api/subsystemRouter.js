@@ -403,7 +403,7 @@ Given that you can only produce a finite number of subsystems per day, and that 
 Answer in 1-2 sentences. Use data to support your answer.`
         
         output.prompt = prompt;
-        const apiKey = "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";
+        const apiKey = "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";
         output.apiKey = apiKey;
 
         res.status(200).send(output)
