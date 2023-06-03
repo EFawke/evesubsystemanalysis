@@ -49,6 +49,8 @@ class App extends React.Component {
       hub: Cookies.get("hub") ? Cookies.get("hub") : "jita",
       view: Cookies.get("view") ? Cookies.get("view") : "demand",
       advice: null,
+      apiKey: null,
+      jitaBuild: null,
     }
     this.handleClick = this.handleClick.bind(this);
     this.changeProfession = this.changeProfession.bind(this);
@@ -125,6 +127,9 @@ class App extends React.Component {
         this.setState({ averageQuants: response.data.averageQuants })
         this.setState({ priceAverages: response.data.priceAverages })
         this.setState({ advice: response.data.advice })
+        //set apiKey
+        this.setState({ apiKey: response.data.apiKey })
+        this.setState({ jitaBuild: response.data.jitaBuild })
       }).then(() => {
         this.setState({ isLoaded: true })
       })
@@ -151,6 +156,8 @@ class App extends React.Component {
           this.setState({ averageQuants: response.data.averageQuants })
           this.setState({ priceAverages: response.data.priceAverages })
           this.setState({ advice: response.data.advice })
+          this.setState({ apiKey: response.data.apiKey })
+          this.setState({ jitaBuild: response.data.jitaBuild })
         }).then(() => {
           this.setState({ isLoaded: true })
         })
@@ -533,14 +540,15 @@ class App extends React.Component {
     const today = this.state.lastSevenDays[6];
     const jitaSell = this.state.price;
     const amarrSell = this.state.amarrPrice;
-    const amarrBuy = this.state.priceAverages[today].amarr_buy;
-    const jitaBuy = this.state.priceAverages[today].buy;
-    const jitaBuild = this.state.priceAverages[today].manufacture_cost_jita;
-    const amarrBuild = this.state.priceAverages[today].manufacture_cost_amarr;
+    // const amarrBuy = this.state.priceAverages[today].amarr_buy;
+    // const jitaBuy = this.state.priceAverages[today].buy;
+    const jitaBuild = this.state.jitaBuild;
+    // const jitaBuild = this.state.priceAverages[today].manufacture_cost_jita;
+    // const amarrBuild = this.state.priceAverages[today].manufacture_cost_amarr;
     const jitaProfit = jitaSell - jitaBuild;
-    const amarrProfit = amarrSell - amarrBuild;
+    // const amarrProfit = amarrSell - amarrBuild;
     const jitaProfitMargin = (jitaProfit / jitaSell * 100).toFixed(2) + "%";
-    const amarrProfitMargin = (amarrProfit / amarrSell * 100).toFixed(2) + "%";
+    // const amarrProfitMargin = (amarrProfit / amarrSell * 100).toFixed(2) + "%";
     const jitaBuyOrders = this.state.averageQuants[today].buy;
     const jitaSellOrders = this.state.averageQuants[today].sell;
     const amarrBuyOrders = this.state.averageQuants[today].amarr_buy;
@@ -568,7 +576,7 @@ Answer in 1-2 sentences. Use data to support your answer.`
               <SubsystemsTable />
             </div>
           </div>
-          <TopContainer prompt = {prompt} jitaPrice={this.state.price} amarrPrice={this.state.amarrPrice} mode={this.state.mode} name={this.state.name} id={this.state.id} num_des={num_des} advice={this.state.advice} />
+          <TopContainer apiKey = {this.state.apiKey} prompt = {prompt} jitaPrice={this.state.price} amarrPrice={this.state.amarrPrice} mode={this.state.mode} name={this.state.name} id={this.state.id} num_des={num_des} advice={this.state.advice} />
           <div className="graphswitcher">
             <button onClick={this.toggleView} data-graph="marketData" className="toggleSwitch">
               Subsystem Loss Tracker

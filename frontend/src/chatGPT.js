@@ -21,32 +21,29 @@ class ChatGPT extends React.Component {
 
     componentDidMount() {
         //axios api/about endpoint in the backend
-        axios.get('/api/key')
-            .then(res => {
-                const apiKey = res.data;
-                const url = 'https://api.openai.com/v1/engines/text-davinci-003/completions';
-                const headers = {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${apiKey}`
-                };
-                const data = {
-                    prompt: this.props.prompt,
-                    max_tokens: 100,
-                };
+        // axios.get('/api/key')
+        //     .then(res => {
+        const apiKey = this.props.apiKey;
+        const url = 'https://api.openai.com/v1/engines/text-davinci-003/completions';
+        const headers = {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${apiKey}`
+        };
+        const data = {
+            prompt: this.props.prompt,
+            max_tokens: 100,
+        };
 
-                axios.post(url, data, { headers })
-                    .then(response => {
-                        this.setState({ advice: response.data.choices[0].text });
-                        this.setState({ isLoaded: true });
-                    })
-                    .catch(error => {
-                        // if(!response.data.choices[0].text){
-                        //     console.log("missing key agian")
-                        // }
-                        console.error(error);
-                        this.setState({ error: error });
-                    });
+        axios.post(url, data, { headers })
+            .then(response => {
+                this.setState({ advice: response.data.choices[0].text });
+                this.setState({ isLoaded: true });
             })
+            .catch(error => {
+                console.error(error);
+                this.setState({ error: error });
+            });
+        // })
         this.setState({ prompt: this.props.prompt });
     }
 

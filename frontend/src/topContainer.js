@@ -49,7 +49,7 @@ class TopContainer extends React.Component {
                             <p className='product_price'>{this.state.price}<span className="quantity">M</span></p>
                         </div>
                     </div>
-                    <ChatGPT prompt={this.props.prompt} mode={this.props.mode} />
+                    <ChatGPT apiKey = {this.props.apiKey} prompt={this.props.prompt} mode={this.props.mode} />
                 </div>
             )
         }

@@ -378,14 +378,22 @@ shipTypeRouter.get(`/:subsystemID`, (req, res, next) => {
             return rank
         }
 
-        // const apiKey = "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";
-        // const apiUrl = 'https://api.openai.com/v1/engines/text-davinci-003/completions';
+        //this throws an error if the data is not there
+        let t = output.lastSevenDays.length -1
+        //console.log(t)
+        if(!output.priceAverages[t]){
+            t = output.lastSevenDays.length -2
+        }
 
-        const jitaBuild = output.priceAverages[output.lastSevenDays[6]].manufacture_cost_jita;
+        let d = output.lastSevenDays[t]
+
+        //console.log(output.priceAverages)
+        const jitaBuild = output.priceAverages[d].manufacture_cost_jita;
         const jitaProfit = output.currentHighestSellPrice - jitaBuild;
         const num_des = output.pieChart[output.name].count;
         const subsystemRank = getSubsystemRank(output.pieChart);
         let percentageOfTotal = ((num_des / 48) * 100).toFixed(2);
+        output.jitaBuild = jitaBuild;
 
         const prompt = `
     Subsystem name: ${output.name}.
@@ -395,6 +403,8 @@ Given that you can only produce a finite number of subsystems per day, and that 
 Answer in 1-2 sentences. Use data to support your answer.`
         
         output.prompt = prompt;
+        const apiKey = "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";
+        output.apiKey = apiKey;
 
         res.status(200).send(output)
     }
