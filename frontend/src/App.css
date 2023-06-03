@@ -334,7 +334,7 @@ html {
     height: 376px;
     /* make the height the rest of the height of the page */
     /* height: calc(100vh - (24px + 28px + 16px + 42px + 129px)); */
-    /* max-height: 376px; */
+    max-height: 376px;
     align-items: center;
 }
 
@@ -644,7 +644,7 @@ input:focus {
     }
 }
 
-@media all and (min-width: 1300px) {
+/* @media all and (min-width: 1300px) {
     .the_data {
         height: 400px;
     }
@@ -654,4 +654,4 @@ input:focus {
     .the_data {
         height: 500px;
     }
-}
+} */

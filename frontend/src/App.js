@@ -51,6 +51,7 @@ class App extends React.Component {
       advice: null,
       apiKey: null,
       jitaBuild: null,
+      prompt: null,
     }
     this.handleClick = this.handleClick.bind(this);
     this.changeProfession = this.changeProfession.bind(this);
@@ -112,6 +113,7 @@ class App extends React.Component {
     if (window.location.pathname === "/") {
       axios.get(`/api/subsystems/45589`).then(response => {
         //console.log(response.data);
+        this.setState({prompt: response.data.prompt})
         this.setState({ name: response.data.name })
         this.setState({ heatMap: response.data.heatmap })
         this.setState({ graph: response.data.graphData })
@@ -141,6 +143,7 @@ class App extends React.Component {
       axios.get(`/api/${window.location.pathname.slice(1)}`)
         .then(response => {
           //console.log(response.data);
+          this.setState({prompt: response.data.prompt})
           this.setState({ name: response.data.name })
           this.setState({ heatMap: response.data.heatmap })
           this.setState({ graph: response.data.graphData })
@@ -461,16 +464,16 @@ class App extends React.Component {
           pieChartColours.push('#ffffffa6')
         } else {
           if (key.includes("Tengu") && this.state.mode === 'dark') {
-            pieChartColours.push("#0000CC20")
+            pieChartColours.push("#0000CC36")
           }
           if (key.includes("Loki") && this.state.mode === 'dark') {
-            pieChartColours.push("#A52A2A20")
+            pieChartColours.push("#A52A2A36")
           }
           if (key.includes("Proteus") && this.state.mode === 'dark') {
-            pieChartColours.push("#00CC0020")
+            pieChartColours.push("#00CC0036")
           }
           if (key.includes("Legion") && this.state.mode === 'dark') {
-            pieChartColours.push("#FFFF3320")
+            pieChartColours.push("#FFFF3336")
           }
         }
         if (key === this.state.name && this.state.mode === 'light') {
@@ -537,31 +540,31 @@ class App extends React.Component {
       return rank
     }
 
-    const today = this.state.lastSevenDays[6];
-    const jitaSell = this.state.price;
-    const amarrSell = this.state.amarrPrice;
+    // const today = this.state.lastSevenDays[6];
+    // const jitaSell = this.state.price;
+    // const amarrSell = this.state.amarrPrice;
     // const amarrBuy = this.state.priceAverages[today].amarr_buy;
     // const jitaBuy = this.state.priceAverages[today].buy;
-    const jitaBuild = this.state.jitaBuild;
+    // const jitaBuild = this.state.jitaBuild;
     // const jitaBuild = this.state.priceAverages[today].manufacture_cost_jita;
     // const amarrBuild = this.state.priceAverages[today].manufacture_cost_amarr;
-    const jitaProfit = jitaSell - jitaBuild;
+    // const jitaProfit = jitaSell - jitaBuild;
     // const amarrProfit = amarrSell - amarrBuild;
-    const jitaProfitMargin = (jitaProfit / jitaSell * 100).toFixed(2) + "%";
+    // const jitaProfitMargin = (jitaProfit / jitaSell * 100).toFixed(2) + "%";
     // const amarrProfitMargin = (amarrProfit / amarrSell * 100).toFixed(2) + "%";
-    const jitaBuyOrders = this.state.averageQuants[today].buy;
-    const jitaSellOrders = this.state.averageQuants[today].sell;
-    const amarrBuyOrders = this.state.averageQuants[today].amarr_buy;
-    const amarrSellOrders = this.state.averageQuants[today].amarr_sell;
-    const percentageOfTotal = getPercentageOfTotal(num_des, this.state.pieChart)
-    const subsystemRank = getSubsystemRank(this.state.pieChart)
+    // const jitaBuyOrders = this.state.averageQuants[today].buy;
+    // const jitaSellOrders = this.state.averageQuants[today].sell;
+    // const amarrBuyOrders = this.state.averageQuants[today].amarr_buy;
+    // const amarrSellOrders = this.state.averageQuants[today].amarr_sell;
+    // const percentageOfTotal = getPercentageOfTotal(num_des, this.state.pieChart)
+    // const subsystemRank = getSubsystemRank(this.state.pieChart)
 
-    const prompt = `
-    Subsystem name: ${this.state.name}.
-In the last 7 days, ${num_des} ${this.state.name} subsystems have been lost by players, accounting for ${percentageOfTotal} of subsystem losses this week. If we assume this is an indication of the demand, that makes it rank ${subsystemRank} out of 48.
-Based on the market data, you can build this subsystem for about ${jitaBuild} and sell it for ${jitaSell}, a difference of ${jitaProfit}.
-Given that you can only produce a finite number of subsystems per day, and that you have a finite amount of capital, should you produce this subsystem?
-Answer in 1-2 sentences. Use data to support your answer.`
+//     const prompt = `
+//     Subsystem name: ${this.state.name}.
+// In the last 7 days, ${num_des} ${this.state.name} subsystems have been lost by players, accounting for ${percentageOfTotal} of subsystem losses this week. If we assume this is an indication of the demand, that makes it rank ${subsystemRank} out of 48.
+// Based on the market data, you can build this subsystem for about ${jitaBuild} and sell it for ${jitaSell}, a difference of ${jitaProfit}.
+// Given that you can only produce a finite number of subsystems per day, and that you have a finite amount of capital, should you produce this subsystem?
+// Answer in 1-2 sentences. Use data to support your answer.`
 
     //console.log(prompt);
 
@@ -576,7 +579,7 @@ Answer in 1-2 sentences. Use data to support your answer.`
               <SubsystemsTable />
             </div>
           </div>
-          <TopContainer apiKey = {this.state.apiKey} prompt = {prompt} jitaPrice={this.state.price} amarrPrice={this.state.amarrPrice} mode={this.state.mode} name={this.state.name} id={this.state.id} num_des={num_des} advice={this.state.advice} />
+          <TopContainer jitaPrice={this.state.price} amarrPrice={this.state.amarrPrice} mode={this.state.mode} name={this.state.name} id={this.state.id} num_des={num_des} advice={this.state.advice} />
           <div className="graphswitcher">
             <button onClick={this.toggleView} data-graph="marketData" className="toggleSwitch">
               Subsystem Loss Tracker
