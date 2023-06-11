@@ -7,6 +7,7 @@ import TopContainer from './topContainer';
 import Cookies from 'js-cookie';
 import SubsystemsTable from './subsystemsTable.js';
 import MarketData from './marketData.js';
+import CompactTableRow from './subsystemRow.js';
 import TopContainerAbout from './topContainerAbout.js';
 //bootstrap
 import { Button, Modal } from 'react-bootstrap';
@@ -50,7 +51,10 @@ class App extends React.Component {
       view: Cookies.get("view") ? Cookies.get("view") : "demand",
       advice: null,
       apiKey: null,
+      profit: null,
       jitaBuild: null,
+      jitaRank: null,
+      amarrRank: null,
       prompt: null,
     }
     this.handleClick = this.handleClick.bind(this);
@@ -104,46 +108,30 @@ class App extends React.Component {
     if (window.location.pathname === "/about/") {
       axios.get(`/api/about`)
         .then(response => {
-          console.log(response.data);
+          // console.log(response.data);
           this.setState({ about: response.data })
           this.setState({ isLoaded: true })
         })
     }
     //if this is the homepage
     if (window.location.pathname === "/") {
-      axios.get(`/api/subsystems/45589`).then(response => {
-        //console.log(response.data);
-        this.setState({prompt: response.data.prompt})
-        this.setState({ name: response.data.name })
-        this.setState({ heatMap: response.data.heatmap })
-        this.setState({ graph: response.data.graphData })
-        const sortedPieChart = {};
-        Object.keys(response.data.pieChart).sort().forEach(function (key) {
-          sortedPieChart[key] = response.data.pieChart[key];
-        }.bind(this));
-        this.setState({ pieChart: sortedPieChart })
-        this.setState({ id: response.data.id })
-        this.setState({ price: response.data.currentHighestSellPrice })
-        this.setState({ amarrPrice: response.data.currentHighestSellPriceAmarr })
-        this.setState({ lastSevenDays: response.data.lastSevenDays })
-        this.setState({ averageQuants: response.data.averageQuants })
-        this.setState({ priceAverages: response.data.priceAverages })
-        this.setState({ advice: response.data.advice })
-        //set apiKey
-        this.setState({ apiKey: response.data.apiKey })
-        this.setState({ jitaBuild: response.data.jitaBuild })
-      }).then(() => {
-        this.setState({ isLoaded: true })
-      })
-        .catch((err) => {
-          console.log(err);
-          this.setState({ is404: true })
+      axios.get(`/api/home`)
+        .then(response => {
+          console.log(response.data);
+          this.setState({ profit: response.data.profit })
+          this.setState({ jitaRank: response.data.recommendedRank.jitaRank })
+          this.setState({ amarrRank: response.data.recommendedRank.amarrRank })
+          this.setState({ isLoaded: true })
         })
-    } if (window.location.pathname !== "/about/" && window.location.pathname !== "/") {
+        .catch(err => {
+          console.log(err);
+        })
+    }
+    if (window.location.pathname !== "/about/" && window.location.pathname !== "/") {
       axios.get(`/api/${window.location.pathname.slice(1)}`)
         .then(response => {
-          //console.log(response.data);
-          this.setState({prompt: response.data.prompt})
+          // console.log(response.data);
+          this.setState({ prompt: response.data.prompt })
           this.setState({ name: response.data.name })
           this.setState({ heatMap: response.data.heatmap })
           this.setState({ graph: response.data.graphData })
@@ -210,17 +198,21 @@ class App extends React.Component {
         </div>
       )
     }
-    if (window.location.pathname === "/about/") {
+    if (window.location.pathname === "/") {
+      const mostProfitable = this.state.profit
+
+      console.log(this.state.jitaRank);
+
       return (
         <div className={this.state.mode + " background"}>
           <div className={this.state.mode + " main-container"}>
-            <Header />
+            <Header mode={this.state.mode} />
             <div className='user_interface'>
-              <button className="header_button" onClick={this.handleClick}><FontAwesomeIcon className={this.state.mode} icon={faGear} /></button>
+              <button className={this.state.mode + " header_button"} onClick={this.handleClick}><FontAwesomeIcon className={this.state.mode} icon={faGear} /></button>
               <div className={this.state.hasBeenClicked + " selector_container " + this.state.mode}>
                 <h1 className='sub_list_header table_header'>Subsystems List</h1>
-                <SubsystemsTable />
-                {/* <h1 className='table_header table_settings'>Settings</h1>
+                <SubsystemsTable mode={this.state.mode} />
+                <h1 className='table_header table_settings'>Settings</h1>
                 <div className="display_option">
                   <div className="setting_column">
                     <h2 className="setting_header">Use Case:</h2>
@@ -318,7 +310,148 @@ class App extends React.Component {
                       </label>
                     </div>
                   </div>
-                </div> */}
+                </div>
+              </div>
+            </div>
+            {/* <TopContainerAbout /> */}
+            <div className={this.state.mode + " page_body"}>
+              <h1 className={this.state.mode + " header_anchor"}>Suggested Subsystems</h1>
+              <table className='home_table'>
+                <thead>
+                  <tr>
+                    <th>Name</th>
+                    <th>Profit</th>
+                    <th>Buy/Sell Ratio</th>
+                    <th>Destroyed This Week</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <CompactTableRow data={this.state.jitaRank[0]} />
+                  <CompactTableRow data={this.state.jitaRank[1]} />
+                  <CompactTableRow data={this.state.jitaRank[2]} />
+                  <CompactTableRow data={this.state.jitaRank[3]} />
+                  <CompactTableRow data={this.state.jitaRank[4]} />
+                  <CompactTableRow data={this.state.jitaRank[5]} />
+                  <CompactTableRow data={this.state.jitaRank[6]} />
+                  <CompactTableRow data={this.state.jitaRank[7]} />
+                  <CompactTableRow data={this.state.jitaRank[8]} />
+                  <CompactTableRow data={this.state.jitaRank[9]} />
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      )
+    }
+    if (window.location.pathname === "/about/") {
+      return (
+        <div className={this.state.mode + " background"}>
+          <div className={this.state.mode + " main-container"}>
+            <Header />
+            <div className='user_interface'>
+              <button className={this.state.mode + " header_button"} onClick={this.handleClick}><FontAwesomeIcon className={this.state.mode} icon={faGear} /></button>
+              <div className={this.state.hasBeenClicked + " selector_container " + this.state.mode}>
+                <h1 className='sub_list_header table_header'>Subsystems List</h1>
+                <SubsystemsTable />
+                <h1 className='table_header table_settings'>Settings</h1>
+                <div className="display_option">
+                  <div className="setting_column">
+                    <h2 className="setting_header">Use Case:</h2>
+                    <h3 className="setting_description">(Used in tailoring your market analysis)</h3>
+                    <div className="radio_div">
+                      <label>
+                        <input
+                          type="radio"
+                          value="industrialist"
+                          checked={this.state.profession === 'industrialist'}
+                          onChange={this.changeProfession}
+                        />
+                        Industrialist
+                      </label>
+                      <label>
+                        <input
+                          type="radio"
+                          value="marketeer"
+                          checked={this.state.profession === 'marketeer'}
+                          onChange={this.changeProfession}
+                        />
+                        Marketeer
+                      </label>
+                    </div>
+                  </div>
+                  <div className="setting_column">
+                    <h2 className="setting_header">Color Scheme:</h2>
+                    <h3 className="setting_description">(Dark mode is recommended)</h3>
+                    <div className="radio_div">
+                      <label>
+                        <input
+                          type="radio"
+                          value="dark"
+                          checked={this.state.mode === 'dark'}
+                          onChange={this.changeMode}
+                        />
+                        Dark Mode
+                      </label>
+                      <label>
+                        <input
+                          type="radio"
+                          value="light"
+                          checked={this.state.mode === 'light'}
+                          onChange={this.changeMode}
+                        />
+                        Light Mode
+                      </label>
+                    </div>
+                  </div>
+                  <div className="setting_column">
+                    <h2 className="setting_header">Market Hub:</h2>
+                    <h3 className="setting_description">(Where you do most of your trading)</h3>
+                    <div className="radio_div">
+                      <label>
+                        <input
+                          type="radio"
+                          value="jita"
+                          checked={this.state.hub === 'jita'}
+                          onChange={this.changeHub}
+                        />
+                        Jita
+                      </label>
+                      <label>
+                        <input
+                          type="radio"
+                          value="amarr"
+                          checked={this.state.hub === 'amarr'}
+                          onChange={this.changeHub}
+                        />
+                        Amarr
+                      </label>
+                    </div>
+                  </div>
+                  <div className="setting_column">
+                    <h2 className="setting_header">Data View:</h2>
+                    <h3 className="setting_description">(Changes the graphs that are displayed)</h3>
+                    <div className="radio_div">
+                      <label>
+                        <input
+                          type="radio"
+                          value="demand"
+                          checked={this.state.view === 'demand'}
+                          onChange={this.changeView}
+                        />
+                        Number Destroyed
+                      </label>
+                      <label>
+                        <input
+                          type="radio"
+                          value="marketeer"
+                          checked={this.state.view === 'marketeer'}
+                          onChange={this.changeView}
+                        />
+                        Market Info
+                      </label>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
             {/* <TopContainerAbout /> */}
@@ -341,7 +474,7 @@ class App extends React.Component {
                 <p>It displays daily average buy and sell prices for the subsystem in Jita and Amarr (sorry Dodixie).</p>
                 <p>It also shows you the current market price for the materials required to manufacture the subsystem.</p>
 
-                <h1>How do I use this?</h1>
+                <h2>How do I use this?</h2>
                 <p>To find different subsystems, you can use the search box at the top of the page.</p>
                 <p>Alternatively, a table of all of the subsystems is available by clicking the gear icon in the top left corner of the page.</p>
                 <p>Once you have found the subsystem you are interested in, you can click on it to view the data.</p>
@@ -352,6 +485,9 @@ class App extends React.Component {
         </div>
       )
     }
+
+    let titleColor = this.state.mode === "dark" ? "#ffffff" : "#000000"
+
     ChartJS.register(
       ArcElement,
       CategoryScale,
@@ -373,7 +509,7 @@ class App extends React.Component {
         title: {
           display: true,
           text: `${this.state.name} destroyed in the last 7 days.`,
-          color: '#ffffff',
+          color: titleColor,
           font: {
             size: 14,
           }
@@ -403,7 +539,7 @@ class App extends React.Component {
         title: {
           display: true,
           text: 'Fraction of subsystems destroyed in the last 7 days.',
-          color: '#ffffff',
+          color: titleColor,
           font: {
             size: 14,
           }
@@ -425,9 +561,9 @@ class App extends React.Component {
     }
     let barDataBackgroundColor;
     if (this.state.mode === 'dark') {
-      barDataBackgroundColor = '#ffffff'
+      barDataBackgroundColor = '#ffffff50'
     } else {
-      barDataBackgroundColor = '#ffffff36'
+      barDataBackgroundColor = '#FF000099'
     }
     let barDataBorderColor;
     if (this.state.mode === 'dark') {
@@ -441,8 +577,8 @@ class App extends React.Component {
         {
           label: '# Destroyed',
           data: destroyed,
-          backgroundColor: '#ffffff50',
-          borderColor: '#ffffff',
+          backgroundColor: barDataBackgroundColor,
+          borderColor: barDataBorderColor,
           borderWidth: 1,
         },
       ],
@@ -479,8 +615,22 @@ class App extends React.Component {
         if (key === this.state.name && this.state.mode === 'light') {
           num_des = value.count
           borderColours.push('#161e26a1')
-          pieChartColours.push('#ffffffa6')
+          pieChartColours.push('#FF000099')
         }
+        // } else {
+        //   if (key.includes("Tengu") && this.state.mode === 'light') {
+        //     pieChartColours.push("#0000CC")
+        //   }
+        //   if (key.includes("Loki") && this.state.mode === 'light') {
+        //     pieChartColours.push("#A52A2A")
+        //   }
+        //   if (key.includes("Proteus") && this.state.mode === 'light') {
+        //     pieChartColours.push("#00CC00")
+        //   }
+        //   if (key.includes("Legion") && this.state.mode === 'light') {
+        //     pieChartColours.push("#FFFF33")
+        //   }
+        // }
         if (key !== this.state.name && this.state.mode === 'light') {
           pieChartColours.push('#ffffff36')
           borderColours.push('#02617f52')
@@ -559,32 +709,134 @@ class App extends React.Component {
     // const percentageOfTotal = getPercentageOfTotal(num_des, this.state.pieChart)
     // const subsystemRank = getSubsystemRank(this.state.pieChart)
 
-//     const prompt = `
-//     Subsystem name: ${this.state.name}.
-// In the last 7 days, ${num_des} ${this.state.name} subsystems have been lost by players, accounting for ${percentageOfTotal} of subsystem losses this week. If we assume this is an indication of the demand, that makes it rank ${subsystemRank} out of 48.
-// Based on the market data, you can build this subsystem for about ${jitaBuild} and sell it for ${jitaSell}, a difference of ${jitaProfit}.
-// Given that you can only produce a finite number of subsystems per day, and that you have a finite amount of capital, should you produce this subsystem?
-// Answer in 1-2 sentences. Use data to support your answer.`
+    //     const prompt = `
+    //     Subsystem name: ${this.state.name}.
+    // In the last 7 days, ${num_des} ${this.state.name} subsystems have been lost by players, accounting for ${percentageOfTotal} of subsystem losses this week. If we assume this is an indication of the demand, that makes it rank ${subsystemRank} out of 48.
+    // Based on the market data, you can build this subsystem for about ${jitaBuild} and sell it for ${jitaSell}, a difference of ${jitaProfit}.
+    // Given that you can only produce a finite number of subsystems per day, and that you have a finite amount of capital, should you produce this subsystem?
+    // Answer in 1-2 sentences. Use data to support your answer.`
 
     //console.log(prompt);
+
+    let grayMarketeer = this.state.view === "marketeer" ? "" : "gray";
+    let grayDemand = this.state.view === "demand" ? "" : "gray";
 
     return (
       <div className={this.state.mode + " background"}>
         <div className={this.state.mode + " main-container"}>
           <Header heatMap={this.state.heatMap} mode={this.state.mode} />
           <div className='user_interface'>
-            <button className="header_button" onClick={this.handleClick}><FontAwesomeIcon className={this.state.mode} icon={faGear} /></button>
+            <button className={this.state.mode + " header_button"} onClick={this.handleClick}><FontAwesomeIcon className={this.state.mode} icon={faGear} /></button>
             <div className={this.state.hasBeenClicked + " selector_container " + this.state.mode}>
               <h1 className='table_header sub_list_header'>Subsystems List</h1>
               <SubsystemsTable />
+              <h1 className='table_header table_settings'>Settings</h1>
+              <div className="display_option">
+                <div className="setting_column">
+                  <h2 className="setting_header">Use Case:</h2>
+                  <h3 className="setting_description">(Used in tailoring your market analysis)</h3>
+                  <div className="radio_div">
+                    <label>
+                      <input
+                        type="radio"
+                        value="industrialist"
+                        checked={this.state.profession === 'industrialist'}
+                        onChange={this.changeProfession}
+                      />
+                      Industrialist
+                    </label>
+                    <label>
+                      <input
+                        type="radio"
+                        value="marketeer"
+                        checked={this.state.profession === 'marketeer'}
+                        onChange={this.changeProfession}
+                      />
+                      Marketeer
+                    </label>
+                  </div>
+                </div>
+                <div className="setting_column">
+                  <h2 className="setting_header">Color Scheme:</h2>
+                  <h3 className="setting_description">(Dark mode is recommended)</h3>
+                  <div className="radio_div">
+                    <label>
+                      <input
+                        type="radio"
+                        value="dark"
+                        checked={this.state.mode === 'dark'}
+                        onChange={this.changeMode}
+                      />
+                      Dark Mode
+                    </label>
+                    <label>
+                      <input
+                        type="radio"
+                        value="light"
+                        checked={this.state.mode === 'light'}
+                        onChange={this.changeMode}
+                      />
+                      Light Mode
+                    </label>
+                  </div>
+                </div>
+                <div className="setting_column">
+                  <h2 className="setting_header">Market Hub:</h2>
+                  <h3 className="setting_description">(Where you do most of your trading)</h3>
+                  <div className="radio_div">
+                    <label>
+                      <input
+                        type="radio"
+                        value="jita"
+                        checked={this.state.hub === 'jita'}
+                        onChange={this.changeHub}
+                      />
+                      Jita
+                    </label>
+                    <label>
+                      <input
+                        type="radio"
+                        value="amarr"
+                        checked={this.state.hub === 'amarr'}
+                        onChange={this.changeHub}
+                      />
+                      Amarr
+                    </label>
+                  </div>
+                </div>
+                <div className="setting_column">
+                  <h2 className="setting_header">Data View:</h2>
+                  <h3 className="setting_description">(Changes the graphs that are displayed)</h3>
+                  <div className="radio_div">
+                    <label>
+                      <input
+                        type="radio"
+                        value="demand"
+                        checked={this.state.view === 'demand'}
+                        onChange={this.changeView}
+                      />
+                      Number Destroyed
+                    </label>
+                    <label>
+                      <input
+                        type="radio"
+                        value="marketeer"
+                        checked={this.state.view === 'marketeer'}
+                        onChange={this.changeView}
+                      />
+                      Market Info
+                    </label>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
           <TopContainer jitaPrice={this.state.price} amarrPrice={this.state.amarrPrice} mode={this.state.mode} name={this.state.name} id={this.state.id} num_des={num_des} advice={this.state.advice} />
           <div className="graphswitcher">
-            <button onClick={this.toggleView} data-graph="marketData" className="toggleSwitch">
+            <button onClick={this.toggleView} data-graph="marketData" className={grayDemand + " toggleSwitch"}>
               Subsystem Loss Tracker
             </button>
-            <button onClick={this.toggleView} data-graph="lossTracker" className="toggleSwitch gray">
+            <button onClick={this.toggleView} data-graph="lossTracker" className={grayMarketeer + " toggleSwitch"}>
               Market Data
             </button>
           </div>

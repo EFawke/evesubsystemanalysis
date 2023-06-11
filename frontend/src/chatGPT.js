@@ -1,6 +1,7 @@
 import React from 'react';
 import axios from 'axios';
 import Loading from './loading.js';
+import Cookies from 'js-cookie';
 
 class ChatGPT extends React.Component {
     constructor(props) {
@@ -26,6 +27,9 @@ class ChatGPT extends React.Component {
                 this.setState({ prompt: response.data.prompt });
                 this.setState({ apiKey: response.data.apiKey });
             }).then(() => {
+
+                console.log(this.state.prompt);
+
                 //log prompt and api key
                 // console.log(this.state.prompt);
                 // console.log(this.state.apiKey);
@@ -59,8 +63,20 @@ class ChatGPT extends React.Component {
             axios.get(`/api/${window.location.pathname.slice(1)}`)
                 .then(response => {
                     this.setState({ prompt: response.data.prompt });
+                    this.setState({marketeerPrompt: response.data.marketeerPrompt})
                     this.setState({ apiKey: response.data.apiKey });
                 }).then(() => {
+                    console.log(this.state.prompt);
+                    let profession = Cookies.get("profession") ? Cookies.get("profession") : "industrialist";
+
+                    let usedPrompt;
+
+                    if(profession === "marketeer"){
+                        usedPrompt = this.state.marketeerPrompt;
+                    }  else {
+                        usedPrompt = this.state.prompt;
+                    }
+
                     const apiKey = this.state.apiKey;
                     const url = 'https://api.openai.com/v1/engines/text-davinci-003/completions';
                     const headers = {
@@ -68,7 +84,7 @@ class ChatGPT extends React.Component {
                         'Authorization': `Bearer ${apiKey}`
                     };
                     const data = {
-                        prompt: this.state.prompt,
+                        prompt: usedPrompt,
                         max_tokens: 100,
                     };
 

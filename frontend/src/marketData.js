@@ -33,13 +33,13 @@ class PageBody extends React.Component {
     }
 
     render() {
-        if(this.props.view === "demand"){
+        let titleColor = this.props.mode === "dark" ? "#ffffff" : "#000000"
+
+        if (this.props.view === "demand") {
             return (
                 <div></div>
             )
         }
-
-
 
         const lastSevenDaysPrices = this.props.priceLstSvn
         const jitaSellPrices = [];
@@ -61,7 +61,7 @@ class PageBody extends React.Component {
         let barSell;
 
         //loop through the last 7 days
-        for(let i = 0; i < Object.keys(lastSevenDaysPrices).length; i++) {
+        for (let i = 0; i < Object.keys(lastSevenDaysPrices).length; i++) {
             const vals = Object.values(lastSevenDaysPrices)[i]
             jitaSellPrices.push(vals.sell)
             jitaBuyPrices.push(vals.buy)
@@ -70,7 +70,7 @@ class PageBody extends React.Component {
             amarrBuyPrices.push(vals.amarr_buy)
             amarrManufacturingCosts.push(vals.manufacture_cost_amarr)
         }
-        for(let i = 0; i < Object.keys(lastSevenDaysQuantities).length; i++) {
+        for (let i = 0; i < Object.keys(lastSevenDaysQuantities).length; i++) {
             const vals = Object.values(lastSevenDaysQuantities)[i]
             jitaSellQuantities.push(vals.sell)
             jitaBuyQuantities.push(vals.buy)
@@ -124,11 +124,19 @@ class PageBody extends React.Component {
                 {
                     label: `${lineLabel} Materials Cost`,
                     data: lineManufacture,
-                    borderColor: 'rgb(230,230,250)',
-                    backgroundColor: 'rgb(230,230,250)',
+                    borderColor: titleColor,
+                    backgroundColor: titleColor,
                 },
             ],
         };
+
+
+        let buyBarColor;
+        let sellBarColor;
+        buyBarColor = this.props.mode === "dark" ? 'rgba(53, 162, 235, 0.5)' : '#0000FF99';
+        sellBarColor = this.props.mode === "dark" ? 'rgba(255, 99, 132, 0.5)' : '#FF000099';
+
+
         const quantityData = {
             labels: barLabels,
             datasets: [
@@ -136,18 +144,19 @@ class PageBody extends React.Component {
                     label: `${lineLabel} Sell Orders`,
                     data: barSell,
                     borderColor: 'rgb(255, 99, 132)',
-                    backgroundColor: 'rgba(255, 99, 132, 0.5)',
+                    backgroundColor: sellBarColor,
                     borderWidth: 1,
                 },
                 {
                     label: `${lineLabel} Buy Orders`,
                     data: barBuy,
                     borderColor: 'rgb(53, 162, 235)',
-                    backgroundColor: 'rgba(53, 162, 235, 0.5)',
+                    backgroundColor: buyBarColor,
                     borderWidth: 1,
                 },
             ],
         }
+
         const quantityOptions = {
             responsive: true,
             plugins: {
@@ -160,7 +169,7 @@ class PageBody extends React.Component {
                 title: {
                     display: true,
                     text: `Average daily buy and sell orders in ${lineLabel}`,
-                    color: '#ffffff',
+                    color: titleColor,
                     font: {
                         size: 14,
                     }
@@ -172,6 +181,10 @@ class PageBody extends React.Component {
         }
         const priceOptions = {
             responsive: true,
+            interaction: {
+                mode: 'index',
+                intersect: false, // Disable line interpolation with y-axis
+            },
             plugins: {
                 legend: {
                     position: 'top',
@@ -180,7 +193,7 @@ class PageBody extends React.Component {
                 title: {
                     display: true,
                     text: 'Average daily prices in ' + lineLabel,
-                    color: '#ffffff',
+                    color: titleColor,
                     font: {
                         size: 14,
                     }

@@ -369,7 +369,7 @@ shipTypeRouter.get(`/:subsystemID`, (req, res, next) => {
         return;
     } else {
         const getSubsystemRank = (piechart) => {
-            const num_des = output.pieChart[output.name].count;
+            const num_des = output.pieChart[output.name] ? output.pieChart[output.name].count : 0;
             let rank = 1;
             for (let i = 0; i < Object.keys(piechart).length; i++) {
                 if (piechart[Object.keys(piechart)[i]].count > num_des) {
@@ -391,7 +391,7 @@ shipTypeRouter.get(`/:subsystemID`, (req, res, next) => {
         //console.log(output.priceAverages)
         const jitaBuild = output.priceAverages[d].manufacture_cost_jita;
         const jitaProfit = output.currentHighestSellPrice - jitaBuild;
-        const num_des = output.pieChart[output.name].count;
+        const num_des = output.pieChart[output.name] ? output.pieChart[output.name].count : 0;
         const subsystemRank = getSubsystemRank(output.pieChart);
         let percentageOfTotal = ((num_des / 48) * 100).toFixed(2);
         output.jitaBuild = jitaBuild;
@@ -400,9 +400,17 @@ shipTypeRouter.get(`/:subsystemID`, (req, res, next) => {
 Subsystem name: ${output.name}.
 In the last 7 days, ${num_des} ${output.name} subsystems have been lost by players, accounting for ${percentageOfTotal} of subsystem losses this week. If we assume this is an indication of the demand, that makes it rank ${subsystemRank} out of 48.
 Based on the market data, you can build this subsystem for about ${jitaBuild} and sell it for ${output.currentHighestSellPrice}, a difference of ${jitaProfit}.
-Given that you can only produce a finite number of subsystems per day, and that you have a finite amount of capital, should you produce this subsystem?
+Given that you can only produce a finite number of subsystems per day, and that you have a finite amount of capital, what is your opinion on the viability of manufacturing this subsystem?
+Answer in 1-2 sentences. Use data to support your answer.`
+
+        const marketeerPrompt = `
+        Subsystem name: ${output.name}.
+In the last 7 days, ${num_des} ${output.name} subsystems have been lost by players, accounting for ${percentageOfTotal} of subsystem losses this week. If we assume this is an indication of the demand, that makes it rank ${subsystemRank} out of 48.
+Based on the market data, industrialists can build this subsystem for about ${jitaBuild} and sell it for ${output.currentHighestSellPrice}, a difference of ${jitaProfit}.
+Given that you have a finite amount of capital, what is your opinion on the viability of trading this subsystem?
 Answer in 1-2 sentences. Use data to support your answer.`
         
+        output.marketeerPrompt = marketeerPrompt;
         output.prompt = prompt;
         const apiKey = "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";
         output.apiKey = apiKey;

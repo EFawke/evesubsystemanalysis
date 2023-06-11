@@ -7,14 +7,14 @@
     --dark_background: #070708;
     --root_background: black;
     --svg_color: #ffffffa6;
-    --light_background: #212529;
+    --light_background: white;
     --light_text: black;
     --light_mode_ui_background: #ffffff;
 }
 
-/* .graph_selector:hover > .highlighted {
-    box-shadow: none;
-} */
+.light .header_button {
+    color: var(--light_text);
+}
 
 .hide {
     display: none;
@@ -193,6 +193,10 @@ html {
     color: var(--font-color);
 }
 
+.light>div>.data-table>tbody>tr>td>a {
+    color: black;
+}
+
 .data-table>tbody>tr>td>a:hover {
     color: white;
 }
@@ -212,6 +216,18 @@ html {
     color: white;
 }
 
+/* .home_table {
+    width: 100%;
+    border-collapse: collapse;
+    border-spacing: 0;
+    border: 1px solid var(--highlight);
+    border-radius: 1rem;
+    margin: 0.5rem 0rem;
+    background: var(--content_background);
+    font-size: 0.8rem;
+    text-decoration: none;
+} */
+
 .input_addornments {
     display: flex;
     align-items: center;
@@ -229,6 +245,7 @@ html {
     text-decoration: none;
     font-size: 1.2rem;
     margin-right: 2rem;
+    font-weight: 800;
 }
 
 /* uncomment later */
@@ -450,6 +467,7 @@ input:focus {
 
 .light {
     background: var(--light_background);
+    color: var(--light_text);
 }
 
 /* .light:hover {
@@ -477,10 +495,13 @@ input:focus {
     border: 1px solid var(--bs-gray-dark);
     background: var(--light_mode_ui_background);
     color: black;
+    font-weight: 700;
 }
 
 .light > .graph_button {
     border: 1px solid var(--bs-gray-dark);
+    background: white;
+    color: black;
 }
 
 .toggle_graphs_view {
@@ -495,7 +516,7 @@ input:focus {
 }
 
 .light .header_anchor {
-    color: var(--font-color);
+    color: var(--light_text);
 }
 
 .toggleSwitch {
@@ -528,6 +549,38 @@ input:focus {
 .version_span {
     font-size: 0.8rem;
     /* color: var(--font-color); */
+}
+
+.home_table > tbody > tr > td > a {
+    text-decoration: none;
+}
+
+.light>table>tbody>tr>td>a {
+    color: var(--light_text);
+}
+
+.home_table > thead > tr {
+    border-bottom: 1px solid var(--bs-gray-dark);
+}
+
+.home_table > tbody > tr {
+    border-bottom: 1px solid var(--bs-gray-dark);
+}
+
+.light > .graphswitcher > .toggleSwitch {
+    color: var(--light_text);
+}
+
+.light > .graphswitcher > .gray {
+    color: rgb(100, 100, 100);
+}
+
+.light .graph_selector {
+    border: 1px solid var(--bs-gray-dark);
+}
+
+.light > .header > .results_container > table > tbody > tr > td > a {
+    color: var(--light_text);
 }
 
 /* mobile styles */
@@ -580,7 +633,7 @@ input:focus {
     }
 
     .page_body {
-        padding: 0.5rem 0.5rem;
+        padding: 0.5rem 1rem;
     }
 
     .graph_button {
@@ -591,12 +644,7 @@ input:focus {
 
     .user_interface {
         padding: 0.5rem;
-        display: none;
     }
-
-    /* .Heatmap {
-        font-size: 0.5rem;
-    } */
 
     .input_addornments {
         margin-top: 0.5rem;
@@ -629,6 +677,12 @@ input:focus {
     }
     .graphswitcher {
         margin: 0rem 0.5rem;
+    }
+}
+
+@media all and (max-width: 768px) {
+    .home_table {
+        font-size: 0.8rem;
     }
 }
 

@@ -3,7 +3,6 @@
 const axios = require('axios');
 const { Client } = require('pg');
 const subsystemIDArr = [45622, 45623, 45624, 45625, 45626, 45627, 45628, 45629, 45630, 45631, 45632, 45633, 45586, 45587, 45588, 45589, 45590, 45591, 45592, 45593, 45594, 45595, 45596, 45597, 45610, 45611, 45612, 45613, 45614, 45615, 45616, 45617, 45618, 45619, 45620, 45621, 45598, 45599, 45600, 45601, 45602, 45603, 45604, 45605, 45606, 45607, 45608, 45609]
-// const date = new Date();
 let client;
 
 if (!process.env.DATABASE_URL) {
@@ -36,30 +35,16 @@ const makeTable = () => {
     })
 }
 
-//drop market_data table
-// const dropTable = () => {
-//     client.query(`DROP TABLE market_data`)
-//         .catch(err => {
-//             console.log(err);
-//         })
-//         .then((res) => {
-//             console.log("table is dropped");
-//         })
-// }
-
 makeTable();
-// dropTable();
 
 const grabMaterialData = () => {
     const date = new Date();
-    // console.log("getting data");
     for (let i = 0; i < subsystemIDArr.length; i++) {
         axios.get(`http://evepraisal.com/item/${subsystemIDArr[i]}.json`)
             .then((result) => {
                 insertIntoPrices(result.data, date);
             })
             .catch(err => {
-                // console.log(err);
                 return;
             })
     }
@@ -142,7 +127,6 @@ const insertIntoTable = (output) => {
     const values = [output.itemId, output.name, output.amarrBuy, output.amarrSell, output.amarrBuyOrdersCount, output.amarrBuyVolume, output.amarrSellOrdersCount, output.amarrSellVolume, output.jitaBuy, output.jitaSell, output.jitaBuyOrdersCount, output.jitaBuyVolume, output.jitaSellOrdersCount, output.jitaSellVolume, output.date, output.materialPriceJita, output.materialPriceAmarr]
     client.query(sql, values)
         .then((res) => {
-            //console.log(output.itemId + " inserted");
         })
         .catch(err => {
             console.log(err);
@@ -154,8 +138,6 @@ const logMarketData = () => {
     const sql = "SELECT * FROM market_data";
     client.query(sql)
         .then((res) => {
-            // console.log(res.rows.length);
-            // console.log(res.rows)
         })
         .catch(err => {
             console.log(err);
